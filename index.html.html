@@ -1,0 +1,2764 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Kumu 🛵 | Domicilios Mitú</title>
+    
+    <!-- 🍄 CONFIGURACIÓN PWA / ICONO DE ACCESO DIRECTO CON HONGO -->
+    <meta name="apple-mobile-web-app-title" content="Kumu">
+    <meta name="application-name" content="Kumu">
+    <meta name="theme-color" content="#2D0B3A">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='512' height='512'><rect width='512' height='512' fill='%232D0B3A' rx='110'/><text x='50%' y='57%' font-size='260' text-anchor='middle' dominant-baseline='central'>🍄</text></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='512' height='512'><rect width='512' height='512' fill='%232D0B3A' rx='110'/><text x='50%' y='57%' font-size='260' text-anchor='middle' dominant-baseline='central'>🍄</text></svg>">
+    <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22Kumu%22%2C%22short_name%22%3A%22Kumu%22%2C%22start_url%22%3A%22%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%232D0B3A%22%2C%22theme_color%22%3A%22%232D0B3A%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'512'%20height%3D'512'%3E%3Crect%20width%3D'512'%20height%3D'512'%20fill%3D'%232D0B3A'%20rx%3D'110'%2F%3E%3Ctext%20x%3D'50%25'%20y%3D'57%25'%20font-size%3D'260'%20text-anchor%3D'middle'%20dominant-baseline%3D'central'%3E%F0%9F%8D%84%3C%2Ftext%3E%3C%2Fsvg%3E%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fsvg+xml%22%7D%5D%7D">
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- 🗺️ LIBRERÍA LEAFLET PARA RASTREO DE MAPA EN MITÚ -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style> 
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; } 
+        #splash-screen { transition: opacity 0.6s ease-out, visibility 0.6s ease-out; }
+        .loader-spinner {
+            border: 3px solid rgba(212, 175, 55, 0.2);
+            border-top: 3px solid #D4AF37;
+            border-radius: 50%;
+            width: 32px; height: 32px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .kumu-header { background: linear-gradient(135deg, #2D0B3A 0%, #1B4D3E 100%); border-bottom: 2px solid #C85A17; }
+        .btn-vaupes { background-color: #C85A17; color: white; }
+        .btn-vaupes:hover { background-color: #A04000; }
+        .badge-amazonia { background-color: #1B4D3E; color: #D4AF37; }
+        
+        /* 🖱️ BARRA DE DESPLAZAMIENTO VISIBLE Y CÓMODA PARA PC Y CELULAR */
+        .kumu-scroll::-webkit-scrollbar { height: 8px; }
+        .kumu-scroll::-webkit-scrollbar-track { background: #e2e8f0; border-radius: 8px; }
+        .kumu-scroll::-webkit-scrollbar-thumb { background: #1B4D3E; border-radius: 8px; cursor: pointer; }
+        .kumu-scroll::-webkit-scrollbar-thumb:hover { background: #C85A17; }
+        .kumu-scroll { scrollbar-width: thin; scrollbar-color: #1B4D3E #e2e8f0; }
+    </style>
+</head>
+<body class="bg-slate-100 text-gray-800 min-h-screen pb-24">
+
+    <!-- 🌟 PANTALLA DE BIENVENIDA BLINDADA (3 SEGUNDOS EXACTOS) -->
+    <div id="splash-screen" onclick="ocultarSplash()" class="fixed inset-0 bg-[#2D0B3A] z-[9999] flex flex-col items-center justify-between p-8 text-center text-white cursor-pointer" title="Haz clic para entrar">
+        <div></div>
+        <div class="flex flex-col items-center space-y-4">
+            <div class="w-28 h-28 bg-[#1B4D3E] border-2 border-[#C85A17] rounded-full flex items-center justify-center shadow-2xl relative">
+                <span class="text-6xl">🍄</span>
+            </div>
+            <div class="space-y-1">
+                <h1 class="text-4xl font-extrabold tracking-wider text-[#D4AF37]">KUMU</h1>
+                <p class="text-xs uppercase tracking-widest text-amber-200 font-medium">Pide fácil, recibe rápido</p>
+            </div>
+            <div class="pt-2">
+                <div class="text-[#D4AF37] text-sm">★★★★★</div>
+                <p class="text-[10px] tracking-wider text-emerald-300 font-semibold uppercase mt-0.5">El Sabor de Mitú • 100% Garantizado</p>
+            </div>
+        </div>
+        <div class="flex flex-col items-center space-y-3 pb-6">
+            <div class="loader-spinner"></div>
+            <p class="text-[11px] text-amber-200 font-medium animate-pulse">Cargando la mejor app de Mitú...</p>
+            <p class="text-[10px] text-amber-400 underline">(Toca aquí si la carga tarda)</p>
+        </div>
+    </div>
+
+    <!-- MODAL AYUDA INSTALACIÓN PWA -->
+    <div id="modalInstalar" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[9995] hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl p-6 text-center max-w-xs space-y-3 shadow-2xl border-t-4 border-[#C85A17]">
+            <div class="text-4xl">📲</div>
+            <h3 class="font-bold text-base text-gray-900">Instalar Kumu en tu Celular</h3>
+            <div class="text-left bg-purple-50 p-3 rounded-xl border border-purple-200 space-y-2 text-xs text-purple-900">
+                <p><b>En Android (Chrome):</b> Toca los 3 puntos ⋮ arriba a la derecha y selecciona <b>"Añadir a la pantalla principal"</b>.</p>
+                <p><b>En iPhone (Safari):</b> Toca el botón Compartir ⎋ abajo y selecciona <b>"Añadir a Inicio"</b>.</p>
+            </div>
+            <button onclick="document.getElementById('modalInstalar').classList.add('hidden')" class="w-full btn-vaupes py-2 rounded-xl font-bold text-xs">Entendido</button>
+        </div>
+    </div>
+
+    <!-- MODAL CONTROL DE EDAD LICORES -->
+    <div id="modalEdad" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[9990] hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl p-6 text-center max-w-xs space-y-3 shadow-2xl border-t-4 border-[#1B4D3E]">
+            <div class="text-4xl">🔞</div>
+            <h3 class="font-bold text-lg text-gray-900">Sección +18 Años</h3>
+            <div class="text-left bg-emerald-50 p-3 rounded-xl border border-emerald-200 space-y-1 text-[11px] text-emerald-950">
+                <p class="font-bold border-b border-emerald-200 pb-1 mb-1 text-center">🛡️ Protocolo de Entrega Licores:</p>
+                <p>1️⃣ Confirmar mayoría de edad.</p>
+                <p>2️⃣ Ingresar Cédula al pedir.</p>
+                <p>3️⃣ <b>PIN de Seguridad de 4 dígitos</b> que se validará con el repartidor junto con tu Cédula física.</p>
+            </div>
+            <div class="flex space-x-2 pt-1">
+                <button onclick="confirmarEdad(false)" class="flex-1 bg-gray-200 text-gray-700 py-2 rounded-xl font-bold text-xs">Soy Menor</button>
+                <button onclick="confirmarEdad(true)" class="flex-1 btn-vaupes py-2 rounded-xl font-bold text-xs">Soy +18 Años</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 💬 BOTÓN FLOTANTE SOPORTE DIRECTO -->
+    <a href="https://wa.me/573215698079?text=%C2%A1Hola!%20Necesito%20soporte%20con%20la%20app%20Kumu%20%F0%9F%8D%84" target="_blank" class="fixed bottom-16 right-4 bg-[#1B4D3E] hover:bg-[#0F382B] text-white w-12 h-12 rounded-full flex items-center justify-center shadow-xl z-40 text-2xl transition transform hover:scale-105 border-2 border-[#D4AF37]" title="Soporte Kumu">
+        💬
+    </a>
+
+    <!-- CANVAS OCULTO PARA GENERAR TICKETS EN IMAGEN (.PNG) -->
+    <canvas id="ticketCanvas" width="600" height="760" class="hidden"></canvas>
+
+    <!-- CONTENEDOR PRINCIPAL -->
+    <div id="app" class="max-w-md mx-auto bg-white min-h-screen shadow-lg flex flex-col relative pb-24"></div>
+
+    <script>
+        // 🔑 LLAVES REALES INTEGRADAS
+        const SUPABASE_URL = 'https://yvqhyhpoglhmuypkcizw.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_3ciXA2wtrEdJIjR6D_61zg_wl7WVpVN';
+
+        let supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        let currentView = 'cliente';
+        let modoAdminVisible = false;
+        let modoRepartidorLogueado = false; // 🛵 Nuevo rol exclusivo para domiciliarios (sin acceso a Admin ni Cuentas)
+        let comercioLogueado = null; 
+        let clicksLogo = 0;
+        let comercioSeleccionado = null;
+        let categoriaFiltro = 'Todos';
+        let categoriaProductoFiltro = 'Todos';
+        let busquedaTexto = '';
+        let esMayorEdad = false;
+        let localSeleccionadoAnalitica = 'GLOBAL';
+        let filtroFechaAnalitica = 'semana';
+
+        let windowComerciosCache = [];
+        let windowProductosCache = [];
+        let todosProductosGlobal = [];
+        let ultimoReporteAuditoriaTexto = '';
+
+        let estaLloviendo = false;
+        let tarifaDomicilio = 4000;
+        const PORCENTAJE_COMISION = 0.10;
+        const MONTO_MINIMO_PEDIDO = 10000;
+
+        // 🔐 SEPARACIÓN DE PINES POR SEGURIDAD
+        const PIN_ADMIN_MAESTRO = "1234";      // 👑 Solo para Gustavo (Acceso Total)
+        const PIN_REPARTIDOR_OFICIAL = "2026"; // 🛵 Solo para Domiciliarios (Abre únicamente la pestaña Repartidor)
+
+        let fotoBase64Comercio = '';
+        let fotoBase64Producto = '';
+        let fotoBase64EditarLocal = '';
+        let mapaLeaflet = null;
+        let ultimoEstadoConocidoCliente = '';
+
+        // 🍔 EMOJIS AUTOMÁTICOS PARA CADA PESTAÑA DE CATEGORÍA DENTRO DEL RESTAURANTE
+        function obtenerTextoConEmojiCategoria(cat) {
+            const limpio = (cat || '').trim();
+            const mapa = {
+                'Todos': '✨ Todos',
+                'Hamburguesas': '🍔 Hamburguesas',
+                'Salchipapas': '🍟 Salchipapas',
+                'Perros Calientes': '🌭 Perros Calientes',
+                'Bebidas': '🥤 Bebidas',
+                'Varios': '🍽️ Varios',
+                'Pizzas': '🍕 Pizzas',
+                'Asados': '🥩 Asados',
+                'Pollo': '🍗 Pollo',
+                'Empanadas': '🥟 Empanadas',
+                'Combos': '🎁 Combos'
+            };
+            if (mapa[limpio]) return mapa[limpio];
+            const lower = limpio.toLowerCase();
+            if (lower.includes('hamburg')) return '🍔 ' + limpio;
+            if (lower.includes('salchi') || lower.includes('papa')) return '🍟 ' + limpio;
+            if (lower.includes('perro') || lower.includes('hot')) return '🌭 ' + limpio;
+            if (lower.includes('bebida') || lower.includes('jugo') || lower.includes('gaseosa')) return '🥤 ' + limpio;
+            if (lower.includes('licor') || lower.includes('cerveza')) return '🍺 ' + limpio;
+            return '🍴 ' + limpio;
+        }
+
+        // 📸 MOTOR INTELIGENTE DE IMÁGENES POR DESCRIPCIÓN DE INGREDIENTES
+        function tieneFotoPersonalizadaValida(url) {
+            if (!url || typeof url !== 'string' || url.trim() === '') return false;
+            if (url.includes('1546069901-ba9599a7e63c')) return false;
+            return true;
+        }
+
+        function sugerirFotoGourmetPorIngredientes(producto) {
+            const texto = `${producto.nombre || ''} ${producto.descripcion || ''} ${producto.categoria || ''}`.toLowerCase();
+            const cat = (producto.categoria || '').toLowerCase();
+
+            let hash = 0;
+            for (let i = 0; i < texto.length; i++) {
+                hash = ((hash << 5) - hash) + texto.charCodeAt(i);
+                hash |= 0;
+            }
+            const idx = Math.abs(hash);
+
+            if (cat.includes('salchipapa') || texto.includes('salchipapa') || texto.includes('papas') || texto.includes('choripapa')) {
+                if (texto.includes('pollo') || texto.includes('desmechad') || texto.includes('mixta') || texto.includes('carne')) {
+                    return 'https://images.unsplash.com/photo-1585109649139-366815a0d713?w=500&auto=format&fit=crop&q=80';
+                }
+                if (texto.includes('queso') || texto.includes('gratinad') || texto.includes('cheddar') || texto.includes('tocineta') || texto.includes('maicito')) {
+                    return 'https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=500&auto=format&fit=crop&q=80';
+                }
+                const galeriaSalchi = [
+                    'https://images.unsplash.com/photo-1576107232684-1279f3908594?w=500&auto=format&fit=crop&q=80',
+                    'https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?w=500&auto=format&fit=crop&q=80',
+                    'https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=500&auto=format&fit=crop&q=80'
+                ];
+                return galeriaSalchi[idx % galeriaSalchi.length];
+            }
+
+            if (cat.includes('perro') || texto.includes('perro') || texto.includes('hot dog') || texto.includes('choriperro')) {
+                if (texto.includes('tocineta') || texto.includes('especial') || texto.includes('doble') || texto.includes('queso')) {
+                    return 'https://images.unsplash.com/photo-1619740455993-9e612b1af08a?w=500&auto=format&fit=crop&q=80';
+                }
+                const galeriaPerros = [
+                    'https://images.unsplash.com/photo-1627054235723-2711b3d0c709?w=500&auto=format&fit=crop&q=80',
+                    'https://images.unsplash.com/photo-1619740455993-9e612b1af08a?w=500&auto=format&fit=crop&q=80',
+                    'https://images.unsplash.com/photo-1541214113241-21578d2d9b62?w=500&auto=format&fit=crop&q=80'
+                ];
+                return galeriaPerros[idx % galeriaPerros.length];
+            }
+
+            if (cat.includes('bebida') || texto.includes('gaseosa') || texto.includes('coca') || texto.includes('jugo') || texto.includes('limonada') || texto.includes('agua') || texto.includes('postobon')) {
+                if (texto.includes('jugo') || texto.includes('natural') || texto.includes('limonada') || texto.includes('mora') || texto.includes('maracuya')) {
+                    return 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=500&auto=format&fit=crop&q=80';
+                }
+                if (texto.includes('agua')) {
+                    return 'https://images.unsplash.com/photo-1548839140-29a749e1cf4d?w=500&auto=format&fit=crop&q=80';
+                }
+                return 'https://images.unsplash.com/photo-1581636625402-29b2a704ef13?w=500&auto=format&fit=crop&q=80';
+            }
+
+            if (cat.includes('hamburguesa') || texto.includes('hamburguesa') || texto.includes('burger') || texto.includes('texas')) {
+                if (texto.includes('doble') || texto.includes('triple') || texto.includes('monster') || texto.includes('casa') || texto.includes('texas')) {
+                    return 'https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=500&auto=format&fit=crop&q=80';
+                }
+                if (texto.includes('tocineta') || texto.includes('bacon') || texto.includes('bbq') || texto.includes('ahumad')) {
+                    return 'https://images.unsplash.com/photo-1553979459-d2229ba7433b?w=500&auto=format&fit=crop&q=80';
+                }
+                if (texto.includes('pollo') || texto.includes('crispy') || texto.includes('apana') || texto.includes('pechuga')) {
+                    return 'https://images.unsplash.com/photo-1606755962773-d324e0a13086?w=500&auto=format&fit=crop&q=80';
+                }
+                if (texto.includes('piña') || texto.includes('hawaiana') || texto.includes('jamon') || texto.includes('huevo') || texto.includes('especial')) {
+                    return 'https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?w=500&auto=format&fit=crop&q=80';
+                }
+                if (texto.includes('mixta') || texto.includes('desmechad') || texto.includes('chorizo')) {
+                    return 'https://images.unsplash.com/photo-1572802419224-296b0aeee0d9?w=500&auto=format&fit=crop&q=80';
+                }
+                const galeriaBurgers = [
+                    'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500&auto=format&fit=crop&q=80',
+                    'https://images.unsplash.com/photo-1550547660-d9450f859349?w=500&auto=format&fit=crop&q=80',
+                    'https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=500&auto=format&fit=crop&q=80'
+                ];
+                return galeriaBurgers[idx % galeriaBurgers.length];
+            }
+
+            if (texto.includes('alita') || texto.includes('pollo') || texto.includes('nugget')) {
+                return 'https://images.unsplash.com/photo-1567620832903-9fc6debc209f?w=500&auto=format&fit=crop&q=80';
+            }
+            if (texto.includes('carne') || texto.includes('asado') || texto.includes('churrasco') || texto.includes('picada')) {
+                return 'https://images.unsplash.com/photo-1544025162-d76694265947?w=500&auto=format&fit=crop&q=80';
+            }
+            return 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=500&auto=format&fit=crop&q=80';
+        }
+
+        function obtenerImagenProducto(p) {
+            if (tieneFotoPersonalizadaValida(p.imagen_url)) {
+                return p.imagen_url;
+            }
+            return sugerirFotoGourmetPorIngredientes(p);
+        }
+
+        async function autogenerarFotosLocalPorIngredientes(comercioId) {
+            const prods = windowProductosCache.filter(p => String(p.comercio_id) === String(comercioId));
+            if (prods.length === 0) {
+                alert("Este local aún no tiene productos registrados.");
+                return;
+            }
+            const confirmar = confirm(`🪄 CARGAR FOTOS POR INGREDIENTES (${prods.length} platos)\n\nLeeremos la descripción de ingredientes de cada plato de este local y guardaremos su fotografía gastronómica directamente en Supabase.\n\n¿Deseas cargar y guardar las imágenes ahora?`);
+            if (!confirmar) return;
+
+            let actualizados = 0;
+            for (const p of prods) {
+                const fotoSugerida = sugerirFotoGourmetPorIngredientes(p);
+                const { error } = await supabaseClient.from('productos').update({ imagen_url: fotoSugerida }).eq('id', p.id);
+                if (!error) actualizados++;
+            }
+            alert(`✅ ¡Excelente! Se cargaron y guardaron en Supabase las imágenes de ${actualizados} productos según sus ingredientes.`);
+            initApp();
+        }
+
+        async function generarFotoIAPorDescripcionPlato(productoId) {
+            const p = windowProductosCache.find(item => String(item.id) === String(productoId));
+            if (!p) return;
+            const descLimpia = (p.descripcion || '').replace(/\[PROMO:\d+\|\d{2}:\d{2}-\d{2}:\d{2}\]/g, '').trim();
+            const promptBase = `Close up professional food photography of ${p.nombre}, ${p.categoria || 'fast food'}, ingredients: ${descLimpia || p.nombre}, appetizing restaurant lighting, 4k`;
+            const semilla = Math.floor(100 + Math.random() * 9000);
+            const urlIA = `https://image.pollinations.ai/prompt/${encodeURIComponent(promptBase)}?width=500&height=500&nologo=true&seed=${semilla}`;
+
+            const usarIA = confirm(`🎨 GENERAR IMAGEN POR INGREDIENTES\n\nPlato: ${p.nombre}\nIngredientes detectados: "${descLimpia || p.nombre}"\n\n• Presiona ACEPTAR para crear una foto nueva generada por IA con esos ingredientes.\n• Presiona CANCELAR para asignarle una foto HD instantánea de nuestro catálogo gourmet.`);
+
+            const urlFinal = usarIA ? urlIA : sugerirFotoGourmetPorIngredientes(p);
+            const { error } = await supabaseClient.from('productos').update({ imagen_url: urlFinal }).eq('id', productoId);
+            if (error) {
+                alert("Error al guardar imagen: " + error.message);
+            } else {
+                alert(`✅ ¡Imagen actualizada en Supabase para "${p.nombre}"!`);
+                initApp();
+            }
+        }
+
+        function reproducirTonoAlerta(tipo = 'normal') {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(tipo === 'exito' ? 880 : 660, ctx.currentTime);
+                gain.gain.setValueAtTime(0.15, ctx.currentTime);
+                osc.start();
+                setTimeout(() => { osc.frequency.setValueAtTime(1046, ctx.currentTime); }, 150);
+                setTimeout(() => { osc.stop(); ctx.close(); }, 380);
+            } catch (e) {}
+        }
+
+        function comprimirImagenArchivo(file, callback) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const maxDim = 550;
+                    let w = img.width;
+                    let h = img.height;
+                    if (w > h && w > maxDim) {
+                        h = Math.round((h * maxDim) / w);
+                        w = maxDim;
+                    } else if (h > maxDim) {
+                        w = Math.round((w * maxDim) / h);
+                        h = maxDim;
+                    }
+                    canvas.width = w;
+                    canvas.height = h;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, w, h);
+                    callback(canvas.toDataURL('image/jpeg', 0.72));
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        let carrito = [];
+        try {
+            const carritoGuardado = JSON.parse(localStorage.getItem('kumu_carrito_inmortal') || '[]');
+            carrito = carritoGuardado.filter(item => !item.esLicor);
+        } catch (e) { carrito = []; }
+
+        function guardarCarritoInmortal() {
+            try {
+                const sinLicor = carrito.filter(item => !item.esLicor);
+                localStorage.setItem('kumu_carrito_inmortal', JSON.stringify(sinLicor));
+            } catch (e) {}
+        }
+
+        function obtenerClienteFrecuente() {
+            try {
+                return JSON.parse(localStorage.getItem('kumu_cliente_frecuente') || '{"nombre":"","telefono":"","direccion":""}');
+            } catch (e) { return { nombre: "", telefono: "", direccion: "" }; }
+        }
+
+        function guardarClienteFrecuente(nombre, telefono, direccion) {
+            try {
+                localStorage.setItem('kumu_cliente_frecuente', JSON.stringify({ nombre, telefono, direccion }));
+            } catch (e) {}
+        }
+
+        function obtenerGastosOperativos() {
+            try {
+                return JSON.parse(localStorage.getItem('kumu_gastos_diarios') || '[]');
+            } catch (e) { return []; }
+        }
+
+        function agregarGastoOperativo() {
+            const concepto = document.getElementById('gastoConcepto')?.value.trim();
+            const monto = Number(document.getElementById('gastoMonto')?.value || 0);
+            if (!concepto || monto <= 0) {
+                alert("Ingresa un concepto (ej: Publicidad Radio) y un valor mayor a $0.");
+                return;
+            }
+            const lista = obtenerGastosOperativos();
+            lista.unshift({
+                id: Date.now(),
+                fecha: new Date().toLocaleDateString('es-CO'),
+                concepto,
+                monto: monto < 1000 ? monto * 1000 : monto
+            });
+            localStorage.setItem('kumu_gastos_diarios', JSON.stringify(lista));
+            mostrarAnaliticaLocal(localSeleccionadoAnalitica);
+        }
+
+        function eliminarGastoOperativo(id) {
+            const lista = obtenerGastosOperativos().filter(g => g.id !== id);
+            localStorage.setItem('kumu_gastos_diarios', JSON.stringify(lista));
+            mostrarAnaliticaLocal(localSeleccionadoAnalitica);
+        }
+
+        function evaluarPromoHoraFeliz(producto) {
+            let precioBase = Number(producto.precio) < 1000 ? Number(producto.precio) * 1000 : Number(producto.precio);
+            let descRaw = producto.descripcion || '';
+            let descLimpia = descRaw.replace(/\[PROMO:\d+\|\d{2}:\d{2}-\d{2}:\d{2}\]/g, '').trim();
+
+            const match = descRaw.match(/\[PROMO:(\d+)\|(\d{2}:\d{2}-\d{2}:\d{2})\]/);
+            if (match) {
+                let precioOferta = Number(match[1]);
+                if (precioOferta < 1000) precioOferta *= 1000;
+                const rango = match[2];
+                const [inicio, fin] = rango.split('-');
+                const [hI, mI] = inicio.split(':').map(Number);
+                const [hF, mF] = fin.split(':').map(Number);
+
+                const ahora = new Date();
+                const minsActual = ahora.getHours() * 60 + ahora.getMinutes();
+                const minsInicio = hI * 60 + (mI || 0);
+                const minsFin = hF * 60 + (mF || 0);
+
+                const dentroDeHorario = minsFin < minsInicio
+                    ? (minsActual >= minsInicio || minsActual <= minsFin)
+                    : (minsActual >= minsInicio && minsActual <= minsFin);
+
+                if (dentroDeHorario && precioOferta < precioBase) {
+                    return { activa: true, precioFinal: precioOferta, precioNormal: precioBase, horario: rango, descLimpia };
+                }
+                return { activa: false, precioFinal: precioBase, precioNormal: precioBase, horario: rango, descLimpia };
+            }
+            return { activa: false, precioFinal: precioBase, precioNormal: precioBase, horario: null, descLimpia };
+        }
+
+        function ocultarSplash() {
+            const splash = document.getElementById('splash-screen');
+            if (splash) { 
+                splash.style.opacity = '0'; 
+                splash.style.visibility = 'hidden';
+                setTimeout(() => splash.remove(), 600); 
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initApp();
+            setTimeout(ocultarSplash, 3000);
+            setInterval(() => {
+                if (currentView === 'cliente' && !comercioSeleccionado && categoriaFiltro !== 'Sanvi') {
+                    renderizarSeguimientoCliente(true);
+                }
+            }, 8000);
+        });
+
+        async function verificarClimaMitu() {
+            try {
+                const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=1.1983&longitude=-70.1733&current_weather=true', { signal: AbortSignal.timeout(3000) });
+                const data = await res.json();
+                if (data && data.current_weather && data.current_weather.weathercode >= 51 && data.current_weather.weathercode <= 99) {
+                    estaLloviendo = true; tarifaDomicilio = 5000;
+                } else { estaLloviendo = false; tarifaDomicilio = 4000; }
+            } catch (e) { tarifaDomicilio = 4000; }
+        }
+
+        function explicarClima() {
+            alert(`🌦️ Monitoreo de Clima en Mitú:\n\n• Tiempo Seco (☀️): $4.000 COP.\n• Tiempo de Lluvia (🌧️): $5.000 COP.\n\nLa tarifa se ajusta automáticamente para apoyar a nuestros repartidores bajo la lluvia.`);
+        }
+
+        function estaComercioAbierto(comercio) {
+            if (comercio.activo === false) return false;
+            
+            const ahora = new Date();
+            const horaActual = ahora.getHours() * 60 + ahora.getMinutes();
+
+            if (!comercio.hora_apertura || !comercio.hora_cierre) {
+                if (comercio.dias_semana && Array.isArray(comercio.dias_semana) && comercio.dias_semana.length > 0) {
+                    const diasNum = comercio.dias_semana.map(Number);
+                    if (!diasNum.includes(ahora.getDay())) return false;
+                }
+                return true;
+            }
+
+            const [hA, mA] = comercio.hora_apertura.split(':').map(Number);
+            const [hC, mC] = comercio.hora_cierre.split(':').map(Number);
+            const minApertura = hA * 60 + (mA || 0);
+            const minCierre = hC * 60 + (mC || 0);
+
+            if (minCierre < minApertura) {
+                const abiertoPorHora = (horaActual >= minApertura || horaActual <= minCierre);
+                if (!abiertoPorHora) return false;
+
+                if (comercio.dias_semana && Array.isArray(comercio.dias_semana) && comercio.dias_semana.length > 0) {
+                    const diasNum = comercio.dias_semana.map(Number);
+                    const diaTurno = horaActual <= minCierre ? (ahora.getDay() + 6) % 7 : ahora.getDay();
+                    if (!diasNum.includes(diaTurno)) return false;
+                }
+                return true;
+            }
+
+            if (comercio.dias_semana && Array.isArray(comercio.dias_semana) && comercio.dias_semana.length > 0) {
+                const diasNum = comercio.dias_semana.map(Number);
+                if (!diasNum.includes(ahora.getDay())) return false;
+            }
+
+            return horaActual >= minApertura && horaActual <= minCierre;
+        }
+
+        async function initApp() {
+            try {
+                await verificarClimaMitu();
+                const app = document.getElementById('app');
+                if (!app) return;
+                app.innerHTML = '';
+                renderBannerPWA(app);
+                renderHeader(app);
+                if (currentView === 'cliente') await renderClienteView(app);
+                else if (currentView === 'negocios') await renderNegociosView(app);
+                else if (currentView === 'domiciliario') await renderDomiciliarioView(app);
+                else if (currentView === 'cierre') await renderCierreView(app);
+                renderNav(app);
+            } catch (err) {
+                console.error("Error en initApp:", err);
+            } finally {
+                ocultarSplash();
+            }
+        }
+
+        function renderBannerPWA(container) {
+            const banner = document.createElement('div');
+            banner.className = 'bg-[#1B4D3E] text-white px-3 py-2 text-xs flex justify-between items-center border-b border-[#C85A17]/40';
+            banner.innerHTML = `
+                <span>🍄 Instala <b>Kumu</b> en tu celular</span>
+                <button onclick="document.getElementById('modalInstalar').classList.remove('hidden')" class="bg-[#C85A17] text-white font-extrabold px-2.5 py-1 rounded text-[10px]">Añadir</button>
+            `;
+            container.appendChild(banner);
+        }
+
+        function renderHeader(container) {
+            const header = document.createElement('div');
+            header.className = 'kumu-header text-white p-4 flex justify-between items-center shadow-md';
+            
+            let tagRol = '';
+            if (modoAdminVisible) tagRol = '<span class="text-[10px] bg-[#C85A17] text-white px-2.5 py-1 rounded font-bold">ADMIN GENERAL</span>';
+            else if (modoRepartidorLogueado) tagRol = '<span class="text-[10px] bg-[#1B4D3E] text-[#D4AF37] px-2.5 py-1 rounded font-bold border border-[#D4AF37]">🛵 MODO REPARTIDOR</span>';
+            else if (comercioLogueado) tagRol = `<span class="text-[10px] bg-[#1B4D3E] text-[#D4AF37] px-2.5 py-1 rounded font-bold border border-[#D4AF37]/50">${comercioLogueado.nombre}</span>`;
+
+            header.innerHTML = `
+                <div onclick="activarModoAcceso()" class="cursor-pointer select-none">
+                    <h1 class="font-bold text-xl flex items-center gap-1 text-[#D4AF37]">🍄 Kumu</h1>
+                    <p class="text-xs text-amber-100 flex items-center gap-1">Pide fácil, recibe rápido <button onclick="event.stopPropagation(); explicarClima();" class="underline bg-black/30 px-1.5 py-0.5 rounded text-[10px] text-[#D4AF37] font-bold">${estaLloviendo ? '🌧️ ($5k)' : '☀️ ($4k)'}</button></p>
+                </div>
+                ${tagRol}
+            `;
+            container.appendChild(header);
+        }
+
+        // 🧭 BARRA SUPERIOR DE RETORNO Y CAMBIO DE ROL (RESPETANDO PERMISOS DE CADA PIN)
+        function obtenerBarraRetornoRolesHTML() {
+            if (modoRepartidorLogueado) {
+                return `
+                    <div class="bg-[#2D0B3A] text-white p-2.5 rounded-xl border-2 border-[#D4AF37] flex justify-between items-center text-xs shadow-md">
+                        <button onclick="switchView('cliente')" class="bg-[#C85A17] hover:bg-amber-700 text-white px-3 py-1.5 rounded-lg font-extrabold flex items-center gap-1 shadow">
+                            ← 🏠 Volver a Tienda
+                        </button>
+                        <span class="text-[11px] text-[#D4AF37] font-extrabold">🛵 Sesión Exclusiva de Repartidor</span>
+                    </div>
+                `;
+            }
+            return `
+                <div class="bg-[#2D0B3A] text-white p-2.5 rounded-xl border-2 border-[#D4AF37] flex flex-wrap justify-between items-center gap-1.5 text-xs shadow-md">
+                    <button onclick="switchView('cliente')" class="bg-[#C85A17] hover:bg-amber-700 text-white px-3 py-1.5 rounded-lg font-extrabold flex items-center gap-1 shadow">
+                        ← 🏠 Volver a Tienda
+                    </button>
+                    <div class="flex gap-1">
+                        <button onclick="switchView('negocios')" class="px-2.5 py-1.5 rounded-lg font-bold ${currentView==='negocios'?'bg-[#D4AF37] text-[#2D0B3A]':'bg-white/10 text-amber-100'}">
+                            🏪 ${comercioLogueado ? 'Mi Local' : 'Admin'}
+                        </button>
+                        ${modoAdminVisible ? `
+                            <button onclick="switchView('domiciliario')" class="px-2.5 py-1.5 rounded-lg font-bold ${currentView==='domiciliario'?'bg-[#D4AF37] text-[#2D0B3A]':'bg-white/10 text-amber-100'}">
+                                🛵 Domis
+                            </button>
+                        ` : ''}
+                        <button onclick="switchView('cierre')" class="px-2.5 py-1.5 rounded-lg font-bold ${currentView==='cierre'?'bg-[#D4AF37] text-[#2D0B3A]':'bg-white/10 text-amber-100'}">
+                            📊 Cuentas
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 🔐 SISTEMA DE 3 PINES SEPARADOS (ADMIN MAESTRO / REPARTIDOR / LOCAL ALIADO)
+        async function activarModoAcceso() {
+            clicksLogo++;
+            if (clicksLogo >= 3) {
+                clicksLogo = 0;
+                if (!modoAdminVisible && !comercioLogueado && !modoRepartidorLogueado) {
+                    const pass = prompt("🔐 Ingresa tu PIN de Acceso (Repartidor, Local Aliado o Admin):");
+                    if (!pass) return;
+
+                    if (pass.trim() === PIN_ADMIN_MAESTRO) {
+                        modoAdminVisible = true;
+                        modoRepartidorLogueado = false;
+                        comercioLogueado = null;
+                        alert("🔓 Acceso Administrador General Activado");
+                    } else if (pass.trim() === PIN_REPARTIDOR_OFICIAL) {
+                        modoRepartidorLogueado = true;
+                        modoAdminVisible = false;
+                        comercioLogueado = null;
+                        currentView = 'domiciliario';
+                        alert("🛵 Modo Repartidor Kumu Activado (Acceso exclusivo a pedidos y entregas)");
+                    } else {
+                        const { data: comercios } = await supabaseClient.from('comercios').select('*').eq('pin_local', pass.trim());
+                        if (comercios && comercios.length > 0) {
+                            comercioLogueado = comercios[0];
+                            modoAdminVisible = false;
+                            modoRepartidorLogueado = false;
+                            currentView = 'negocios';
+                            alert(`🏪 Sesión iniciada como Aliado: ${comercioLogueado.nombre}`);
+                        } else {
+                            alert("❌ PIN Incorrecto");
+                        }
+                    }
+                } else {
+                    modoAdminVisible = false;
+                    modoRepartidorLogueado = false;
+                    comercioLogueado = null;
+                    currentView = 'cliente';
+                    alert("🔒 Sesión Cerrada (Modo Cliente)");
+                }
+                initApp();
+            }
+        }
+
+        function renderNav(container) {
+            const nav = document.createElement('div');
+            nav.className = 'fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-[#2D0B3A] text-white border-t-2 border-[#D4AF37] flex justify-around p-2.5 shadow-2xl z-50';
+            let botonesNav = `<button onclick="switchView('cliente')" class="text-xs font-bold ${currentView==='cliente'?'text-[#D4AF37]':'text-gray-300'} flex flex-col items-center"><span class="text-lg">🏠</span> Inicio</button>`;
+            
+            if (modoRepartidorLogueado) {
+                // El repartidor SOLO ve Inicio y Repartidor (No ve Admin ni Cuentas)
+                botonesNav += `
+                    <button onclick="switchView('domiciliario')" class="text-xs font-bold ${currentView==='domiciliario'?'text-[#D4AF37]':'text-gray-300'} flex flex-col items-center"><span class="text-lg">🛵</span> Repartidor</button>
+                `;
+            } else if (modoAdminVisible || comercioLogueado) {
+                botonesNav += `
+                    <button onclick="switchView('negocios')" class="text-xs font-bold ${currentView==='negocios'?'text-[#D4AF37]':'text-gray-300'} flex flex-col items-center"><span class="text-lg">🏪</span> ${comercioLogueado ? 'Mi Local' : 'Admin'}</button>
+                    ${modoAdminVisible ? `<button onclick="switchView('domiciliario')" class="text-xs font-bold ${currentView==='domiciliario'?'text-[#D4AF37]':'text-gray-300'} flex flex-col items-center"><span class="text-lg">🛵</span> Repartidor</button>` : ''}
+                    <button onclick="switchView('cierre')" class="text-xs font-bold ${currentView==='cierre'?'text-[#D4AF37]':'text-gray-300'} flex flex-col items-center"><span class="text-lg">📊</span> Cuentas</button>
+                `;
+            }
+            nav.innerHTML = botonesNav;
+            container.appendChild(nav);
+        }
+
+        function switchView(view) { currentView = view; comercioSeleccionado = null; initApp(); }
+
+        async function renderClienteView(container) {
+            const content = document.createElement('div');
+            content.className = 'p-4 flex-1 space-y-4';
+
+            let ultimoPedido = null;
+            try { ultimoPedido = JSON.parse(localStorage.getItem('kumu_ultimo_pedido')); } catch (e) {}
+
+            if (!comercioSeleccionado) {
+                content.innerHTML = `
+                    <input type="text" id="inputBusqueda" oninput="buscarProductos(this.value)" value="${busquedaTexto}" placeholder="🔍 Buscar plato, medicina o local en Mitú..." class="w-full p-2.5 border border-amber-200 rounded-lg text-xs bg-amber-50/40 outline-none focus:ring-2 focus:ring-[#1B4D3E]">
+
+                    <!-- 🔄 BOTÓN REORDENAR EN 1 TOQUE (EXCEPTO ALCOHOL) -->
+                    ${ultimoPedido && ultimoPedido.items && ultimoPedido.items.length > 0 ? `
+                        <div class="bg-gradient-to-r from-[#2D0B3A] to-[#1B4D3E] text-white p-3 rounded-xl border border-[#D4AF37] shadow-md flex justify-between items-center">
+                            <div class="pr-2">
+                                <p class="text-[10px] text-[#D4AF37] font-extrabold uppercase">⚡ Repetir mi último pedido</p>
+                                <p class="text-xs font-bold truncate max-w-[210px]">${ultimoPedido.comercioNombre}: ${ultimoPedido.resumen}</p>
+                            </div>
+                            <button onclick="repetirUltimoPedido()" class="bg-[#C85A17] hover:bg-amber-700 text-white px-3 py-1.5 rounded-lg text-xs font-extrabold shadow flex-shrink-0">
+                                🔄 ¡Pedir lo mismo!
+                            </button>
+                        </div>
+                    ` : ''}
+
+                    <!-- 🗺️ CAJA DE RASTREO DE PEDIDO EN CURSO DEL CLIENTE -->
+                    <div id="cajaSeguimientoMapaCliente"></div>
+
+                    <!-- ⚡ BANNER DE HORA FELIZ / PROMOCIONES POR RELOJ -->
+                    <div id="bannerHoraFeliz"></div>
+
+                    <!-- 🏷️ PESTAÑAS DEL MENÚ PRINCIPAL (CON BARRA HORIZONTAL VISIBLE PARA PC) -->
+                    <div class="flex space-x-2 overflow-x-auto kumu-scroll pb-2.5 text-xs">
+                        <button onclick="filtrarCat('Todos')" class="px-3.5 py-2 rounded-full font-bold whitespace-nowrap shadow-sm ${categoriaFiltro==='Todos'?'bg-[#1B4D3E] text-[#D4AF37]':'bg-gray-200 text-gray-700'}">✨ Todos</button>
+                        <button onclick="filtrarCat('Restaurantes & Comida Rápida')" class="px-3.5 py-2 rounded-full font-bold whitespace-nowrap shadow-sm ${categoriaFiltro==='Restaurantes & Comida Rápida'?'bg-[#1B4D3E] text-[#D4AF37]':'bg-gray-200 text-gray-700'}">🍔 Restaurantes & Comida Rápida</button>
+                        <button onclick="filtrarCat('Licores & Cigarrillos')" class="px-3.5 py-2 rounded-full font-bold whitespace-nowrap shadow-sm ${categoriaFiltro==='Licores & Cigarrillos'?'bg-[#C85A17] text-white':'bg-amber-100 text-amber-900 border border-amber-300'}">🍺 Licores & Cigarrillos 🔞</button>
+                        <button onclick="filtrarCat('Droguería')" class="px-3.5 py-2 rounded-full font-bold whitespace-nowrap shadow-sm ${categoriaFiltro==='Droguería'?'bg-[#1B4D3E] text-[#D4AF37]':'bg-gray-200 text-gray-700'}">💊 Droguería</button>
+                        <button onclick="filtrarCat('Sanvi')" class="px-3.5 py-2 rounded-full font-bold whitespace-nowrap shadow-sm ${categoriaFiltro==='Sanvi'?'bg-[#2D0B3A] text-[#D4AF37] border border-[#D4AF37]':'bg-emerald-50 text-[#1B4D3E] border border-emerald-300'}">🌾 Sanvi (Próximamente)</button>
+                    </div>
+                    <h2 class="font-bold text-gray-800">${categoriaFiltro === 'Sanvi' ? '🌾 Sanvi • Mercado Campesino en Mitú' : 'Locales Disponibles en Mitú'}</h2>
+                    <div id="listaComercios" class="space-y-3">Cargando locales...</div>
+                `;
+                container.appendChild(content);
+
+                if (categoriaFiltro === 'Sanvi') {
+                    const lista = document.getElementById('listaComercios');
+                    lista.innerHTML = `
+                        <div class="bg-gradient-to-br from-[#1B4D3E] via-[#2D0B3A] to-[#C85A17] text-white rounded-2xl p-5 shadow-xl border-2 border-[#D4AF37] space-y-3 text-center">
+                            <div class="w-16 h-16 mx-auto bg-white/10 rounded-full flex items-center justify-center text-4xl border border-[#D4AF37]">
+                                🌾
+                            </div>
+                            <span class="inline-block bg-[#D4AF37] text-[#2D0B3A] text-[10px] font-extrabold px-3 py-0.5 rounded-full uppercase tracking-wider">
+                                Próximamente en Kumu
+                            </span>
+                            <h3 class="text-lg font-extrabold text-[#D4AF37]">Sanvi: Del Campo y la Chagra a tu Casa</h3>
+                            <p class="text-xs text-amber-100 leading-relaxed">
+                                Muy pronto en <b>Kumu 🍄</b> conectaremos directamente a las familias de Mitú con nuestros <b>campesinos y productores locales en Sanvi</b>.
+                            </p>
+                            <div class="bg-black/25 p-3 rounded-xl border border-white/15 text-left text-[11px] space-y-1 text-emerald-100">
+                                <p>🥬 <b>Cosecha Fresca Local:</b> Yuca, plátano, frutas amazónicas y verduras del día.</p>
+                                <p>🥣 <b>Tradición del Vaupés:</b> Fariña, casabe, almidón, ají y pescado fresco.</p>
+                                <p>🤝 <b>Comercio Justo:</b> Apoyo directo a las manos campesinas de nuestra tierra, llevándolo hasta tu puerta.</p>
+                            </div>
+                            <button onclick="filtrarCat('Todos')" class="w-full bg-[#D4AF37] text-[#2D0B3A] font-extrabold py-2.5 rounded-xl text-xs shadow-md">
+                                ← Volver a Restaurantes y Comercios Activos
+                            </button>
+                        </div>
+                    `;
+                    return;
+                }
+
+                try {
+                    const { data: prodsAll } = await supabaseClient.from('productos').select('*');
+                    if (prodsAll) {
+                        todosProductosGlobal = prodsAll;
+                        localStorage.setItem('kumu_cache_productos', JSON.stringify(prodsAll));
+                    } else {
+                        todosProductosGlobal = JSON.parse(localStorage.getItem('kumu_cache_productos') || '[]');
+                    }
+                } catch (e) {
+                    todosProductosGlobal = JSON.parse(localStorage.getItem('kumu_cache_productos') || '[]');
+                }
+
+                let comercios = [];
+                try {
+                    const { data, error } = await supabaseClient.from('comercios').select('*');
+                    if (!error && data) {
+                        comercios = data;
+                        localStorage.setItem('kumu_cache_comercios', JSON.stringify(data));
+                    } else {
+                        comercios = JSON.parse(localStorage.getItem('kumu_cache_comercios') || '[]');
+                    }
+                } catch (e) {
+                    comercios = JSON.parse(localStorage.getItem('kumu_cache_comercios') || '[]');
+                }
+                windowComerciosCache = comercios || [];
+
+                renderizarBannerHoraFeliz(todosProductosGlobal, windowComerciosCache);
+                renderizarSeguimientoCliente(false);
+
+                let comerciosFiltrados = comercios;
+                if (categoriaFiltro !== 'Todos') {
+                    if (categoriaFiltro === 'Restaurantes & Comida Rápida') {
+                        comerciosFiltrados = comercios.filter(c => ['Restaurantes & Comida Rápida', 'Restaurantes', 'Comida Rápida'].includes(c.categoria));
+                    } else {
+                        comerciosFiltrados = comercios.filter(c => c.categoria === categoriaFiltro);
+                    }
+                }
+
+                if(busquedaTexto.trim() !== '') {
+                    const q = busquedaTexto.toLowerCase();
+                    const idsConPlato = todosProductosGlobal
+                        .filter(p => p.nombre.toLowerCase().includes(q) || (p.descripcion && p.descripcion.toLowerCase().includes(q)))
+                        .map(p => p.comercio_id);
+                    comerciosFiltrados = comercios.filter(c => c.nombre.toLowerCase().includes(q) || idsConPlato.includes(c.id));
+                }
+
+                const lista = document.getElementById('listaComercios');
+                if (!comerciosFiltrados || comerciosFiltrados.length === 0) {
+                    lista.innerHTML = `<p class="text-sm text-gray-500 italic">No hay comercios disponibles en esta categoría.</p>`;
+                    return;
+                }
+
+                lista.innerHTML = comerciosFiltrados.map(c => {
+                    const abierto = estaComercioAbierto(c);
+                    const imagenLocal = c.imagen_url || 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=200';
+                    const horarioTexto = (c.hora_apertura && c.hora_cierre) ? ` • 🕒 ${c.hora_apertura} - ${c.hora_cierre}` : '';
+                    return `
+                        <div onclick="seleccionarComercioPorId('${c.id}')" class="bg-white border rounded-xl p-3 shadow-sm flex items-center space-x-3 cursor-pointer hover:border-[#1B4D3E] transition ${!abierto ? 'opacity-60 bg-gray-50' : ''}">
+                            <img src="${imagenLocal}" class="w-16 h-16 rounded-lg object-cover border flex-shrink-0" alt="${c.nombre}" onerror="this.src='https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=200'">
+                            <div class="flex-1">
+                                <div class="flex justify-between items-center">
+                                    <h3 class="font-bold text-gray-800">${c.nombre}</h3>
+                                    <span class="text-[10px] px-2 py-0.5 rounded-full font-bold ${abierto ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'}">${abierto ? '🟢 ABIERTO' : '🔴 CERRADO'}</span>
+                                </div>
+                                ${modoAdminVisible ? `
+                                    <div class="flex space-x-1 mt-2">
+                                        <button onclick="event.stopPropagation(); toggleActivoLocal('${c.id}', ${c.activo !== false})" class="px-2 py-0.5 rounded text-[10px] font-bold ${c.activo !== false ? 'bg-amber-600 text-white' : 'bg-emerald-600 text-white'}">${c.activo !== false ? '🛑 Apagar Local' : '🟢 Encender'}</button>
+                                        <button onclick="event.stopPropagation(); eliminarComercio('${c.id}')" class="bg-red-600 hover:bg-red-800 text-white font-bold py-0.5 px-2 rounded text-[10px]">🗑️ Eliminar</button>
+                                    </div>
+                                ` : ''}
+                                <p class="text-xs text-gray-500 mt-1">${c.categoria} • ${c.direccion}${horarioTexto}</p>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } else {
+                const abierto = estaComercioAbierto(comercioSeleccionado);
+                comercioSeleccionado.abierto = abierto;
+                content.innerHTML = `
+                    <button onclick="comercioSeleccionado=null; initApp();" class="text-sm text-[#1B4D3E] font-bold mb-2 flex items-center gap-1">← Volver a locales</button>
+                    <div class="flex justify-between items-center mb-2">
+                        <h2 class="font-bold text-xl text-gray-800">${comercioSeleccionado.nombre}</h2>
+                        <span class="text-xs px-2 py-1 rounded font-bold ${abierto ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'}">${abierto ? '🟢 ABIERTO' : '🔴 CERRADO'}</span>
+                    </div>
+                    <div class="bg-amber-50 border border-amber-200 p-3 rounded-lg text-xs text-amber-950 mb-3">
+                        <p class="font-bold mb-1">📲 Datos de Transferencia / Nequi / Bre-B:</p>
+                        <p class="text-sm font-bold text-amber-900">${comercioSeleccionado.telefono}</p>
+                    </div>
+
+                    ${(modoAdminVisible || comercioLogueado) ? `
+                        <button onclick="autogenerarFotosLocalPorIngredientes('${comercioSeleccionado.id}')" class="w-full mb-3 bg-[#2D0B3A] text-[#D4AF37] border-2 border-[#D4AF37] py-2.5 px-3 rounded-xl text-xs font-extrabold shadow flex items-center justify-center gap-1.5">
+                            🪄 Cargar Fotos por Ingredientes a Todo el Menú
+                        </button>
+                    ` : ''}
+
+                    <!-- 🏷️ BARRA DE PESTAÑAS DEL LOCAL CON EMOJIS Y BARRA VISIBLE PARA PC -->
+                    <div id="barraCatProductos" class="flex space-x-2 overflow-x-auto kumu-scroll pb-2.5 text-xs mb-3"></div>
+
+                    <div id="listaProductos" class="space-y-3 mt-1">Cargando menú...</div>
+                    <div id="carritoResumen" class="mt-6 border-t pt-4"></div>
+                `;
+                container.appendChild(content);
+
+                let productos = [];
+                try {
+                    const { data, error } = await supabaseClient.from('productos').select('*').eq('comercio_id', comercioSeleccionado.id);
+                    if (!error && data) {
+                        productos = data;
+                    } else {
+                        productos = todosProductosGlobal.filter(p => p.comercio_id === comercioSeleccionado.id);
+                    }
+                } catch (e) {
+                    productos = todosProductosGlobal.filter(p => p.comercio_id === comercioSeleccionado.id);
+                }
+                windowProductosCache = productos || [];
+                
+                let categoriasProds = ['Todos', 'Hamburguesas', 'Salchipapas', 'Perros Calientes', 'Bebidas', 'Varios'];
+                if (productos) {
+                    productos.forEach(p => {
+                        const cat = p.categoria || 'Varios';
+                        if (cat !== 'Sanvi' && !categoriasProds.includes(cat)) {
+                            categoriasProds.push(cat);
+                        }
+                    });
+                }
+
+                const barraCat = document.getElementById('barraCatProductos');
+                if (barraCat) {
+                    barraCat.innerHTML = categoriasProds.map(cat => `
+                        <button onclick="filtrarCatProducto('${cat}')" class="px-3.5 py-1.5 rounded-full font-bold whitespace-nowrap shadow-sm ${categoriaProductoFiltro === cat ? 'bg-[#1B4D3E] text-[#D4AF37]' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}">${obtenerTextoConEmojiCategoria(cat)}</button>
+                    `).join('');
+                }
+
+                const pList = document.getElementById('listaProductos');
+                if (!productos || productos.length === 0) {
+                    pList.innerHTML = `<p class="text-sm text-gray-500 italic">Este local aún no tiene productos registrados.</p>`;
+                } else {
+                    let productosFiltrados = productos;
+                    if (categoriaProductoFiltro !== 'Todos') {
+                        productosFiltrados = productos.filter(p => (p.categoria || 'Varios') === categoriaProductoFiltro);
+                    }
+
+                    if (productosFiltrados.length === 0) {
+                        pList.innerHTML = `<p class="text-sm text-gray-500 italic">No hay productos en la pestaña "${obtenerTextoConEmojiCategoria(categoriaProductoFiltro)}".</p>`;
+                    } else {
+                        pList.innerHTML = productosFiltrados.map(p => {
+                            const promoInfo = evaluarPromoHoraFeliz(p);
+                            p.precioReal = promoInfo.precioFinal;
+                            const imgProd = obtenerImagenProducto(p);
+                            const estaDisponible = p.disponible !== false;
+                            const catActual = p.categoria || 'Varios';
+
+                            return `
+                                <div class="bg-white border ${promoInfo.activa ? 'border-2 border-[#C85A17] bg-amber-50/30' : ''} rounded-xl p-2.5 flex items-center justify-between space-x-3 shadow-sm ${!estaDisponible ? 'opacity-50' : ''}">
+                                    <img src="${imgProd}" class="w-16 h-16 rounded-lg object-cover border-2 border-[#D4AF37]/50 flex-shrink-0" onerror="this.src='${sugerirFotoGourmetPorIngredientes(p)}'">
+                                    <div class="flex-1">
+                                        ${promoInfo.activa ? `<span class="inline-block bg-[#C85A17] text-white text-[9px] font-extrabold px-2 py-0.5 rounded-full mb-0.5">🔥 HORA FELIZ (${promoInfo.horario})</span>` : ''}
+                                        <h4 class="font-bold text-sm text-gray-800">${p.nombre} ${!estaDisponible ? '<span class="text-red-600 font-bold text-[10px]">(Agotado)</span>' : ''}</h4>
+                                        <p class="text-[11px] text-gray-600 whitespace-pre-line leading-relaxed">${promoInfo.descLimpia}</p>
+                                        <div class="flex items-center gap-1.5 mt-0.5">
+                                            ${promoInfo.activa ? `<span class="text-[11px] line-through text-gray-400">$${promoInfo.precioNormal.toLocaleString()}</span>` : ''}
+                                            <p class="text-xs font-extrabold text-[#1B4D3E]">$${promoInfo.precioFinal.toLocaleString()} COP</p>
+                                        </div>
+                                        
+                                        ${(modoAdminVisible || comercioLogueado) ? `
+                                            <div class="flex flex-wrap items-center gap-1.5 mt-1.5">
+                                                <select onchange="cambiarCategoriaProducto('${p.id}', this.value)" class="p-1 border rounded text-[10px] bg-amber-50 font-semibold text-amber-900">
+                                                    <option value="Hamburguesas" ${catActual==='Hamburguesas'?'selected':''}>🍔 Hamburguesas</option>
+                                                    <option value="Salchipapas" ${catActual==='Salchipapas'?'selected':''}>🍟 Salchipapas</option>
+                                                    <option value="Perros Calientes" ${catActual==='Perros Calientes'?'selected':''}>🌭 Perros Calientes</option>
+                                                    <option value="Bebidas" ${catActual==='Bebidas'?'selected':''}>🥤 Bebidas</option>
+                                                    <option value="Varios" ${catActual==='Varios'?'selected':''}>🍽️ Varios</option>
+                                                </select>
+                                                <button onclick="event.stopPropagation(); generarFotoIAPorDescripcionPlato('${p.id}')" class="bg-emerald-700 text-white font-bold py-0.5 px-2 rounded text-[10px]">🎨 Foto IA</button>
+                                                ${modoAdminVisible ? `<button onclick="event.stopPropagation(); editarPrecioFotoProducto('${p.id}')" class="bg-blue-600 text-white font-bold py-0.5 px-2 rounded text-[10px]">✏️ Precio/Foto</button>` : ''}
+                                                <button onclick="event.stopPropagation(); programarHoraFelizPlato('${p.id}')" class="bg-[#2D0B3A] text-[#D4AF37] font-bold py-0.5 px-2 rounded text-[10px]">⏰ Hora Feliz</button>
+                                                <button onclick="event.stopPropagation(); eliminarProducto('${p.id}')" class="bg-red-600 hover:bg-red-800 text-white font-bold py-0.5 px-2 rounded text-[10px]">🗑️</button>
+                                            </div>
+                                        ` : ''}
+                                    </div>
+                                    <button onclick="agregarAlCarritoPorId('${p.id}')" ${(!abierto || !estaDisponible) ? 'disabled' : ''} class="${(abierto && estaDisponible) ? 'bg-[#1B4D3E] text-[#D4AF37]' : 'bg-gray-300 text-gray-500 cursor-not-allowed'} px-3 py-1.5 rounded-lg text-xs font-bold">+</button>
+                                </div>
+                            `;
+                        }).join('');
+                    }
+                }
+                renderizarCarrito();
+            }
+        }
+
+        async function editarPrecioFotoProducto(productoId) {
+            const p = windowProductosCache.find(item => item.id === productoId);
+            if (!p) return;
+            const nuevoPrecio = prompt(`✏️ Editar precio de "${p.nombre}" ($COP):`, p.precio);
+            if (nuevoPrecio === null) return;
+            let precioNum = Number(nuevoPrecio);
+            if (precioNum > 0 && precioNum < 1000) precioNum *= 1000;
+
+            const nuevaFotoUrl = prompt(`🖼️ Si deseas cambiar la foto manualmente, pega la URL aquí (o deja vacío para conservar la actual):`, p.imagen_url || '');
+            const datosActualizar = { precio: precioNum };
+            if (nuevaFotoUrl !== null && nuevaFotoUrl.trim() !== '') {
+                datosActualizar.imagen_url = nuevaFotoUrl.trim();
+            }
+
+            const { error } = await supabaseClient.from('productos').update(datosActualizar).eq('id', productoId);
+            if (error) alert("Error al actualizar producto: " + error.message);
+            else { alert("✅ Producto actualizado correctamente."); initApp(); }
+        }
+
+        function renderizarBannerHoraFeliz(productos, comercios) {
+            const divBanner = document.getElementById('bannerHoraFeliz');
+            if (!divBanner) return;
+            const promosEnVivo = [];
+            (productos || []).forEach(p => {
+                if (p.disponible === false) return;
+                const info = evaluarPromoHoraFeliz(p);
+                if (info.activa) {
+                    const local = (comercios || []).find(c => c.id === p.comercio_id);
+                    if (local && estaComercioAbierto(local)) {
+                        promosEnVivo.push({ plato: p, local, info });
+                    }
+                }
+            });
+
+            if (promosEnVivo.length === 0) {
+                divBanner.innerHTML = '';
+                return;
+            }
+
+            divBanner.innerHTML = `
+                <div class="bg-gradient-to-r from-[#2D0B3A] via-[#C85A17] to-[#2D0B3A] p-3 rounded-xl border-2 border-[#D4AF37] text-white shadow-md space-y-2">
+                    <p class="text-[11px] font-extrabold text-[#D4AF37] uppercase flex items-center gap-1">⚡ Combos Relámpago / Hora Feliz Activa</p>
+                    <div class="space-y-1.5">
+                        ${promosEnVivo.map(item => `
+                            <div onclick="seleccionarComercioPorId('${item.local.id}')" class="bg-black/25 hover:bg-black/40 p-2 rounded-lg flex justify-between items-center cursor-pointer transition">
+                                <div>
+                                    <p class="text-xs font-bold text-white">${item.plato.nombre} <span class="text-[10px] text-amber-200">• ${item.local.nombre}</span></p>
+                                    <p class="text-[10px] text-amber-100">Antes: <span class="line-through">$${item.info.precioNormal.toLocaleString()}</span> ➔ <b>Ahora: $${item.info.precioFinal.toLocaleString()} COP</b> (${item.info.horario})</p>
+                                </div>
+                                <span class="bg-[#D4AF37] text-[#2D0B3A] font-extrabold text-[10px] px-2 py-1 rounded">Ver ➔</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        async function programarHoraFelizPlato(productoId) {
+            const p = windowProductosCache.find(item => item.id === productoId);
+            if (!p) return;
+            const infoActual = evaluarPromoHoraFeliz(p);
+
+            const precioOferta = prompt(`⏰ CONFIGURAR HORA FELIZ PARA: ${p.nombre}\n\nPrecio normal: $${infoActual.precioNormal.toLocaleString()} COP.\nIngresa el Precio de Oferta en COP (o escribe 0 para desactivar la promo):`, infoActual.activa ? infoActual.precioFinal : '');
+            if (precioOferta === null) return;
+
+            let descLimpia = infoActual.descLimpia;
+            if (Number(precioOferta) <= 0) {
+                const { error } = await supabaseClient.from('productos').update({ descripcion: descLimpia }).eq('id', productoId);
+                if (error) alert("Error: " + error.message);
+                else { alert("✅ Promoción desactivada. El plato volvió a su precio normal."); initApp(); }
+                return;
+            }
+
+            const horario = prompt("🕒 Ingresa el rango de hora militar en que se activará sola (Ejemplo: 18:00-20:00 o pon 00:00-23:59 para probarla todo el día):", infoActual.horario || "18:00-20:00");
+            if (!horario || !horario.includes('-')) {
+                alert("⚠️ Formato de hora inválido. Usa el formato HH:MM-HH:MM (ej: 18:00-20:00).");
+                return;
+            }
+
+            let numPrecio = Number(precioOferta);
+            if (numPrecio < 1000) numPrecio *= 1000;
+            const nuevaDescripcion = `${descLimpia} [PROMO:${numPrecio}|${horario.trim()}]`.trim();
+
+            const { error } = await supabaseClient.from('productos').update({ descripcion: nuevaDescripcion }).eq('id', productoId);
+            if (error) alert("Error al guardar Hora Feliz: " + error.message);
+            else {
+                alert(`🎉 ¡Hora Feliz activada para ${p.nombre}!\nPrecio promo: $${numPrecio.toLocaleString()} COP en horario ${horario.trim()}.`);
+                initApp();
+            }
+        }
+
+        // 🔔 BARRA DE PROGRESO EN VIVO DE 4 PASOS PARA EL CLIENTE
+        async function renderizarSeguimientoCliente(esAutoRefresh = false) {
+            const cont = document.getElementById('cajaSeguimientoMapaCliente');
+            if (!cont) return;
+            const ultimoId = localStorage.getItem('kumu_pedido_activo_id');
+            if (!ultimoId) { cont.innerHTML = ''; return; }
+
+            const { data: p } = await supabaseClient.from('pedidos').select('*, comercios(nombre)').eq('id', ultimoId).maybeSingle();
+            if (!p) { cont.innerHTML = ''; return; }
+
+            if (ultimoEstadoConocidoCliente && ultimoEstadoConocidoCliente !== p.estado) {
+                reproducirTonoAlerta('exito');
+                if (p.estado === 'En Preparación') {
+                    alert(`👨‍🍳 ¡BUENAS NOTICIAS!\n\n${p.comercios ? p.comercios.nombre : 'El restaurante'} ya aceptó tu pedido y lo está preparando.`);
+                } else if (p.estado === 'En Camino') {
+                    const domiTexto = (p.domiciliario_info || '').replace(/\[GPS:[-\d.,]+\]/g, '').split('|')[0];
+                    alert(`🛵 ¡TU PEDIDO VA EN CAMINO!\n\nEl repartidor ${domiTexto || 'de Kumu'} ya recogió tu pedido y va hacia tu dirección.`);
+                } else if (p.estado.includes('Entregado')) {
+                    alert(`🎉 ¡Pedido entregado! Que lo disfrutes mucho.`);
+                    verificarCalificacionPendiente();
+                }
+            }
+            ultimoEstadoConocidoCliente = p.estado;
+
+            if (p.estado.includes('Entregado') || p.estado.includes('Cancelado')) {
+                if (p.estado.includes('Cancelado')) {
+                    cont.innerHTML = `
+                        <div class="bg-red-50 border-2 border-red-400 rounded-xl p-3 text-xs text-red-900 flex justify-between items-center">
+                            <span>❌ <b>Tu último pedido fue cancelado:</b> ${p.estado}</span>
+                            <button onclick="localStorage.removeItem('kumu_pedido_activo_id'); initApp();" class="bg-red-600 text-white px-2 py-1 rounded font-bold text-[10px]">Cerrar</button>
+                        </div>
+                    `;
+                } else {
+                    localStorage.removeItem('kumu_pedido_activo_id');
+                    cont.innerHTML = '';
+                }
+                return;
+            }
+
+            const mapaExistente = document.getElementById(`mapaCliente_${p.id}`);
+            if (esAutoRefresh && mapaExistente && !mapaExistente.classList.contains('hidden')) {
+                return;
+            }
+
+            let lat = 1.1983, lng = -70.1733, tieneGPS = false;
+            if (p.domiciliario_info) {
+                const matchGPS = p.domiciliario_info.match(/\[GPS:([-\d.]+),([-\d.]+)\]/);
+                if (matchGPS) {
+                    lat = parseFloat(matchGPS[1]);
+                    lng = parseFloat(matchGPS[2]);
+                    tieneGPS = true;
+                }
+            }
+            const infoRepartidorLimpia = (p.domiciliario_info || '').replace(/\[GPS:[-\d.,]+\]/g, '').trim();
+            const matchTelDomi = infoRepartidorLimpia.match(/Tel:\s*([0-9]+)/i);
+            const telDomi = matchTelDomi ? matchTelDomi[1] : '';
+
+            let pasoActual = 1;
+            if (p.estado === 'En Preparación') pasoActual = 2;
+            else if (p.estado === 'En Camino' || infoRepartidorLimpia) pasoActual = 3;
+
+            cont.innerHTML = `
+                <div class="bg-emerald-50 border-2 border-[#1B4D3E] rounded-2xl p-3.5 shadow-md space-y-2.5">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs font-extrabold text-[#1B4D3E]">🛵 Estado de tu Pedido (${p.comercios ? p.comercios.nombre : 'Kumu'})</span>
+                        <span class="text-[10px] bg-[#2D0B3A] text-[#D4AF37] px-2.5 py-0.5 rounded-full font-extrabold animate-pulse">${p.estado}</span>
+                    </div>
+
+                    <div class="grid grid-cols-4 gap-1 text-center pt-1">
+                        <div class="p-1.5 rounded-lg ${pasoActual >= 1 ? 'bg-[#1B4D3E] text-[#D4AF37] font-bold' : 'bg-gray-200 text-gray-500'} text-[10px]">
+                            <div>📩</div>1. Enviado
+                        </div>
+                        <div class="p-1.5 rounded-lg ${pasoActual >= 2 ? 'bg-[#1B4D3E] text-[#D4AF37] font-bold' : 'bg-gray-200 text-gray-500'} text-[10px]">
+                            <div>👨‍🍳</div>2. Cocinando
+                        </div>
+                        <div class="p-1.5 rounded-lg ${pasoActual >= 3 ? 'bg-[#C85A17] text-white font-bold' : 'bg-gray-200 text-gray-500'} text-[10px]">
+                            <div>🛵</div>3. En Camino
+                        </div>
+                        <div class="p-1.5 rounded-lg bg-gray-200 text-gray-500 text-[10px]">
+                            <div>✅</div>4. Llegó
+                        </div>
+                    </div>
+
+                    ${infoRepartidorLimpia ? `
+                        <div class="bg-white border border-emerald-300 p-2 rounded-xl text-xs space-y-1">
+                            <p class="font-extrabold text-[#1B4D3E]">🛵 Repartidor Asignado:</p>
+                            <p class="text-[11px] text-gray-800 font-semibold">${infoRepartidorLimpia}</p>
+                            ${telDomi ? `
+                                <a href="https://wa.me/57${telDomi}?text=Hola,%20te%20escribo%20por%20mi%20pedido%20en%20Kumu%20%F0%9F%8D%84" target="_blank" class="inline-block mt-1 bg-emerald-600 text-white px-2.5 py-1 rounded-lg text-[10px] font-bold">
+                                    💬 Escribir a mi Repartidor por WhatsApp
+                                </a>
+                            ` : ''}
+                        </div>
+                    ` : `
+                        <p class="text-[11px] text-gray-700 font-medium">
+                            ${pasoActual === 2 ? '👨‍🍳 ¡El local ya aceptó tu pedido y lo está preparando! Pronto saldrá con un repartidor.' : '⏳ Esperando confirmación del local y asignación de repartidor...'}
+                        </p>
+                    `}
+
+                    <div class="flex gap-2">
+                        <button onclick="verMapaRepartidorEnVivo('${p.id}', ${lat}, ${lng}, ${tieneGPS})" class="flex-1 bg-[#2D0B3A] text-[#D4AF37] py-1.5 rounded-lg text-xs font-bold">
+                            🗺️ Ver Mapa en Vivo
+                        </button>
+                        <button onclick="renderizarSeguimientoCliente(false)" class="bg-white border px-3 py-1.5 rounded-lg text-xs font-bold" title="Actualizar estado">🔄</button>
+                    </div>
+                    <div id="mapaCliente_${p.id}" class="hidden h-48 w-full rounded-lg border-2 border-[#1B4D3E] mt-2"></div>
+                </div>
+            `;
+        }
+
+        function verMapaRepartidorEnVivo(pedidoId, lat, lng, tieneGPS) {
+            const divMapa = document.getElementById(`mapaCliente_${pedidoId}`);
+            if (!divMapa) return;
+            divMapa.classList.toggle('hidden');
+            if (divMapa.classList.contains('hidden')) return;
+
+            setTimeout(() => {
+                if (mapaLeaflet) { mapaLeaflet.remove(); mapaLeaflet = null; }
+                mapaLeaflet = L.map(divMapa.id).setView([lat, lng], 15);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap'
+                }).addTo(mapaLeaflet);
+
+                const iconoMoto = L.divIcon({
+                    html: '<div style="font-size:26px;">🛵</div>',
+                    className: 'kumu-moto-pin',
+                    iconSize: [30, 30]
+                });
+                L.marker([lat, lng], { icon: iconoMoto }).addTo(mapaLeaflet)
+                    .bindPopup(tieneGPS ? "🛵 Repartidor Kumu en ruta (Mitú)" : "📍 Casco Urbano de Mitú")
+                    .openPopup();
+            }, 150);
+        }
+
+        async function toggleActivoLocal(id, estadoActual) {
+            const nuevoEstado = !estadoActual;
+            const { error } = await supabaseClient.from('comercios').update({ activo: nuevoEstado }).eq('id', id);
+            if(error) alert('Error: ' + error.message);
+            else { alert(nuevoEstado ? '🟢 Local encendido y visible' : '🛑 Local apagado de emergencia'); initApp(); }
+        }
+
+        async function cambiarCategoriaProducto(id, nuevaCategoria) {
+            const { error } = await supabaseClient.from('productos').update({ categoria: nuevaCategoria }).eq('id', id);
+            if(error) {
+                alert('Error al actualizar categoría: ' + error.message);
+            } else {
+                alert('✅ Categoría actualizada a: ' + nuevaCategoria);
+                initApp();
+            }
+        }
+
+        function seleccionarComercioPorId(id) {
+            const comercio = windowComerciosCache.find(c => c.id === id);
+            if (!comercio) return;
+            if (comercio.categoria === 'Licores & Cigarrillos' && !esMayorEdad) {
+                document.getElementById('modalEdad').classList.remove('hidden');
+                return;
+            }
+            comercioSeleccionado = { ...comercio, abierto: estaComercioAbierto(comercio) };
+            categoriaProductoFiltro = 'Todos';
+            initApp();
+        }
+
+        function agregarAlCarritoPorId(id) {
+            const producto = windowProductosCache.find(p => p.id === id);
+            if (!producto) return;
+            agregarAlCarrito(producto);
+        }
+
+        function buscarProductos(val) { busquedaTexto = val; initApp(); }
+        
+        function filtrarCat(cat) { 
+            if (cat === 'Licores & Cigarrillos' && !esMayorEdad) {
+                document.getElementById('modalEdad').classList.remove('hidden');
+                return;
+            }
+            categoriaFiltro = cat; 
+            initApp(); 
+        }
+
+        function filtrarCatProducto(cat) {
+            categoriaProductoFiltro = cat;
+            initApp();
+        }
+
+        function confirmarEdad(esMayor) {
+            document.getElementById('modalEdad').classList.add('hidden');
+            if (esMayor) {
+                esMayorEdad = true;
+                categoriaFiltro = 'Licores & Cigarrillos';
+                initApp();
+            } else { alert("🚫 Acceso denegado."); }
+        }
+        
+        function agregarAlCarrito(producto) {
+            if(producto.disponible === false) { alert("Producto temporalmente agotado."); return; }
+
+            if (carrito.length > 0 && comercioSeleccionado && carrito[0].comercio_id && carrito[0].comercio_id !== comercioSeleccionado.id) {
+                const vaciar = confirm("🛒 Tu carrito tiene productos de otro comercio diferente.\n\n¿Deseas vaciar el carrito anterior para pedir en " + comercioSeleccionado.nombre + "?");
+                if (!vaciar) return;
+                carrito = [];
+            }
+
+            const promoInfo = evaluarPromoHoraFeliz(producto);
+            const precioFix = promoInfo.precioFinal;
+            const esLicor = comercioSeleccionado && comercioSeleccionado.categoria === 'Licores & Cigarrillos';
+
+            const existe = carrito.find(item => item.id === producto.id);
+            if (existe) {
+                existe.cantidad += 1;
+                existe.precioCalculado = precioFix;
+            } else {
+                carrito.push({ ...producto, precioCalculado: precioFix, cantidad: 1, notas: '', esLicor: Boolean(esLicor) });
+            }
+            guardarCarritoInmortal();
+            renderizarCarrito();
+        }
+
+        function repetirUltimoPedido() {
+            try {
+                const ultimo = JSON.parse(localStorage.getItem('kumu_ultimo_pedido'));
+                if (!ultimo || !ultimo.items) return;
+                const local = windowComerciosCache.find(c => c.id === ultimo.comercioId);
+                if (!local) { alert("El comercio de tu último pedido no está disponible."); return; }
+                if (!estaComercioAbierto(local)) { alert(`🔴 ${local.nombre} está cerrado en este momento.`); return; }
+
+                carrito = ultimo.items.filter(i => !i.esLicor);
+                comercioSeleccionado = { ...local, abierto: true };
+                guardarCarritoInmortal();
+                initApp();
+            } catch (e) {}
+        }
+
+        function cambiarCantidad(idx, cambio) {
+            carrito[idx].cantidad += cambio;
+            if (carrito[idx].cantidad <= 0) {
+                carrito.splice(idx, 1);
+            }
+            guardarCarritoInmortal();
+            renderizarCarrito();
+        }
+
+        function eliminarDelCarrito(idx) {
+            carrito.splice(idx, 1);
+            guardarCarritoInmortal();
+            renderizarCarrito();
+        }
+
+        function renderizarCarrito() {
+            const resumen = document.getElementById('carritoResumen');
+            if(!resumen) return;
+            if(carrito.length === 0) { resumen.innerHTML = ''; return; }
+
+            const subtotalProductos = carrito.reduce((acc, item) => acc + (item.precioCalculado * item.cantidad), 0);
+            const comisionKumu = Math.round(subtotalProductos * PORCENTAJE_COMISION);
+            const totalFinal = subtotalProductos + tarifaDomicilio + comisionKumu;
+            const tieneLicor = (comercioSeleccionado && comercioSeleccionado.categoria === 'Licores & Cigarrillos') || carrito.some(i => i.esLicor);
+            const cumpleMinto = subtotalProductos >= MONTO_MINIMO_PEDIDO;
+            const datosFrecuentes = obtenerClienteFrecuente();
+
+            resumen.innerHTML = `
+                <h3 class="font-bold text-gray-800 mb-2">Tu Pedido en Kumu (${carrito.reduce((a,b)=>a+b.cantidad,0)})</h3>
+                <div class="space-y-2 mb-3">
+                    ${carrito.map((i, idx) => `
+                        <div class="text-xs bg-gray-50 p-2 rounded border space-y-1">
+                            <div class="flex justify-between items-center font-semibold">
+                                <span>${i.nombre}</span>
+                                <span>$${(i.precioCalculado*i.cantidad).toLocaleString()} COP</span>
+                            </div>
+                            <div class="flex justify-between items-center pt-1">
+                                <div class="flex items-center space-x-1">
+                                    <button onclick="cambiarCantidad(${idx}, -1)" class="bg-gray-200 hover:bg-gray-300 px-2 py-0.5 rounded font-bold text-gray-700">-</button>
+                                    <span class="px-2 font-bold">${i.cantidad}</span>
+                                    <button onclick="cambiarCantidad(${idx}, 1)" class="bg-gray-200 hover:bg-gray-300 px-2 py-0.5 rounded font-bold text-gray-700">+</button>
+                                </div>
+                                <button onclick="eliminarDelCarrito(${idx})" class="text-red-600 hover:text-red-800 text-xs font-bold">🗑️ Quitar</button>
+                            </div>
+                            <input type="text" value="${i.notas || ''}" onchange="carrito[${idx}].notas = this.value; guardarCarritoInmortal();" placeholder="Nota especial (Ej. Fría, sin cebolla...)" class="w-full mt-1 p-1 border rounded text-[11px] bg-white">
+                        </div>
+                    `).join('')}
+                </div>
+                
+                <div class="space-y-1 text-xs text-gray-600 border-t pt-2 bg-emerald-50/50 p-2.5 rounded-lg border border-emerald-100">
+                    <div class="flex justify-between"><span>Subtotal Productos:</span><span class="font-semibold">$${subtotalProductos.toLocaleString()} COP</span></div>
+                    <div class="flex justify-between text-emerald-800"><span>Envío Domicilio ${estaLloviendo ? '🌧️' : '☀️'}:</span><span class="font-bold">$${tarifaDomicilio.toLocaleString()} COP</span></div>
+                    <div class="flex justify-between text-amber-900"><span>Servicio Kumu (10%):</span><span class="font-semibold">$${comisionKumu.toLocaleString()} COP</span></div>
+                </div>
+
+                <div class="flex justify-between font-bold text-base my-3 text-emerald-800"><span>Total a Pagar:</span><span class="text-lg">$${totalFinal.toLocaleString()} COP</span></div>
+
+                ${!cumpleMinto ? `<div class="bg-amber-100 border border-amber-300 text-amber-900 text-xs p-2 rounded-lg font-semibold mb-2">⚠️ Mínimo de compra en productos: $${MONTO_MINIMO_PEDIDO.toLocaleString()} COP (Te faltan $${(MONTO_MINIMO_PEDIDO - subtotalProductos).toLocaleString()} COP).</div>` : ''}
+
+                <div class="space-y-2 bg-gray-50 p-3 rounded-lg border">
+                    <label class="block text-[11px] font-bold text-gray-700">Forma de Pago:</label>
+                    <select id="metodoPago" onchange="toggleMetodoPago(this.value)" class="w-full p-2 border rounded text-xs bg-white font-semibold">
+                        <option value="Transferencia">Transferencia (Nequi / Bre-B)</option>
+                        <option value="Efectivo">Efectivo (Pago al Repartidor)</option>
+                    </select>
+
+                    <input type="text" id="nombreCliente" value="${datosFrecuentes.nombre}" placeholder="Tu Nombre Completo" class="w-full p-2 border rounded text-xs">
+                    <input type="text" id="telefonoCliente" value="${datosFrecuentes.telefono}" placeholder="Tu WhatsApp de contacto" class="w-full p-2 border rounded text-xs">
+                    ${tieneLicor ? '<input type="text" id="cedulaCliente" placeholder="Nro. Cédula (+18 Obligatorio)" class="w-full p-2 border border-emerald-300 rounded text-xs bg-emerald-50 font-semibold">' : ''}
+                    <input type="text" id="direccionCliente" value="${datosFrecuentes.direccion}" placeholder="Dirección / Barrio en Mitú" class="w-full p-2 border rounded text-xs">
+                    
+                    <div id="divEfectivoCambio" class="bg-emerald-50 border border-emerald-300 p-2.5 rounded-lg space-y-1">
+                        <label class="block text-[11px] font-bold text-emerald-900">💵 ¿Con qué billete vas a pagar?</label>
+                        <input type="number" id="pagaConBillete" placeholder="Ej. 50000 (Para calcular tu cambio)" class="w-full p-2 border rounded text-xs bg-white font-semibold">
+                    </div>
+
+                    <div id="divTransferenciaInfo" class="bg-amber-50 border border-amber-200 p-2.5 rounded-lg text-[11px] text-amber-900 font-semibold">
+                        📸 Recuerda enviar el <b>pantallazo de tu pago</b> al WhatsApp del restaurante al confirmar.
+                    </div>
+
+                    <button onclick="enviarPedido(${totalFinal}, ${subtotalProductos}, ${tarifaDomicilio}, ${comisionKumu}, ${tieneLicor})" ${!cumpleMinto ? 'disabled' : ''} class="w-full ${cumpleMinto ? 'btn-vaupes' : 'bg-gray-300 text-gray-500 cursor-not-allowed'} p-2.5 rounded-lg font-extrabold text-sm">Confirmar y Enviar por WhatsApp</button>
+                </div>
+            `;
+            toggleMetodoPago(document.getElementById('metodoPago').value);
+        }
+
+        function toggleMetodoPago(val) {
+            const divEfectivo = document.getElementById('divEfectivoCambio');
+            const divTransferencia = document.getElementById('divTransferenciaInfo');
+            if(val === 'Efectivo') {
+                if(divEfectivo) divEfectivo.style.display = 'block';
+                if(divTransferencia) divTransferencia.style.display = 'none';
+            } else {
+                if(divEfectivo) divEfectivo.style.display = 'none';
+                if(divTransferencia) divTransferencia.style.display = 'block';
+            }
+        }
+
+        async function enviarPedido(total, subtotal, domicilio, comision, tieneLicor) {
+            if (comercioSeleccionado) {
+                localStorage.setItem('ultimoComercioId', comercioSeleccionado.id);
+                localStorage.setItem('ultimoComercioNombre', comercioSeleccionado.nombre);
+            }
+            const nombre = document.getElementById('nombreCliente').value.trim();
+            const telefono = document.getElementById('telefonoCliente').value.trim();
+            const direccion = document.getElementById('direccionCliente').value.trim();
+            const metodoPago = document.getElementById('metodoPago').value;
+            const billeteInput = document.getElementById('pagaConBillete');
+            const pagaCon = billeteInput ? billeteInput.value.trim() : '';
+            const cedulaInput = document.getElementById('cedulaCliente');
+            const cedula = cedulaInput ? cedulaInput.value.trim() : '';
+
+            if(!nombre || !telefono || !direccion || (tieneLicor && !cedula) || (metodoPago === 'Efectivo' && !pagaCon)) { 
+                alert('Por favor completa todos los datos requeridos (incluyendo el billete con el que pagarás para calcular el cambio).'); 
+                return; 
+            }
+
+            guardarClienteFrecuente(nombre, telefono, direccion);
+
+            const pinSeguro = tieneLicor ? Math.floor(1000 + Math.random() * 9000) : null;
+            const detallePedido = carrito.map(i => `${i.cantidad}x ${i.nombre} ${i.notas ? '('+i.notas+')' : ''}`).join(', ');
+            
+            let infoPagoTexto = metodoPago === 'Efectivo' ? `Efectivo (Paga con: $${Number(pagaCon).toLocaleString()})` : `Transferencia (Enviará pantallazo)`;
+            const tagLicor = tieneLicor ? ` 🔞 [LICOR - CC: ${cedula}] [PIN: ${pinSeguro}]` : '';
+            const desgloseDireccion = `${direccion} [Pago: ${infoPagoTexto}]${tagLicor} | Detalle: ${detallePedido} | Sub: ${subtotal} | Domi: ${domicilio}`;
+            const estadoInicial = metodoPago === 'Efectivo' ? 'Pendiente Efectivo' : 'Por Verificar Pago';
+
+            const { data: pedCreado, error } = await supabaseClient.from('pedidos').insert([{ 
+                cliente_nombre: nombre, 
+                cliente_telefono: telefono, 
+                direccion_entrega: desgloseDireccion, 
+                comercio_id: comercioSeleccionado.id, 
+                total: total, 
+                estado: estadoInicial 
+            }]).select().maybeSingle();
+
+            if(error) alert('Error: ' + error.message);
+            else { 
+                if (!tieneLicor && comercioSeleccionado) {
+                    localStorage.setItem('kumu_ultimo_pedido', JSON.stringify({
+                        comercioId: comercioSeleccionado.id,
+                        comercioNombre: comercioSeleccionado.nombre,
+                        resumen: detallePedido,
+                        items: carrito
+                    }));
+                }
+
+                if (pedCreado && pedCreado.id) {
+                    localStorage.setItem('kumu_pedido_activo_id', pedCreado.id);
+                    ultimoEstadoConocidoCliente = estadoInicial;
+                }
+
+                let mensajeWA = `Hola *${comercioSeleccionado.nombre}*, acabo de hacer un pedido en *Kumu 🛵*:\n\n*Pedido:* ${detallePedido}\n*Método de Pago:* ${infoPagoTexto}\n*Total:* $${total.toLocaleString()} COP\n*Cliente:* ${nombre}${tieneLicor ? '\n*CC:* '+cedula : ''}\n*Dirección:* ${direccion}`;
+                
+                if (metodoPago === 'Transferencia') {
+                    mensajeWA += `\n\n📸 *Adjunto mi pantallazo de pago.*`;
+                } else if (pagaCon) {
+                    let cambioCalculado = Number(pagaCon) - total;
+                    if (cambioCalculado > 0) {
+                        mensajeWA += `\n💵 *Paga con:* $${Number(pagaCon).toLocaleString()} (Llevar cambio de $${cambioCalculado.toLocaleString()})`;
+                    }
+                }
+
+                if (tieneLicor) {
+                    mensajeWA += `\n\n🔒 *PIN DE SEGURIDAD:* ${pinSeguro}`;
+                    alert(`¡Pedido registrado! 🔑 Tu CÓDIGO PIN es: KUMU-${pinSeguro}.\n\nEn la pantalla principal de Kumu podrás ver en vivo cuando el local acepte tu pedido y qué repartidor te lo lleva.`);
+                } else {
+                    alert('✅ ¡Pedido registrado en Kumu!\n\nAhora se abrirá WhatsApp para enviarle el detalle al local. Al volver a la app verás la barra de progreso en vivo de tu pedido.'); 
+                }
+
+                const telLimpio = (comercioSeleccionado ? comercioSeleccionado.telefono : '').toString().split('|')[0].replace(/\D/g, '');
+                window.open(`https://wa.me/57${telLimpio}?text=${encodeURIComponent(mensajeWA)}`, '_blank');
+                carrito = [];
+                guardarCarritoInmortal();
+                comercioSeleccionado = null;
+                initApp(); 
+            }
+        }
+
+        function cargarImagenGaleria(event, tipo) {
+            const file = event.target.files[0];
+            if (!file) return;
+            comprimirImagenArchivo(file, function(base64Optimizado) {
+                if(tipo === 'comercio') { fotoBase64Comercio = base64Optimizado; alert("📸 Foto de local optimizada (<40KB) y cargada."); } 
+                else if(tipo === 'editar_local') { fotoBase64EditarLocal = base64Optimizado; alert("📸 Nueva foto de local optimizada y cargada."); }
+                else { fotoBase64Producto = base64Optimizado; alert("📸 Foto de producto optimizada (<40KB) y cargada."); }
+            });
+        }
+
+        async function descargarBackupSupabase() {
+            const { data: comercios } = await supabaseClient.from('comercios').select('*');
+            const { data: productos } = await supabaseClient.from('productos').select('*');
+            const { data: pedidos } = await supabaseClient.from('pedidos').select('*');
+            const backup = {
+                fecha_backup: new Date().toISOString(),
+                comercios: comercios || [],
+                productos: productos || [],
+                pedidos: pedidos || [],
+                gastos_operativos: obtenerGastosOperativos()
+            };
+            const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Backup_Kumu_Supabase_${new Date().toISOString().slice(0,10)}.json`;
+            a.click();
+        }
+
+        function copiarTextoKitOperativo(tipo) {
+            let texto = '';
+            if (tipo === 'repartidor') {
+                texto = `🛵 *MANUAL OFICIAL DE REPARTIDORES KUMU MITÚ*\n\n1️⃣ *Entrar al Panel Repartidor:* Abre https://domicilios-mitu.vercel.app, toca 3 veces el logo de Kumu arriba a la izquierda e ingresa el PIN exclusivo de repartidores: *2026*.\n2️⃣ *Tomar Pedido:* Toca "Tomar Pedido" con tu Nombre, Cédula y Teléfono.\n3️⃣ *Avisar y GPS:* Toca "Avisar WA" y "Transmitir Mapa" para que el cliente vea que vas en camino.\n4️⃣ *Cambio Exacto:* Revisa con qué billete paga el cliente y lleva las vueltas desde el local.\n5️⃣ *Protocolo Licores (+18):* Exige siempre Cédula física e ingresa el PIN de 4 dígitos del cliente.\n6️⃣ *Tu Ganancia:* 100% del domicilio ($4.000 seco / $5.000 lluvia).`;
+            } else {
+                texto = `🤝 *ACUERDO DE ALIANZA COMERCIAL - KUMU MITÚ*\n\n• *Registro y Menú Digital:* $0 COP.\n• *Recaudo del Local:* Recibes el 100% del valor de tus platos.\n• *Comisión Kumu:* 10% sobre pedido entregado + tarifa de domicilio asumida por el cliente.\n• *Autonomía Total:* Ingresa con tu PIN privado de 4 dígitos (3 clics en el logo de Kumu) para aceptar pedidos, pausar agotados, activar Hora Feliz y ver tus cuentas en vivo.`;
+            }
+            navigator.clipboard?.writeText(texto);
+            alert("✅ Texto copiado al portapapeles. Ya puedes pegarlo en WhatsApp:\n\n" + texto);
+        }
+
+        async function ejecutarAuditoriaSaludKumu() {
+            const box = document.getElementById('boxResultadoAuditoria');
+            if (!box) return;
+            box.innerHTML = `<p class="text-xs text-amber-200 animate-pulse">🔍 Escaneando Supabase, peso de imágenes, PINs y vulnerabilidades...</p>`;
+
+            const inicioPing = performance.now();
+            const { data: comercios, error: errC } = await supabaseClient.from('comercios').select('*');
+            const { data: productos, error: errP } = await supabaseClient.from('productos').select('*');
+            const { data: pedidos, error: errPed } = await supabaseClient.from('pedidos').select('*');
+            const latenciaMs = Math.round(performance.now() - inicioPing);
+
+            const listaC = comercios || [];
+            const listaP = productos || [];
+            const listaPed = pedidos || [];
+
+            const bytesTotales = new Blob([JSON.stringify(listaC) + JSON.stringify(listaP) + JSON.stringify(listaPed)]).size;
+            const mbUsados = (bytesTotales / (1024 * 1024)).toFixed(2);
+            const porcentajeCupo = ((bytesTotales / (500 * 1024 * 1024)) * 100).toFixed(2);
+
+            const alertas = [];
+            const localesPinDebil = listaC.filter(c => !c.pin_local || c.pin_local === '0000' || c.pin_local === '1234' || c.pin_local === '2026');
+            if (localesPinDebil.length > 0) {
+                alertas.push(`⚠️ ${localesPinDebil.length} local(es) tienen un PIN débil ('0000' o igual a Admin/Repartidor): ${localesPinDebil.map(l => l.nombre).join(', ')}.`);
+            }
+
+            const fotosPesadas = listaP.filter(p => p.imagen_url && p.imagen_url.length > 180000);
+            if (fotosPesadas.length > 0) {
+                alertas.push(`📸 ${fotosPesadas.length} producto(s) tienen fotos antiguas sin comprimir (>150KB).`);
+            }
+
+            const preciosCero = listaP.filter(p => !p.precio || Number(p.precio) <= 0);
+            if (preciosCero.length > 0) {
+                alertas.push(`💵 ${preciosCero.length} producto(s) tienen precio en $0 o inválido.`);
+            }
+
+            const ahoraMs = Date.now();
+            const estancados = listaPed.filter(p => (p.estado === 'Pendiente Efectivo' || p.estado === 'Por Verificar Pago') && (ahoraMs - new Date(p.creado_at).getTime() > 15 * 60000));
+            if (estancados.length > 0) {
+                alertas.push(`🛵 ${estancados.length} pedido(s) llevan más de 15 min sin repartidor asignado.`);
+            }
+
+            const estadoConexion = (!errC && !errP && !errPed) ? `🟢 Óptimo (${latenciaMs} ms)` : `🔴 Error detectado`;
+
+            ultimoReporteAuditoriaTexto = `📊 REPORTE DE AUDITORÍA KUMU (${new Date().toLocaleString('es-CO')})\n` +
+                `• Estado Supabase: ${estadoConexion}\n` +
+                `• Uso Cupo Gratuito (500MB): ${mbUsados} MB (${porcentajeCupo}%)\n` +
+                `• Registros Activos: ${listaC.length} locales | ${listaP.length} productos | ${listaPed.length} pedidos\n` +
+                `• Hallazgos / Vulnerabilidades: ${alertas.length === 0 ? 'Ninguna (100% Blindado)' : alertas.join(' | ')}`;
+
+            box.innerHTML = `
+                <div class="grid grid-cols-2 gap-1.5 text-[11px] mt-1">
+                    <div class="bg-black/30 p-2 rounded-lg border border-white/15">
+                        <span class="text-amber-200 block text-[10px]">📡 Conexión Supabase</span>
+                        <span class="font-extrabold text-emerald-300">${estadoConexion}</span>
+                    </div>
+                    <div class="bg-black/30 p-2 rounded-lg border border-white/15">
+                        <span class="text-amber-200 block text-[10px]">💾 Uso de 500 MB Gratis</span>
+                        <span class="font-extrabold text-[#D4AF37]">${mbUsados} MB (${porcentajeCupo}%)</span>
+                    </div>
+                </div>
+                <div class="bg-black/25 p-2.5 rounded-lg border border-white/15 text-[11px] space-y-1 mt-1.5">
+                    <p class="font-extrabold text-[#D4AF37]">🛡️ Diagnóstico de Vulnerabilidades (${alertas.length}):</p>
+                    ${alertas.length === 0
+                        ? `<p class="text-emerald-300 font-semibold">✅ Sin vulnerabilidades: PINs separados (Admin 1234 / Domi 2026), fotos optimizadas y base de datos limpia.</p>`
+                        : alertas.map(a => `<p class="text-amber-100">${a}</p>`).join('')}
+                </div>
+                <button onclick="copiarDiagnósticoParaGemini()" class="w-full mt-2 bg-[#D4AF37] text-[#2D0B3A] font-extrabold py-1.5 rounded-lg text-[11px] shadow">
+                    📋 Copiar Diagnóstico para Gemini
+                </button>
+            `;
+        }
+
+        function copiarDiagnósticoParaGemini() {
+            if (!ultimoReporteAuditoriaTexto) return;
+            navigator.clipboard?.writeText(ultimoReporteAuditoriaTexto);
+            alert("✅ Informe técnico copiado.\n\nSolo pégalo en nuestro chat de Gemini y tomaremos juntos las decisiones de mejora:\n\n" + ultimoReporteAuditoriaTexto);
+        }
+
+        async function renderNegociosView(container) {
+            const content = document.createElement('div');
+            content.className = 'p-4 flex-1 space-y-4';
+            container.appendChild(content);
+
+            if (modoAdminVisible) {
+                content.innerHTML = `
+                    ${obtenerBarraRetornoRolesHTML()}
+                    <div class="flex justify-between items-center">
+                        <h2 class="font-bold text-lg text-gray-800">🏪 Panel Administrador General</h2>
+                        <button onclick="descargarBackupSupabase()" class="bg-[#2D0B3A] text-[#D4AF37] px-2.5 py-1 rounded-lg text-[10px] font-bold shadow">🛡️ Backup DB</button>
+                    </div>
+
+                    <!-- 🤖 CENTRO DE SINERGIA Y AUDITORÍA AUTÓNOMA -->
+                    <div class="bg-gradient-to-br from-[#2D0B3A] to-[#1B4D3E] text-white p-3.5 rounded-2xl border-2 border-[#D4AF37] shadow-md space-y-2">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h3 class="font-extrabold text-xs text-[#D4AF37] uppercase">🤖 Guardián de Sinergia y Seguridad</h3>
+                                <p class="text-[10px] text-amber-100">PIN Maestro (Solo tú): 1234 • PIN Repartidores: 2026</p>
+                            </div>
+                            <button onclick="ejecutarAuditoriaSaludKumu()" class="bg-[#C85A17] text-white px-2.5 py-1 rounded-lg text-[10px] font-extrabold shadow">
+                                🔍 Auditar Ahora
+                            </button>
+                        </div>
+                        <div id="boxResultadoAuditoria"></div>
+                    </div>
+
+                    <!-- 📋 KIT OPERATIVO RÁPIDO -->
+                    <div class="bg-emerald-50 border border-emerald-300 p-2.5 rounded-xl flex justify-between items-center gap-2 text-xs">
+                        <span class="font-bold text-emerald-950 text-[11px]">📋 Copiar Plantillas WA:</span>
+                        <div class="flex gap-1.5">
+                            <button onclick="copiarTextoKitOperativo('repartidor')" class="bg-[#1B4D3E] text-white px-2 py-1 rounded text-[10px] font-bold">🛵 Manual Domi (PIN 2026)</button>
+                            <button onclick="copiarTextoKitOperativo('aliado')" class="bg-[#C85A17] text-white px-2 py-1 rounded text-[10px] font-bold">🤝 Acuerdo Local</button>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gray-50 border p-3 rounded-xl space-y-2">
+                        <h3 class="font-bold text-xs uppercase text-gray-600">Registrar Nuevo Local Aliado</h3>
+                        <input type="text" id="negNombre" placeholder="Nombre (Ej. Texas Burger)" class="w-full p-2 border rounded text-xs">
+                        <select id="negCat" class="w-full p-2 border rounded text-xs">
+                            <option value="Restaurantes & Comida Rápida">🍔 Restaurantes & Comida Rápida</option>
+                            <option value="Licores & Cigarrillos">🍺 Licores & Cigarrillos 🔞</option>
+                            <option value="Droguería">💊 Droguería</option>
+                        </select>
+                        <input type="text" id="negDir" placeholder="Dirección" class="w-full p-2 border rounded text-xs">
+                        <input type="text" id="negTel" placeholder="WhatsApp / Nro de Cuenta" class="w-full p-2 border rounded text-xs">
+                        <input type="text" id="negPin" placeholder="PIN Privado del Local (Ej: 5555)" class="w-full p-2 border rounded text-xs bg-amber-50 border-amber-300 font-bold">
+                        
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="block text-[10px] font-bold text-gray-600">Apertura:</label>
+                                <input type="time" id="negApertura" value="08:00" class="w-full p-1.5 border rounded text-xs">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-gray-600">Cierre:</label>
+                                <input type="time" id="negCierre" value="22:00" class="w-full p-1.5 border rounded text-xs">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-[10px] font-bold text-gray-600">Días de Atención:</label>
+                            <div class="grid grid-cols-4 gap-1 text-[11px] mt-1 bg-white p-2 border rounded">
+                                <label><input type="checkbox" name="diasNegocio" value="1" checked> Lun</label>
+                                <label><input type="checkbox" name="diasNegocio" value="2" checked> Mar</label>
+                                <label><input type="checkbox" name="diasNegocio" value="3" checked> Mié</label>
+                                <label><input type="checkbox" name="diasNegocio" value="4" checked> Jue</label>
+                                <label><input type="checkbox" name="diasNegocio" value="5" checked> Vie</label>
+                                <label><input type="checkbox" name="diasNegocio" value="6" checked> Sáb</label>
+                                <label><input type="checkbox" name="diasNegocio" value="0" checked> Dom</label>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-2 border rounded text-xs space-y-1">
+                            <label class="font-bold text-gray-600 block">🖼️ Foto del Local (Se comprime sola):</label>
+                            <input type="file" accept="image/*" onchange="cargarImagenGaleria(event, 'comercio')" class="w-full text-xs">
+                            <input type="text" id="negFotoUrl" placeholder="o Pega una URL de foto" class="w-full p-1 border rounded text-[11px] mt-1">
+                        </div>
+
+                        <button onclick="crearComercio()" class="w-full btn-vaupes p-2 rounded text-xs font-extrabold">Guardar Local</button>
+                    </div>
+
+                    <div class="border-t pt-4 space-y-2">
+                        <h3 class="font-bold text-xs uppercase text-gray-600">Agregar Producto al Menú</h3>
+                        <select id="selectLocalProd" class="w-full p-2 border rounded text-xs"><option value="">Selecciona un Local...</option></select>
+                        <input type="text" id="prodNombre" placeholder="Nombre del producto" class="w-full p-2 border rounded text-xs">
+                        <input type="text" id="prodDesc" placeholder="Descripción de ingredientes (Se usará para su foto)" class="w-full p-2 border rounded text-xs">
+                        <input type="number" id="prodPrecio" placeholder="Precio Normal ($COP - Ej: 15000)" class="w-full p-2 border rounded text-xs">
+
+                        <div class="bg-amber-50 border border-amber-300 p-2 rounded-lg space-y-1">
+                            <label class="block text-[10px] font-extrabold text-[#C85A17] uppercase">⏰ Activación por Reloj / Hora Feliz (Opcional):</label>
+                            <input type="number" id="prodPrecioPromo" placeholder="Precio en Promo (Ej: 12000 - Dejar vacío si no aplica)" class="w-full p-1.5 border rounded text-xs bg-white">
+                            <input type="text" id="prodHorarioPromo" placeholder="Rango de Hora (Ej: 18:00-20:00)" class="w-full p-1.5 border rounded text-xs bg-white">
+                        </div>
+                        
+                        <label class="block text-[10px] font-bold text-gray-600 mt-1">Pestaña / Categoría del Producto:</label>
+                        <select id="prodCat" class="w-full p-2 border rounded text-xs bg-amber-50 font-semibold">
+                            <option value="Hamburguesas">🍔 Hamburguesas</option>
+                            <option value="Salchipapas">🍟 Salchipapas</option>
+                            <option value="Perros Calientes">🌭 Perros Calientes</option>
+                            <option value="Bebidas">🥤 Bebidas</option>
+                            <option value="Varios">🍽️ Varios</option>
+                        </select>
+
+                        <div class="bg-white p-2 border rounded text-xs space-y-1 mt-2">
+                            <label class="font-bold text-gray-600 block">🖼️ Foto del Producto (Si lo dejas vacío, se genera por ingredientes):</label>
+                            <input type="file" accept="image/*" onchange="cargarImagenGaleria(event, 'producto')" class="w-full text-xs">
+                            <input type="text" id="prodFotoUrl" placeholder="o Pega una URL de foto" class="w-full p-1 border rounded text-[11px] mt-1">
+                        </div>
+
+                        <button onclick="crearProducto()" class="w-full bg-[#1B4D3E] text-[#D4AF37] p-2 rounded text-xs font-bold">Agregar Producto</button>
+                    </div>
+                `;
+                const { data: comercios } = await supabaseClient.from('comercios').select('*');
+                const select = document.getElementById('selectLocalProd');
+                if(comercios && select) {
+                    comercios.forEach(c => {
+                        const opt = document.createElement('option');
+                        opt.value = c.id; opt.textContent = c.nombre;
+                        select.appendChild(opt);
+                    });
+                }
+                ejecutarAuditoriaSaludKumu();
+            } else if (comercioLogueado) {
+                const diasActuales = (comercioLogueado.dias_semana || [0,1,2,3,4,5,6]).map(Number);
+                content.innerHTML = `
+                    ${obtenerBarraRetornoRolesHTML()}
+                    <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-xl flex justify-between items-center">
+                        <div>
+                            <h2 class="font-bold text-base text-emerald-950">🏪 ${comercioLogueado.nombre}</h2>
+                            <p class="text-xs text-emerald-800">Panel de Aliado Kumu</p>
+                        </div>
+                        <span class="text-[10px] bg-[#1B4D3E] text-white px-2 py-0.5 rounded font-bold">Sesión Activa</span>
+                    </div>
+
+                    <!-- 🛎️ BANDEJA DE PEDIDOS ENTRANTES DEL LOCAL -->
+                    <div class="bg-amber-50 border-2 border-[#C85A17] rounded-xl p-3 shadow-sm space-y-2">
+                        <div class="flex justify-between items-center border-b border-amber-200 pb-1">
+                            <h3 class="font-extrabold text-xs uppercase text-[#C85A17]">🛎️ Pedidos Activos de tu Local</h3>
+                            <button onclick="renderPedidosAliado()" class="text-[10px] bg-white border px-2 py-0.5 rounded font-bold">🔄 Refrescar</button>
+                        </div>
+                        <div id="listaPedidosAliadoLocal" class="space-y-2">Cargando pedidos...</div>
+                    </div>
+
+                    <!-- ✏️ EDITAR INFORMACIÓN GENERAL Y CUENTAS -->
+                    <div class="bg-white border rounded-xl p-3 shadow-sm space-y-2">
+                        <h3 class="font-bold text-xs uppercase text-gray-600 border-b pb-1">✏️ Editar Datos, Nombre, Teléfono y Foto</h3>
+                        
+                        <label class="block text-[10px] font-bold text-gray-600">Nombre del Local:</label>
+                        <input type="text" id="editNombreLocal" value="${comercioLogueado.nombre || ''}" class="w-full p-1.5 border rounded text-xs">
+
+                        <label class="block text-[10px] font-bold text-gray-600">WhatsApp / Nro de Cuenta (Nequi / Bre-B):</label>
+                        <input type="text" id="editTelLocal" value="${comercioLogueado.telefono || ''}" class="w-full p-1.5 border rounded text-xs">
+
+                        <label class="block text-[10px] font-bold text-gray-600">Dirección / Barrio:</label>
+                        <input type="text" id="editDirLocal" value="${comercioLogueado.direccion || ''}" class="w-full p-1.5 border rounded text-xs">
+
+                        <div class="bg-gray-50 p-2 border rounded text-xs space-y-1">
+                            <label class="font-bold text-gray-600 block">🖼️ Cambiar Foto del Local:</label>
+                            <input type="file" accept="image/*" onchange="cargarImagenGaleria(event, 'editar_local')" class="w-full text-xs">
+                            <input type="text" id="editFotoUrlLocal" placeholder="o Pega una URL de foto nueva" class="w-full p-1 border rounded text-[11px] mt-1">
+                        </div>
+
+                        <button onclick="guardarInfoGeneralAliado()" class="w-full btn-vaupes py-1.5 rounded text-xs font-bold">Guardar Cambios Generales</button>
+                    </div>
+
+                    <!-- 🕒 EDITAR HORARIO Y DÍAS -->
+                    <div class="bg-white border rounded-xl p-3 shadow-sm space-y-2">
+                        <h3 class="font-bold text-xs uppercase text-gray-600 border-b pb-1">⚙️ Editar Horario y Días de Apertura</h3>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="block text-[10px] font-bold text-gray-600">Apertura:</label>
+                                <input type="time" id="editApertura" value="${comercioLogueado.hora_apertura || '08:00'}" class="w-full p-1.5 border rounded text-xs">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-gray-600">Cierre:</label>
+                                <input type="time" id="editCierre" value="${comercioLogueado.hora_cierre || '22:00'}" class="w-full p-1.5 border rounded text-xs">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-gray-600">Días Activos:</label>
+                            <div class="grid grid-cols-4 gap-1 text-[11px] mt-1 bg-gray-50 p-2 border rounded">
+                                <label><input type="checkbox" name="editDias" value="1" ${diasActuales.includes(1)?'checked':''}> Lun</label>
+                                <label><input type="checkbox" name="editDias" value="2" ${diasActuales.includes(2)?'checked':''}> Mar</label>
+                                <label><input type="checkbox" name="editDias" value="3" ${diasActuales.includes(3)?'checked':''}> Mié</label>
+                                <label><input type="checkbox" name="editDias" value="4" ${diasActuales.includes(4)?'checked':''}> Jue</label>
+                                <label><input type="checkbox" name="editDias" value="5" ${diasActuales.includes(5)?'checked':''}> Vie</label>
+                                <label><input type="checkbox" name="editDias" value="6" ${diasActuales.includes(6)?'checked':''}> Sáb</label>
+                                <label><input type="checkbox" name="editDias" value="0" ${diasActuales.includes(0)?'checked':''}> Dom</label>
+                            </div>
+                        </div>
+                        <button onclick="guardarHorarioAliado()" class="w-full btn-vaupes py-1.5 rounded text-xs font-bold">Guardar Horario</button>
+                    </div>
+
+                    <!-- 📦 GESTIÓN DE PRODUCTOS, FOTOS POR INGREDIENTES Y STOCK -->
+                    <div class="bg-white border rounded-xl p-3 shadow-sm space-y-3">
+                        <div class="flex justify-between items-center border-b pb-1">
+                            <h3 class="font-bold text-xs uppercase text-gray-600">📦 Tus Productos, Fotos y Stock</h3>
+                            <button onclick="autogenerarFotosLocalPorIngredientes('${comercioLogueado.id}')" class="bg-[#2D0B3A] text-[#D4AF37] px-2 py-0.5 rounded text-[10px] font-bold">🪄 Fotos por Ingredientes</button>
+                        </div>
+                        <div id="listaProductosAliado" class="space-y-2">Cargando tus productos...</div>
+                    </div>
+                `;
+                renderPedidosAliado();
+                renderProductosAliado();
+            }
+        }
+
+        async function renderPedidosAliado() {
+            const cont = document.getElementById('listaPedidosAliadoLocal');
+            if (!cont || !comercioLogueado) return;
+
+            const { data: pedidos } = await supabaseClient
+                .from('pedidos')
+                .select('*')
+                .eq('comercio_id', comercioLogueado.id)
+                .order('creado_at', { ascending: false })
+                .limit(15);
+
+            const activos = (pedidos || []).filter(p => !p.estado.includes('Entregado') && !p.estado.includes('Cancelado'));
+            if (activos.length === 0) {
+                cont.innerHTML = `<p class="text-xs text-gray-500 italic">No tienes pedidos pendientes en este momento.</p>`;
+                return;
+            }
+
+            cont.innerHTML = activos.map(p => {
+                const infoDomi = (p.domiciliario_info || '').replace(/\[GPS:[-\d.,]+\]/g, '').trim();
+                return `
+                    <div class="bg-white border rounded-lg p-2.5 text-xs space-y-1.5 shadow-sm">
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-gray-900">👤 ${p.cliente_nombre}</span>
+                            <span class="text-[10px] bg-amber-100 text-amber-900 px-2 py-0.5 rounded font-bold">${p.estado}</span>
+                        </div>
+                        <p class="text-[11px] text-gray-700">${p.direccion_entrega}</p>
+                        <p class="font-bold text-emerald-800">Total: $${Number(p.total).toLocaleString()} COP</p>
+                        ${infoDomi ? `<p class="text-[10px] bg-emerald-50 text-emerald-900 p-1 rounded font-semibold">🛵 Repartidor asignado: ${infoDomi}</p>` : ''}
+                        <div class="flex gap-1.5 pt-1">
+                            ${p.estado !== 'En Preparación' && p.estado !== 'En Camino' ? `
+                                <button onclick="aceptarPedidoRestaurante('${p.id}', '${p.cliente_nombre.replace(/'/g, '')}', '${p.cliente_telefono || ''}')" class="flex-1 bg-[#1B4D3E] text-[#D4AF37] py-1.5 rounded font-bold text-[11px]">
+                                    👨‍🍳 Aceptar y Avisar Cliente
+                                </button>
+                            ` : `<span class="text-[10px] text-emerald-700 font-bold">✅ Pedido Aceptado</span>`}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function aceptarPedidoRestaurante(pedidoId, nombreCliente, telCliente) {
+            const { error } = await supabaseClient.from('pedidos').update({ estado: 'En Preparación' }).eq('id', pedidoId);
+            if (error) {
+                alert("Error: " + error.message);
+                return;
+            }
+            const nombreRest = comercioLogueado ? comercioLogueado.nombre : 'el restaurante';
+            const telLimpio = (telCliente || '').replace(/\D/g, '');
+            if (telLimpio) {
+                const msg = `¡Hola *${nombreCliente}*! 👨‍🍳 En *${nombreRest}* ya recibimos y aceptamos tu pedido por *Kumu 🍄*. Ya lo estamos preparando y pronto saldrá con el repartidor.`;
+                window.open(`https://wa.me/57${telLimpio}?text=${encodeURIComponent(msg)}`, '_blank');
+            }
+            initApp();
+        }
+
+        async function guardarInfoGeneralAliado() {
+            if (!comercioLogueado) return;
+            const nombre = document.getElementById('editNombreLocal').value.trim();
+            const telefono = document.getElementById('editTelLocal').value.trim();
+            const direccion = document.getElementById('editDirLocal').value.trim();
+            const urlInput = document.getElementById('editFotoUrlLocal').value.trim();
+            const imagen_url = fotoBase64EditarLocal || urlInput || comercioLogueado.imagen_url;
+
+            if (!nombre || !telefono || !direccion) {
+                alert("Por favor completa nombre, teléfono y dirección.");
+                return;
+            }
+
+            const { error } = await supabaseClient.from('comercios').update({
+                nombre, telefono, direccion, imagen_url
+            }).eq('id', comercioLogueado.id);
+
+            if (error) {
+                alert("Error al actualizar la información: " + error.message);
+            } else {
+                comercioLogueado.nombre = nombre;
+                comercioLogueado.telefono = telefono;
+                comercioLogueado.direccion = direccion;
+                comercioLogueado.imagen_url = imagen_url;
+                fotoBase64EditarLocal = '';
+                alert("✅ ¡Información del local actualizada con éxito!");
+                initApp();
+            }
+        }
+
+        async function guardarHorarioAliado() {
+            if (!comercioLogueado) return;
+            const hora_apertura = document.getElementById('editApertura').value;
+            const hora_cierre = document.getElementById('editCierre').value;
+            const checkboxes = document.querySelectorAll('input[name="editDias"]:checked');
+            const dias_semana = Array.from(checkboxes).map(cb => Number(cb.value));
+
+            const { error } = await supabaseClient.from('comercios').update({ hora_apertura, hora_cierre, dias_semana }).eq('id', comercioLogueado.id);
+            if (error) {
+                alert("Error al actualizar horario: " + error.message);
+            } else {
+                comercioLogueado.hora_apertura = hora_apertura;
+                comercioLogueado.hora_cierre = hora_cierre;
+                comercioLogueado.dias_semana = dias_semana;
+                alert("✅ Horario y días actualizados con éxito.");
+                initApp();
+            }
+        }
+
+        async function renderProductosAliado() {
+            const cont = document.getElementById('listaProductosAliado');
+            if(!cont || !comercioLogueado) return;
+
+            const { data: productos } = await supabaseClient.from('productos').select('*').eq('comercio_id', comercioLogueado.id);
+            windowProductosCache = productos || [];
+            if(!productos || productos.length === 0) {
+                cont.innerHTML = `<p class="text-xs text-gray-400 italic">No tienes productos registrados.</p>`;
+                return;
+            }
+
+            cont.innerHTML = productos.map(p => {
+                const disponible = p.disponible !== false;
+                const catActual = p.categoria || 'Varios';
+                const infoPromo = evaluarPromoHoraFeliz(p);
+                const imgProd = obtenerImagenProducto(p);
+                return `
+                    <div class="flex justify-between items-center bg-gray-50 p-2 rounded border text-xs gap-2">
+                        <img src="${imgProd}" class="w-12 h-12 rounded object-cover border flex-shrink-0">
+                        <div class="flex-1">
+                            <p class="font-bold text-gray-800">${p.nombre}</p>
+                            <p class="text-[10px] text-emerald-700 font-semibold">$${infoPromo.precioFinal.toLocaleString()} COP ${infoPromo.horario ? `(⏰ Promo ${infoPromo.horario})` : ''}</p>
+                            <div class="flex items-center space-x-1 mt-1">
+                                <span class="text-[10px] text-gray-500">Pestaña:</span>
+                                <select onchange="cambiarCategoriaProducto('${p.id}', this.value)" class="p-1 border rounded text-[10px] bg-white font-semibold text-emerald-900">
+                                    <option value="Hamburguesas" ${catActual==='Hamburguesas'?'selected':''}>🍔 Hamburguesas</option>
+                                    <option value="Salchipapas" ${catActual==='Salchipapas'?'selected':''}>🍟 Salchipapas</option>
+                                    <option value="Perros Calientes" ${catActual==='Perros Calientes'?'selected':''}>🌭 Perros Calientes</option>
+                                    <option value="Bebidas" ${catActual==='Bebidas'?'selected':''}>🥤 Bebidas</option>
+                                    <option value="Varios" ${catActual==='Varios'?'selected':''}>🍽️ Varios</option>
+                                </select>
+                            </div>
+                            <div class="flex flex-wrap gap-1 mt-1">
+                                <button onclick="event.stopPropagation(); generarFotoIAPorDescripcionPlato('${p.id}')" class="bg-emerald-700 text-white font-bold py-0.5 px-1.5 rounded text-[10px]">🎨 Foto IA</button>
+                                <button onclick="event.stopPropagation(); programarHoraFelizPlato('${p.id}')" class="bg-[#2D0B3A] text-[#D4AF37] font-bold py-0.5 px-1.5 rounded text-[10px]">⏰ Hora Feliz</button>
+                                <button onclick="event.stopPropagation(); eliminarProducto('${p.id}')" class="bg-red-600 hover:bg-red-800 text-white font-bold py-0.5 px-1.5 rounded text-[10px]">🗑️</button>
+                            </div>
+                        </div>
+                        <button onclick="alternarDisponibilidadProducto('${p.id}', ${!disponible})" class="px-2.5 py-1 rounded text-[10px] font-bold ${disponible ? 'bg-[#1B4D3E] text-white' : 'bg-red-600 text-white'}">
+                            ${disponible ? '🟢 Disponible' : '🔴 Agotado'}
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function alternarDisponibilidadProducto(id, nuevoEstado) {
+            const { error } = await supabaseClient.from('productos').update({ disponible: nuevoEstado }).eq('id', id);
+            if(error) alert('Error: ' + error.message); else initApp();
+        }
+
+        async function crearComercio() {
+            const nombre = document.getElementById('negNombre').value.trim();
+            const categoria = document.getElementById('negCat').value;
+            const direccion = document.getElementById('negDir').value.trim();
+            const telefono = document.getElementById('negTel').value.trim();
+            const pin_local = document.getElementById('negPin').value.trim() || '0000';
+            const hora_apertura = document.getElementById('negApertura').value || '08:00';
+            const hora_cierre = document.getElementById('negCierre').value || '22:00';
+            const checkboxes = document.querySelectorAll('input[name="diasNegocio"]:checked');
+            const dias_semana = Array.from(checkboxes).map(cb => Number(cb.value));
+            const urlInput = document.getElementById('negFotoUrl').value.trim();
+            const imagen_url = fotoBase64Comercio || urlInput;
+
+            if(!nombre || !direccion || !telefono || !pin_local) { alert('Completa todos los campos, incluyendo el PIN.'); return; }
+
+            let datosComercio = { nombre, categoria, direccion, telefono, pin_local, hora_apertura, hora_cierre, dias_semana };
+            if (imagen_url) datosComercio.imagen_url = imagen_url;
+
+            let { error } = await supabaseClient.from('comercios').insert([datosComercio]);
+            
+            if(error && (error.message.includes('dias_semana') || error.message.includes('hora_apertura') || error.message.includes('imagen_url'))) {
+                let datosSeguros = { nombre, categoria, direccion, telefono, pin_local };
+                let { error: err2 } = await supabaseClient.from('comercios').insert([datosSeguros]);
+                if (err2) {
+                    alert('Error: ' + err2.message);
+                    return;
+                } else {
+                    alert('¡Comercio registrado con éxito!');
+                    fotoBase64Comercio = '';
+                    initApp();
+                    return;
+                }
+            }
+
+            if(error) alert('Error: ' + error.message); 
+            else { alert('¡Comercio registrado con éxito!'); fotoBase64Comercio = ''; initApp(); }
+        }
+
+        async function crearProducto() {
+            const comercio_id = document.getElementById('selectLocalProd').value;
+            const nombre = document.getElementById('prodNombre').value.trim();
+            let descripcion = document.getElementById('prodDesc').value.trim();
+            let precio = Number(document.getElementById('prodPrecio').value);
+            let precioPromo = Number(document.getElementById('prodPrecioPromo') ? document.getElementById('prodPrecioPromo').value : 0);
+            const horarioPromo = document.getElementById('prodHorarioPromo') ? document.getElementById('prodHorarioPromo').value.trim() : '';
+            const categoria = document.getElementById('prodCat') ? document.getElementById('prodCat').value : 'Varios';
+            const urlInput = document.getElementById('prodFotoUrl').value.trim();
+            const imagen_url = fotoBase64Producto || urlInput || sugerirFotoGourmetPorIngredientes({ nombre, descripcion, categoria });
+            
+            if (precio < 1000) precio = precio * 1000;
+            if (precioPromo > 0 && precioPromo < 1000) precioPromo = precioPromo * 1000;
+            if(!comercio_id || !nombre || !precio) { alert('Selecciona local, nombre y precio.'); return; }
+
+            if (precioPromo > 0 && horarioPromo.includes('-')) {
+                descripcion = `${descripcion} [PROMO:${precioPromo}|${horarioPromo}]`.trim();
+            }
+            
+            let datosProd = { comercio_id, nombre, descripcion, precio, categoria, imagen_url };
+
+            let { error } = await supabaseClient.from('productos').insert([datosProd]);
+            if(error && (error.message.includes('imagen_url') || error.message.includes('categoria'))) {
+                let { error: err2 } = await supabaseClient.from('productos').insert([{ comercio_id, nombre, descripcion, precio }]);
+                if (err2) alert('Error: ' + err2.message);
+                else { alert('¡Producto agregado con éxito!'); fotoBase64Producto = ''; initApp(); }
+            } else if(error) {
+                alert('Error: ' + error.message);
+            } else { 
+                alert('¡Producto agregado con su imagen por ingredientes!'); 
+                fotoBase64Producto = ''; 
+                initApp(); 
+            }
+        }
+
+        async function renderDomiciliarioView(container) {
+            const content = document.createElement('div');
+            content.className = 'p-4 flex-1 space-y-3';
+            content.innerHTML = `
+                ${obtenerBarraRetornoRolesHTML()}
+                <div class="flex justify-between items-center">
+                    <h2 class="font-bold text-lg text-gray-800">🛵 Panel Repartidor</h2>
+                    <button onclick="initApp()" class="bg-[#1B4D3E] text-[#D4AF37] px-2.5 py-1 rounded text-[11px] font-bold shadow">🔄 Refrescar</button>
+                </div>
+                <div id="listaPedidos" class="space-y-3 mt-3">Cargando pedidos...</div>
+            `;
+            container.appendChild(content);
+
+            const { data: pedidos } = await supabaseClient
+                .from('pedidos')
+                .select('*, comercios(nombre)')
+                .order('creado_at', { ascending: false })
+                .limit(50);
+
+            const lista = document.getElementById('listaPedidos');
+            if(!pedidos || pedidos.length === 0) { lista.innerHTML = `<p class="text-sm text-gray-500 italic">No hay pedidos registrados.</p>`; return; }
+
+            const ahoraMs = new Date().getTime();
+            const pendientesEstancados = pedidos.filter(p => {
+                if (p.estado !== 'Por Verificar Pago' && p.estado !== 'Pendiente Efectivo' && p.estado !== 'En Preparación') return false;
+                const creadoMs = new Date(p.creado_at).getTime();
+                return (ahoraMs - creadoMs) > 10 * 60 * 1000 && !p.domiciliario_info;
+            });
+
+            let alertaEstancadosHTML = '';
+            if (pendientesEstancados.length > 0 && modoAdminVisible) {
+                alertaEstancadosHTML = `
+                    <div class="bg-red-100 border border-red-300 text-red-900 p-2.5 rounded-xl text-xs font-semibold mb-2">
+                        ⚠️ Alerta Guardián Kumu: Hay ${pendientesEstancados.length} pedido(s) sin repartidor asignado desde hace más de 10 minutos. ¡Revisa el grupo de WhatsApp!
+                    </div>
+                `;
+            }
+
+            const pedidosActivos = pedidos.filter(p => !p.estado.includes('Entregado') && !p.estado.includes('Cancelado'));
+            const pedidosFinalizados = pedidos.filter(p => p.estado.includes('Entregado') || p.estado.includes('Cancelado')).slice(0, 15);
+
+            const renderTarjetaPedido = (p) => {
+                const esLicor = p.direccion_entrega.includes('🔞');
+                const matchPin = p.direccion_entrega.match(/PIN:\s*(\d+)/);
+                const pinEsperado = matchPin ? matchPin[1] : null;
+                const telCliente = p.cliente_telefono ? p.cliente_telefono.toString().replace(/\D/g, '') : '';
+                const domiciliarioInfo = p.domiciliario_info || '';
+                const infoLimpia = domiciliarioInfo.replace(/\[GPS:[-\d.,]+\]/g, '').trim();
+                const yaFinalizado = p.estado.includes('Entregado') || p.estado.includes('Cancelado');
+
+                return `
+                    <div class="bg-white border rounded-xl p-3 shadow-sm space-y-2 ${esLicor ? 'border-[#C85A17] bg-amber-50/20' : ''} ${yaFinalizado ? 'opacity-70 bg-gray-50' : ''}">
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-sm text-[#1B4D3E]">🏪 ${p.comercios ? p.comercios.nombre : 'Pedido Kumu'}</span>
+                            <span class="text-xs bg-amber-100 text-amber-900 px-2 py-0.5 rounded font-semibold">${p.estado}</span>
+                        </div>
+
+                        ${esLicor && !yaFinalizado ? `
+                            <div class="bg-[#1B4D3E] text-[#D4AF37] font-bold text-[10px] p-2 rounded text-center space-y-1 border border-[#C85A17]">
+                                <p>🔞 OBLIGATORIO: VERIFICAR CÉDULA FÍSICA</p>
+                                <p class="text-[9px] font-normal text-amber-100">Ingresa el PIN dictado por el cliente para completar.</p>
+                                <div class="flex space-x-1 pt-1">
+                                    <input type="number" id="pinInput_${p.id}" placeholder="PIN Cliente" class="w-full p-1.5 border border-amber-300 rounded text-xs text-center font-bold text-black">
+                                    <button onclick="verificarPinYEntregar('${p.id}', '${pinEsperado}')" class="bg-[#C85A17] text-white px-3 py-1.5 rounded text-xs font-bold">Validar</button>
+                                </div>
+                            </div>
+                        ` : ''}
+
+                        <p class="text-xs text-gray-700"><b>Cliente:</b> ${p.cliente_nombre}</p>
+                        <p class="text-xs text-gray-700"><b>Detalles:</b> ${p.direccion_entrega}</p>
+                        <p class="text-xs font-bold text-emerald-800">Total: $${Number(p.total).toLocaleString()} COP</p>
+                        ${infoLimpia ? `<p class="text-[11px] bg-emerald-50 text-emerald-950 p-1.5 rounded font-semibold border border-emerald-200">🛵 Repartidor: ${infoLimpia}</p>` : ''}
+
+                        ${!yaFinalizado ? `
+                            <div class="grid grid-cols-2 gap-1.5 pt-1">
+                                ${telCliente ? `
+                                    <a href="https://wa.me/57${telCliente}?text=Hola%20${encodeURIComponent(p.cliente_nombre)},%20soy%20el%20repartidor%20de%20Kumu%20🛵%20y%20voy%20en%20camino%20con%20tu%20pedido." target="_blank" class="block text-center bg-[#1B4D3E] hover:bg-[#0F382B] text-white font-bold py-1.5 px-2 rounded text-[11px]">💬 Avisar WA</a>
+                                ` : ''}
+                                <button onclick="transmitirGPSPedido('${p.id}')" class="bg-[#2D0B3A] text-[#D4AF37] font-bold py-1.5 px-2 rounded text-[11px]">
+                                    📍 Transmitir/Ver Mapa
+                                </button>
+                            </div>
+
+                            <div id="mapaCliente_${p.id}" class="hidden h-44 w-full rounded-lg border-2 border-[#2D0B3A] mt-2"></div>
+
+                            ${modoAdminVisible && p.estado !== 'En Preparación' && p.estado !== 'En Camino' ? `
+                                <button onclick="actualizarEstado('${p.id}', 'En Preparación')" class="w-full bg-amber-100 hover:bg-amber-200 text-amber-950 border border-amber-400 py-1.5 rounded-lg text-[11px] font-extrabold mt-1">
+                                    👨‍🍳 Paso 2: Confirmar Pago / Pasar a "Cocinando"
+                                </button>
+                            ` : ''}
+
+                            <div class="flex space-x-2 pt-1">
+                                ${!infoLimpia ? `
+                                    <button onclick="tomarPedidoConDatos('${p.id}')" class="flex-1 btn-vaupes py-1.5 rounded-lg text-xs font-bold">✋ Paso 3: Tomar Pedido (En Camino)</button>
+                                ` : `
+                                    <button onclick="actualizarEstado('${p.id}', 'Entregado')" class="flex-1 bg-emerald-600 text-white py-1.5 rounded-lg text-xs font-bold">✅ Paso 4: Marcar Entregado ⭐</button>
+                                `}
+                                ${modoAdminVisible ? `<button onclick="cancelarPedidoConMotivo('${p.id}')" class="bg-gray-200 text-gray-700 hover:bg-red-100 hover:text-red-700 py-1.5 px-2 rounded-lg text-xs font-bold" title="Cancelar con motivo">❌</button>` : ''}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            };
+
+            lista.innerHTML = alertaEstancadosHTML +
+                `<h3 class="text-xs font-extrabold uppercase text-[#C85A17]">🔥 Pedidos Activos por Entregar (${pedidosActivos.length})</h3>` +
+                (pedidosActivos.length ? pedidosActivos.map(renderTarjetaPedido).join('') : `<p class="text-xs text-gray-500 italic bg-white p-3 rounded-xl border">No hay pedidos pendientes de entrega en este instante.</p>`) +
+                `<h3 class="text-xs font-extrabold uppercase text-gray-500 pt-3 border-t">✅ Últimos Finalizados (${pedidosFinalizados.length})</h3>` +
+                pedidosFinalizados.map(renderTarjetaPedido).join('');
+        }
+
+        async function transmitirGPSPedido(pedidoId) {
+            const { data: ped } = await supabaseClient.from('pedidos').select('domiciliario_info').eq('id', pedidoId).maybeSingle();
+            let baseInfo = (ped?.domiciliario_info || 'Repartidor en ruta').replace(/\[GPS:[-\d.,]+\]/g, '').trim();
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(async (pos) => {
+                    const lat = pos.coords.latitude.toFixed(5);
+                    const lng = pos.coords.longitude.toFixed(5);
+                    const nuevaInfo = `${baseInfo} [GPS:${lat},${lng}]`;
+                    await supabaseClient.from('pedidos').update({ domiciliario_info: nuevaInfo }).eq('id', pedidoId);
+                    verMapaRepartidorEnVivo(pedidoId, parseFloat(lat), parseFloat(lng), true);
+                }, () => {
+                    verMapaRepartidorEnVivo(pedidoId, 1.1983, -70.1733, false);
+                });
+            } else {
+                verMapaRepartidorEnVivo(pedidoId, 1.1983, -70.1733, false);
+            }
+        }
+
+        async function cancelarPedidoConMotivo(id) {
+            const motivos = [
+                "1. Local sin ingredientes / Agotado",
+                "2. Cliente canceló el pedido",
+                "3. Cliente no contesta llamadas ni WhatsApp",
+                "4. Imposibilidad logística / Sin domiciliario"
+            ];
+            const seleccion = prompt("Elige el número de motivo de cancelación:\n\n" + motivos.join("\n"));
+            if (!seleccion) return;
+
+            let textoMotivo = "Cancelado por Admin";
+            if (seleccion.includes("1")) textoMotivo = "Cancelado: Local sin ingredientes / Agotado";
+            else if (seleccion.includes("2")) textoMotivo = "Cancelado: Cliente canceló el pedido";
+            else if (seleccion.includes("3")) textoMotivo = "Cancelado: Cliente no contesta llamadas";
+            else if (seleccion.includes("4")) textoMotivo = "Cancelado: Sin domiciliario disponible";
+
+            const { error } = await supabaseClient.from('pedidos').update({ estado: textoMotivo }).eq('id', id);
+            if(error) alert('Error: ' + error.message); else initApp();
+        }
+
+        async function liquidarEfectivoPedido(id) {
+            const confirmacion = confirm("🤝 ¿Confirmas que el domiciliario te entregó este dinero en efectivo?");
+            if(!confirmacion) return;
+
+            const { data: pedidoActual } = await supabaseClient.from('pedidos').select('estado').eq('id', id).single();
+            const estadoActualizado = (pedidoActual?.estado || '') + ' [Efectivo Liquidado 🤝]';
+
+            const { error } = await supabaseClient.from('pedidos').update({ estado: estadoActualizado }).eq('id', id);
+            if(error) alert('Error: ' + error.message);
+            else { alert('✅ Caja liquidada con éxito.'); initApp(); }
+        }
+
+        async function tomarPedidoConDatos(pedidoId) {
+            const guardado = JSON.parse(localStorage.getItem('kumu_domi_frecuente') || '{"nombre":"","cedula":"","tel":""}');
+            const nombreDomi = prompt("Ingresa tu Nombre y Apellido:", guardado.nombre);
+            if (!nombreDomi || !nombreDomi.trim()) return;
+            
+            const cedulaDomi = prompt("Ingresa tu Número de Cédula (para cuentas exactas):", guardado.cedula);
+            if (!cedulaDomi || !cedulaDomi.trim()) return;
+
+            const telefonoDomi = prompt("Ingresa tu Teléfono / WhatsApp de contacto:", guardado.tel);
+            if (!telefonoDomi || !telefonoDomi.trim()) return;
+
+            localStorage.setItem('kumu_domi_frecuente', JSON.stringify({ nombre: nombreDomi.trim(), cedula: cedulaDomi.trim(), tel: telefonoDomi.trim() }));
+
+            const { data: historialPedidos } = await supabaseClient.from('pedidos').select('domiciliario_info, estado').ilike('estado', '%Entregado%');
+            let carrerasPrevias = 0;
+            if (historialPedidos) {
+                historialPedidos.forEach(item => {
+                    if (item.domiciliario_info && item.domiciliario_info.includes(cedulaDomi.trim())) {
+                        carrerasPrevias++;
+                    }
+                });
+            }
+
+            const infoCompleta = `${nombreDomi.trim()} | CC: ${cedulaDomi.trim()} | Tel: ${telefonoDomi.trim()} (★ Carreras: ${carrerasPrevias + 1})`;
+
+            const { error } = await supabaseClient
+                .from('pedidos')
+                .update({ 
+                    estado: 'En Camino',
+                    domiciliario_info: infoCompleta 
+                })
+                .eq('id', pedidoId);
+
+            if (error) {
+                alert("Error al tomar el pedido: " + error.message);
+            } else {
+                alert(`✅ ¡Pedido asignado a ${nombreDomi.trim()}!\n⭐ Llevas acumuladas ${carrerasPrevias + 1} carreras exitosas.\n\nEl cliente ya puede ver tu nombre y estado en vivo en su pantalla.`);
+                transmitirGPSPedido(pedidoId);
+                initApp();
+            }
+        }
+
+        async function verificarPinYEntregar(id, pinEsperado) {
+            const input = document.getElementById(`pinInput_${id}`);
+            const pinIngresado = input ? input.value.trim() : '';
+
+            if (pinIngresado === pinEsperado) {
+                alert("✅ PIN Correcto. Cédula y entrega verificadas.");
+                actualizarEstado(id, 'Entregado');
+            } else {
+                alert("❌ PIN Incorrecto.");
+            }
+        }
+
+        async function actualizarEstado(id, estado) {
+            const { error } = await supabaseClient.from('pedidos').update({ estado }).eq('id', id);
+            if(error) alert('Error: ' + error.message); else initApp();
+        }
+
+        async function renderCierreView(container) {
+            const content = document.createElement('div');
+            content.className = 'p-4 flex-1 space-y-4';
+            content.innerHTML = `
+                ${obtenerBarraRetornoRolesHTML()}
+                <div class="flex justify-between items-center border-b pb-2">
+                    <div>
+                        <h2 class="font-extrabold text-base text-[#2D0B3A]">📊 Centro Financiero y Tabla Dinámica</h2>
+                        <p class="text-[11px] text-gray-500">Alimentado en vivo de Supabase • Día a Día</p>
+                    </div>
+                    <div class="flex space-x-1">
+                        <button onclick="cambiarFiltroFecha('hoy')" class="px-2 py-1 rounded text-[10px] font-bold ${filtroFechaAnalitica==='hoy'?'bg-[#C85A17] text-white':'bg-gray-200 text-gray-700'}">Hoy</button>
+                        <button onclick="cambiarFiltroFecha('semana')" class="px-2 py-1 rounded text-[10px] font-bold ${filtroFechaAnalitica==='semana'?'bg-[#C85A17] text-white':'bg-gray-200 text-gray-700'}">7 Días</button>
+                        <button onclick="cambiarFiltroFecha('mes')" class="px-2 py-1 rounded text-[10px] font-bold ${filtroFechaAnalitica==='mes'?'bg-[#C85A17] text-white':'bg-gray-200 text-gray-700'}">Mes</button>
+                    </div>
+                </div>
+                
+                <div id="pestañasLocalesAnalitica" class="flex space-x-2 overflow-x-auto kumu-scroll pb-2.5 text-xs">Cargando locales...</div>
+                <div id="detalleAnaliticaLocal" class="mt-2"></div>
+            `;
+            container.appendChild(content);
+
+            let queryComercios = supabaseClient.from('comercios').select('*');
+            if(comercioLogueado) {
+                queryComercios = queryComercios.eq('id', comercioLogueado.id);
+                localSeleccionadoAnalitica = comercioLogueado.id;
+            }
+
+            const { data: comercios } = await queryComercios;
+            if(!comercios) return;
+            windowComerciosCache = comercios;
+
+            const divTabs = document.getElementById('pestañasLocalesAnalitica');
+            let htmlTabs = '';
+            if (!comercioLogueado) {
+                htmlTabs += `<button onclick="mostrarAnaliticaLocal('GLOBAL')" class="px-3 py-1.5 rounded-lg font-extrabold whitespace-nowrap ${localSeleccionadoAnalitica==='GLOBAL'?'bg-[#2D0B3A] text-[#D4AF37] border border-[#D4AF37]':'bg-gray-200 text-gray-700'}">🌐 Consolidado Kumu</button>`;
+            }
+            htmlTabs += comercios.map(c => `
+                <button onclick="mostrarAnaliticaLocal('${c.id}')" class="px-3 py-1.5 rounded-lg font-bold whitespace-nowrap ${localSeleccionadoAnalitica===c.id?'bg-[#1B4D3E] text-[#D4AF37]':'bg-gray-200 text-gray-700'}">🏪 ${c.nombre}</button>
+            `).join('');
+            divTabs.innerHTML = htmlTabs;
+
+            if (!localSeleccionadoAnalitica) {
+                localSeleccionadoAnalitica = comercioLogueado ? comercioLogueado.id : 'GLOBAL';
+            }
+            mostrarAnaliticaLocal(localSeleccionadoAnalitica);
+        }
+
+        function cambiarFiltroFecha(filtro) {
+            filtroFechaAnalitica = filtro;
+            initApp();
+        }
+
+        async function mostrarAnaliticaLocal(comercioId) {
+            localSeleccionadoAnalitica = comercioId;
+            const containerDetalle = document.getElementById('detalleAnaliticaLocal');
+            if(!containerDetalle) return;
+
+            let nombreVista = 'Consolidado Global Kumu';
+            let pedidos = [];
+
+            if (comercioId === 'GLOBAL') {
+                const { data } = await supabaseClient.from('pedidos').select('*, comercios(nombre)').order('creado_at', { ascending: false });
+                pedidos = data || [];
+            } else {
+                const { data: comercio } = await supabaseClient.from('comercios').select('*').eq('id', comercioId).maybeSingle();
+                const { data } = await supabaseClient.from('pedidos').select('*, comercios(nombre)').eq('comercio_id', comercioId).order('creado_at', { ascending: false });
+                nombreVista = comercio ? comercio.nombre : 'Local Aliado';
+                pedidos = data || [];
+            }
+
+            const ahora = new Date();
+            const hoyColombia = ahora.toLocaleDateString('es-CO');
+            const hace7Dias = new Date(ahora.getTime() - 7 * 24 * 60 * 60 * 1000);
+            const hace30Dias = new Date(ahora.getTime() - 30 * 24 * 60 * 60 * 1000);
+
+            const pedidosFiltrados = pedidos.filter(p => {
+                if (p.estado && p.estado.includes('Cancelado')) return false;
+                if (!p.creado_at) return true;
+                const fechaObj = new Date(p.creado_at);
+                const fechaPedidoColombia = fechaObj.toLocaleDateString('es-CO');
+                if (filtroFechaAnalitica === 'hoy') return fechaPedidoColombia === hoyColombia;
+                if (filtroFechaAnalitica === 'semana') return fechaObj >= hace7Dias;
+                return fechaObj >= hace30Dias;
+            });
+
+            let totalPlatosLocal = 0;
+            let totalDomiRecaudado = 0;
+            let totalComisionKumu = 0;
+            let totalGeneralRecaudado = 0;
+            let totalEfectivo = 0;
+            let totalTransferencia = 0;
+            let pedidosEfectivoNoLiquidados = [];
+
+            const tablaPorDia = {};
+            const tablaPorRepartidor = {};
+
+            pedidosFiltrados.forEach(p => {
+                let total = Number(p.total) || 0;
+                if(total < 1000) total = total * 1000;
+
+                const esEfectivo = (p.direccion_entrega || '').includes('Efectivo') || p.estado?.includes('Efectivo') || p.estado === 'Pendiente Efectivo';
+                const yaLiquidado = p.estado?.includes('Efectivo Liquidado');
+
+                if (esEfectivo) {
+                    totalEfectivo += total;
+                    if (!yaLiquidado && (p.estado === 'Entregado' || p.estado?.includes('Entregado'))) {
+                        pedidosEfectivoNoLiquidados.push(p);
+                    }
+                } else {
+                    totalTransferencia += total;
+                }
+
+                const matchSub = (p.direccion_entrega || '').match(/Sub:\s*(\d+)/);
+                const matchDom = (p.direccion_entrega || '').match(/Domi:\s*(\d+)/);
+
+                let sub = matchSub ? Number(matchSub[1]) : Math.round(total * 0.80);
+                let domi = matchDom ? Number(matchDom[1]) : 4000;
+                let kumu = Math.round(sub * PORCENTAJE_COMISION);
+
+                totalPlatosLocal += sub;
+                totalDomiRecaudado += domi;
+                totalComisionKumu += kumu;
+                totalGeneralRecaudado += total;
+
+                const fechaDia = p.creado_at ? new Date(p.creado_at).toLocaleDateString('es-CO') : hoyColombia;
+                if (!tablaPorDia[fechaDia]) {
+                    tablaPorDia[fechaDia] = { pedidos: 0, platos: 0, domi: 0, kumu: 0, total: 0 };
+                }
+                tablaPorDia[fechaDia].pedidos += 1;
+                tablaPorDia[fechaDia].platos += sub;
+                tablaPorDia[fechaDia].domi += domi;
+                tablaPorDia[fechaDia].kumu += kumu;
+                tablaPorDia[fechaDia].total += total;
+
+                if (p.domiciliario_info) {
+                    const limpio = p.domiciliario_info.replace(/\[GPS:[-\d.,]+\]/g, '').trim();
+                    const matchCC = limpio.match(/CC:\s*([0-9]+)/i);
+                    const claveRep = matchCC ? `CC ${matchCC[1]}` : limpio.split('|')[0].trim();
+                    const nombreRep = limpio.split('|')[0].trim();
+                    if (!tablaPorRepartidor[claveRep]) {
+                        tablaPorRepartidor[claveRep] = { nombre: nombreRep, carreras: 0, ganadoDomi: 0, efectivoRecogido: 0 };
+                    }
+                    tablaPorRepartidor[claveRep].carreras += 1;
+                    tablaPorRepartidor[claveRep].ganadoDomi += domi;
+                    if (esEfectivo && !yaLiquidado) {
+                        tablaPorRepartidor[claveRep].efectivoRecogido += total;
+                    }
+                }
+            });
+
+            const gastosGuardados = obtenerGastosOperativos();
+            const totalGastos = gastosGuardados.reduce((acc, g) => acc + Number(g.monto || 0), 0);
+            const utilidadNetaKumu = totalComisionKumu - totalGastos;
+
+            let liquidacionHTML = '';
+            if (pedidosEfectivoNoLiquidados.length > 0 && modoAdminVisible) {
+                liquidacionHTML = `
+                    <div class="bg-emerald-50 border border-emerald-300 p-3 rounded-xl space-y-2">
+                        <p class="text-xs font-bold text-emerald-950">🤝 Efectivo Pendiente de Recibir (Repartidores):</p>
+                        <div class="space-y-1.5">
+                            ${pedidosEfectivoNoLiquidados.map(pe => `
+                                <div class="bg-white p-2 rounded border flex justify-between items-center text-xs">
+                                    <div>
+                                        <p class="font-bold text-gray-800">${pe.cliente_nombre} - $${Number(pe.total).toLocaleString()} COP</p>
+                                        <p class="text-[10px] text-gray-500">${pe.domiciliario_info ? 'Domi: '+pe.domiciliario_info.split('|')[0] : 'Sin repartidor asig.'}</p>
+                                    </div>
+                                    <button onclick="liquidarEfectivoPedido('${pe.id}')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-1 px-2.5 rounded text-[10px]">🤝 Recibir Dinero</button>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            const filasDias = Object.entries(tablaPorDia);
+            const filasRepartidores = Object.entries(tablaPorRepartidor);
+
+            containerDetalle.innerHTML = `
+                <div class="bg-white border rounded-xl p-4 shadow-sm space-y-4">
+                    <div class="flex justify-between items-center border-b pb-2">
+                        <h3 class="font-extrabold text-sm text-[#2D0B3A]">🏪 ${nombreVista}</h3>
+                        <span class="text-[10px] bg-amber-100 text-amber-900 px-2 py-0.5 rounded font-bold uppercase">${filtroFechaAnalitica} (${pedidosFiltrados.length} ped.)</span>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-2 text-xs">
+                        <div class="bg-emerald-50 p-2.5 rounded-lg border border-emerald-200"><p class="text-gray-500 text-[10px]">🟢 Platos (Locales)</p><p class="font-extrabold text-emerald-800 text-sm">$${totalPlatosLocal.toLocaleString()} COP</p></div>
+                        <div class="bg-blue-50 p-2.5 rounded-lg border border-blue-200"><p class="text-gray-500 text-[10px]">🛵 Domiciliarios</p><p class="font-extrabold text-blue-800 text-sm">$${totalDomiRecaudado.toLocaleString()} COP</p></div>
+                        <div class="bg-purple-50 p-2.5 rounded-lg border border-purple-200"><p class="text-gray-500 text-[10px]">🍄 Comisión Kumu (10%)</p><p class="font-extrabold text-[#2D0B3A] text-sm">$${totalComisionKumu.toLocaleString()} COP</p></div>
+                        <div class="bg-amber-50 p-2.5 rounded-lg border border-amber-300"><p class="text-gray-500 text-[10px]">📈 Total Movido</p><p class="font-extrabold text-[#C85A17] text-sm">$${totalGeneralRecaudado.toLocaleString()} COP</p></div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2 text-xs">
+                        <div class="bg-white p-2.5 rounded-lg border border-emerald-300">
+                            <span class="text-gray-500 block text-[10px]">💵 En Efectivo</span>
+                            <span class="font-bold text-emerald-800 text-sm">$${totalEfectivo.toLocaleString()} COP</span>
+                        </div>
+                        <div class="bg-white p-2.5 rounded-lg border border-indigo-200">
+                            <span class="text-gray-500 block text-[10px]">📱 Por Transferencia</span>
+                            <span class="font-bold text-indigo-800 text-sm">$${totalTransferencia.toLocaleString()} COP</span>
+                        </div>
+                    </div>
+
+                    ${liquidacionHTML}
+
+                    <!-- 📅 TABLA DINÁMICA DÍA A DÍA -->
+                    <div class="space-y-1.5">
+                        <h4 class="font-extrabold text-xs text-[#2D0B3A] uppercase">📅 Tabla Dinámica Día a Día (Base de Datos)</h4>
+                        <div class="overflow-x-auto kumu-scroll border rounded-xl">
+                            <table class="w-full text-left text-[11px]">
+                                <thead class="bg-[#2D0B3A] text-[#D4AF37] uppercase text-[10px]">
+                                    <tr>
+                                        <th class="p-2">Fecha</th>
+                                        <th class="p-2 text-center">Ped.</th>
+                                        <th class="p-2">Locales</th>
+                                        <th class="p-2">Domis</th>
+                                        <th class="p-2">Kumu 10%</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y">
+                                    ${filasDias.length === 0 ? `<tr><td colspan="5" class="p-3 text-center text-gray-400 italic">Sin movimientos en este periodo</td></tr>` :
+                                      filasDias.map(([fecha, d]) => `
+                                        <tr class="hover:bg-amber-50/40">
+                                            <td class="p-2 font-bold text-gray-800">${fecha}</td>
+                                            <td class="p-2 text-center font-bold">${d.pedidos}</td>
+                                            <td class="p-2 text-emerald-800">$${d.platos.toLocaleString()}</td>
+                                            <td class="p-2 text-blue-800">$${d.domi.toLocaleString()}</td>
+                                            <td class="p-2 font-extrabold text-[#C85A17]">$${d.kumu.toLocaleString()}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- 🛵 TABLA DINÁMICA POR CÉDULA DE REPARTIDOR -->
+                    <div class="space-y-1.5">
+                        <h4 class="font-extrabold text-xs text-[#1B4D3E] uppercase">🛵 Liquidación por Cédula de Repartidor</h4>
+                        <div class="overflow-x-auto kumu-scroll border rounded-xl">
+                            <table class="w-full text-left text-[11px]">
+                                <thead class="bg-[#1B4D3E] text-[#D4AF37] uppercase text-[10px]">
+                                    <tr>
+                                        <th class="p-2">Repartidor / CC</th>
+                                        <th class="p-2 text-center">Viajes</th>
+                                        <th class="p-2">Ganancia Domi</th>
+                                        <th class="p-2">Efectivo en Bolsillo</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y">
+                                    ${filasRepartidores.length === 0 ? `<tr><td colspan="4" class="p-3 text-center text-gray-400 italic">Aún no hay viajes asignados por cédula</td></tr>` :
+                                      filasRepartidores.map(([cc, r]) => `
+                                        <tr>
+                                            <td class="p-2 font-bold text-gray-800">${r.nombre}<br><span class="text-[9px] text-gray-500">${cc}</span></td>
+                                            <td class="p-2 text-center font-extrabold text-emerald-700">${r.carreras} ⭐</td>
+                                            <td class="p-2 font-bold text-blue-800">$${r.ganadoDomi.toLocaleString()}</td>
+                                            <td class="p-2 font-bold ${r.efectivoRecogido > 0 ? 'text-red-600' : 'text-gray-400'}">$${r.efectivoRecogido.toLocaleString()}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- 📝 LIBRO DIARIO DE GASTOS MANUALES DE KUMU -->
+                    ${modoAdminVisible ? `
+                        <div class="bg-slate-50 border-2 border-[#2D0B3A]/20 p-3 rounded-xl space-y-2">
+                            <div class="flex justify-between items-center">
+                                <h4 class="font-extrabold text-xs text-[#2D0B3A] uppercase">📝 Registrar Gasto Diario Kumu (Caja Menor)</h4>
+                                <span class="text-[11px] font-extrabold ${utilidadNetaKumu >= 0 ? 'text-emerald-700' : 'text-red-600'}">
+                                    Utilidad Neta: $${utilidadNetaKumu.toLocaleString()} COP
+                                </span>
+                            </div>
+                            <div class="flex gap-1.5">
+                                <input type="text" id="gastoConcepto" placeholder="Concepto (Ej: Radio, Volantes)" class="flex-1 p-1.5 border rounded text-xs bg-white">
+                                <input type="number" id="gastoMonto" placeholder="$ Valor" class="w-24 p-1.5 border rounded text-xs bg-white">
+                                <button onclick="agregarGastoOperativo()" class="bg-[#2D0B3A] text-[#D4AF37] px-3 rounded text-xs font-extrabold">+</button>
+                            </div>
+                            ${gastosGuardados.length > 0 ? `
+                                <div class="space-y-1 pt-1 max-h-28 overflow-y-auto kumu-scroll">
+                                    ${gastosGuardados.map(g => `
+                                        <div class="flex justify-between items-center text-[11px] bg-white p-1.5 rounded border">
+                                            <span><b>${g.fecha}:</b> ${g.concepto}</span>
+                                            <div class="flex items-center gap-2">
+                                                <span class="text-red-600 font-bold">-$${Number(g.monto).toLocaleString()}</span>
+                                                <button onclick="eliminarGastoOperativo(${g.id})" class="text-gray-400 hover:text-red-600 font-bold">✕</button>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            ` : ''}
+                        </div>
+                    ` : ''}
+
+                    <!-- 📈 DIAGRAMAS FINANCIEROS -->
+                    <div class="grid grid-cols-1 gap-3">
+                        <div class="bg-gray-50 p-3 border rounded-xl">
+                            <p class="text-[10px] font-bold text-gray-500 uppercase mb-1 text-center">📊 Distribución de Ingresos (COP)</p>
+                            <canvas id="graficoLocalEspecifico" height="170"></canvas>
+                        </div>
+                        <div class="bg-gray-50 p-3 border rounded-xl">
+                            <p class="text-[10px] font-bold text-gray-500 uppercase mb-1 text-center">💳 Proporción Efectivo vs. Transferencias</p>
+                            <canvas id="graficoDonutPagos" height="150"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2 pt-1">
+                        <button onclick="descargarTicketImagen('${nombreVista.replace(/'/g, '')}', ${totalPlatosLocal}, ${totalDomiRecaudado}, ${totalComisionKumu}, ${totalGeneralRecaudado}, ${totalEfectivo}, ${totalTransferencia}, ${pedidosFiltrados.length})"
+                                class="w-full bg-[#2D0B3A] text-[#D4AF37] border-2 border-[#D4AF37] py-2.5 px-3 rounded-xl text-xs font-extrabold shadow flex items-center justify-center gap-1.5">
+                            📸 Descargar Ticket Digital en Imagen (WhatsApp)
+                        </button>
+                        <button onclick="exportarExcelCSV('${comercioId}', '${nombreVista.replace(/'/g, '')}')"
+                                class="w-full bg-[#1B4D3E] text-white border border-[#D4AF37] py-2.5 px-3 rounded-xl text-xs font-extrabold shadow flex items-center justify-center gap-1.5">
+                            📥 Descargar Tabla Dinámica a Excel / Google Sheets (.CSV)
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            const ctx = document.getElementById('graficoLocalEspecifico').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Locales', 'Domicilios', 'Kumu 10%', 'Gastos Kumu'],
+                    datasets: [{
+                        label: 'COP',
+                        data: [totalPlatosLocal, totalDomiRecaudado, totalComisionKumu, totalGastos],
+                        backgroundColor: ['#1B4D3E', '#2563eb', '#C85A17', '#dc2626']
+                    }]
+                },
+                options: { responsive: true, plugins: { legend: { display: false } } }
+            });
+
+            const ctxDonut = document.getElementById('graficoDonutPagos').getContext('2d');
+            new Chart(ctxDonut, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Efectivo', 'Transferencia (Nequi/Bre-B)'],
+                    datasets: [{
+                        data: [totalEfectivo || 1, totalTransferencia || 0],
+                        backgroundColor: ['#10b981', '#2D0B3A']
+                    }]
+                },
+                options: { responsive: true }
+            });
+        }
+
+        function descargarTicketImagen(nombreLocal, platos, domi, kumu, total, efectivo, transferencia, cantPedidos) {
+            const canvas = document.getElementById('ticketCanvas');
+            const ctx = canvas.getContext('2d');
+
+            ctx.fillStyle = '#2D0B3A';
+            ctx.fillRect(0, 0, 600, 760);
+
+            ctx.strokeStyle = '#D4AF37';
+            ctx.lineWidth = 6;
+            ctx.strokeRect(20, 20, 560, 720);
+
+            ctx.fillStyle = '#C85A17';
+            ctx.fillRect(23, 23, 554, 110);
+
+            ctx.fillStyle = '#D4AF37';
+            ctx.font = 'bold 34px Inter, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('🍄 KUMU DOMICILIOS MITÚ', 300, 75);
+
+            ctx.fillStyle = '#FFFFFF';
+            ctx.font = '18px Inter, sans-serif';
+            ctx.fillText('SOPORTE OFICIAL DE LIQUIDACIÓN DE CAJA', 300, 110);
+
+            ctx.textAlign = 'left';
+            ctx.fillStyle = '#D4AF37';
+            ctx.font = 'bold 23px Inter, sans-serif';
+            ctx.fillText(`Reporte: ${nombreLocal}`, 48, 180);
+
+            ctx.fillStyle = '#E5E7EB';
+            ctx.font = '17px Inter, sans-serif';
+            ctx.fillText(`Corte: ${filtroFechaAnalitica.toUpperCase()} • ${new Date().toLocaleString('es-CO')}`, 48, 215);
+            ctx.fillText(`Pedidos Entregados / Válidos: ${cantPedidos}`, 48, 245);
+
+            ctx.strokeStyle = '#D4AF37';
+            ctx.lineWidth = 2;
+            ctx.beginPath(); ctx.moveTo(48, 270); ctx.lineTo(552, 270); ctx.stroke();
+
+            const fila = (label, val, y, color = '#FFFFFF') => {
+                ctx.fillStyle = color;
+                ctx.font = 'bold 21px Inter, sans-serif';
+                ctx.textAlign = 'left';
+                ctx.fillText(label, 48, y);
+                ctx.textAlign = 'right';
+                ctx.fillText(`$${Number(val).toLocaleString('es-CO')} COP`, 552, y);
+            };
+
+            fila('🟢 Venta Comida / Platos (Local):', platos, 320, '#6EE7B7');
+            fila('🛵 Carreras Repartidores:', domi, 365, '#93C5FD');
+            fila('🍄 Comisión Kumu (10%):', kumu, 410, '#FDE047');
+
+            ctx.beginPath(); ctx.moveTo(48, 440); ctx.lineTo(552, 440); ctx.stroke();
+
+            fila('💵 Recaudado en Efectivo:', efectivo, 485, '#FFFFFF');
+            fila('📱 Recaudado en Transferencia:', transferencia, 525, '#FFFFFF');
+
+            ctx.fillStyle = '#1B4D3E';
+            ctx.fillRect(45, 565, 510, 75);
+            ctx.strokeRect(45, 565, 510, 75);
+            fila('💰 TOTAL GENERAL RECAUDADO:', total, 612, '#D4AF37');
+
+            ctx.textAlign = 'center';
+            ctx.fillStyle = '#D4AF37';
+            ctx.font = 'italic 16px Inter, sans-serif';
+            ctx.fillText('Kumu 🍄 • "Pide fácil, recibe rápido" • Mitú, Vaupés', 300, 700);
+
+            const enlace = document.createElement('a');
+            enlace.download = `Ticket_Kumu_${nombreLocal.replace(/\s+/g, '_')}.png`;
+            enlace.href = canvas.toDataURL('image/png');
+            enlace.click();
+        }
+
+        async function exportarExcelCSV(comercioId, nombreLocal) {
+            const { data: pedidos } = await supabaseClient.from('pedidos').select('*, comercios(nombre)').order('creado_at', { ascending: false });
+            if (!pedidos || pedidos.length === 0) { alert("No hay pedidos para exportar."); return; }
+
+            const filas = [
+                ['Fecha', 'Hora', 'Comercio', 'Cliente', 'Telefono_Cliente', 'Metodo_Pago', 'Repartidor_Y_Cedula', 'Subtotal_Platos_COP', 'Domicilio_COP', 'Comision_Kumu_10_COP', 'Total_COP', 'Estado']
+            ];
+
+            pedidos.forEach(p => {
+                const fechaObj = new Date(p.creado_at);
+                const nomComercio = p.comercios ? p.comercios.nombre : nombreLocal;
+                let total = Number(p.total) || 0;
+                if (total < 1000) total *= 1000;
+
+                const matchSub = (p.direccion_entrega || '').match(/Sub:\s*(\d+)/);
+                const matchDom = (p.direccion_entrega || '').match(/Domi:\s*(\d+)/);
+                const sub = matchSub ? Number(matchSub[1]) : Math.round(total * 0.80);
+                const domi = matchDom ? Number(matchDom[1]) : 4000;
+                const comision = Math.round(sub * PORCENTAJE_COMISION);
+                const metodo = (p.direccion_entrega || '').includes('Efectivo') ? 'Efectivo' : 'Transferencia';
+                const domiLimpio = (p.domiciliario_info || 'Sin asignar').replace(/\[GPS:[-\d.,]+\]/g, '').replace(/"/g, '""');
+
+                filas.push([
+                    fechaObj.toLocaleDateString('es-CO'),
+                    fechaObj.toLocaleTimeString('es-CO'),
+                    `"${(nomComercio || '').replace(/"/g, '""')}"`,
+                    `"${(p.cliente_nombre || '').replace(/"/g, '""')}"`,
+                    p.cliente_telefono || '',
+                    metodo,
+                    `"${domiLimpio}"`,
+                    sub,
+                    domi,
+                    comision,
+                    total,
+                    `"${(p.estado || '').replace(/"/g, '""')}"`
+                ]);
+            });
+
+            const csvContent = '\uFEFF' + filas.map(f => f.join(',')).join('\n');
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Tabla_Dinamica_Kumu_${new Date().toISOString().slice(0,10)}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        function verificarCalificacionPendiente() {
+            const comercioId = localStorage.getItem('ultimoComercioId');
+            const comercioName = localStorage.getItem('ultimoComercioNombre');
+
+            if (comercioId && comercioName) {
+                const elNombre = document.getElementById('nombre-comercio-calificar');
+                const elModal = document.getElementById('modal-calificacion');
+                if(elNombre) elNombre.innerText = comercioName;
+                if(elModal) elModal.style.display = 'block';
+            }
+        }
+
+        async function enviarCalificacion(puntuacion) {
+            const comercioId = localStorage.getItem('ultimoComercioId');
+            if (!comercioId) return;
+
+            const { error } = await supabaseClient
+                .from('calificaciones')
+                .insert([{ comercio_id: comercioId, puntuacion: puntuacion }]);
+
+            if (!error) {
+                alert("¡Muchas gracias por tu calificación! 🙌");
+                document.getElementById('modal-calificacion').style.display = 'none';
+                localStorage.removeItem('ultimoComercioId');
+                localStorage.removeItem('ultimoComercioNombre');
+            } else {
+                console.error("Error al calificar:", error);
+                alert("No se pudo enviar la calificación, intenta de nuevo.");
+            }
+        }
+
+        const CLAVE_ADMIN = "1234";
+
+        async function eliminarProducto(productoId) {
+            const clave = prompt("🔐 Ingresa la contraseña de administrador:");
+            if (clave !== CLAVE_ADMIN) {
+                if (clave !== null) alert("❌ Contraseña incorrecta");
+                return;
+            }
+
+            const confirmacion = confirm("⚠️ ¿Estás seguro de que deseas eliminar este producto definitivamente?");
+            if (!confirmacion) return;
+
+            const { error } = await supabaseClient
+                .from('productos')
+                .delete()
+                .eq('id', productoId);
+
+            if (error) {
+                alert("❌ Error al eliminar el producto: " + error.message);
+            } else {
+                alert("✅ Producto eliminado con éxito");
+                initApp();
+            }
+        }
+
+        async function eliminarComercio(comercioId) {
+            const clave = prompt("🔐 Ingresa la contraseña de administrador:");
+            if (clave !== CLAVE_ADMIN) {
+                if (clave !== null) alert("❌ Contraseña incorrecta");
+                return;
+            }
+
+            const confirmacion = confirm("⚠️ ¿ESTÁS SEGURO? Se eliminará el local y sus productos.");
+            if (!confirmacion) return;
+
+            const { error } = await supabaseClient
+                .from('comercios')
+                .delete()
+                .eq('id', comercioId);
+
+            if (error) {
+                alert("❌ Error al eliminar el local: " + error.message);
+            } else {
+                alert("✅ Local eliminado con éxito");
+                initApp();
+            }
+        }
+
+        window.onload = () => {
+            initApp();
+            verificarCalificacionPendiente();
+        };
+    </script>
+
+    <!-- Tarjeta flotante para calificación de un solo toque -->
+    <div id="modal-calificacion" style="display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #ffffff; padding: 15px 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 1000; text-align: center; width: 90%; max-width: 400px;">
+        <p style="margin-bottom: 10px; font-weight: bold; color: #333;">¿Qué tal te pareció tu pedido en <span id="nombre-comercio-calificar" style="color: #1B4D3E;"></span>?</p>
+        <div style="display: flex; justify-content: space-around; font-size: 24px;">
+            <button onclick="enviarCalificacion(1)" style="background:none; border:none; cursor:pointer; font-size:28px;">😡</button>
+            <button onclick="enviarCalificacion(2)" style="background:none; border:none; cursor:pointer; font-size:28px;">😕</button>
+            <button onclick="enviarCalificacion(3)" style="background:none; border:none; cursor:pointer; font-size:28px;">😐</button>
+            <button onclick="enviarCalificacion(4)" style="background:none; border:none; cursor:pointer; font-size:28px;">🙂</button>
+            <button onclick="enviarCalificacion(5)" style="background:none; border:none; cursor:pointer; font-size:28px;">😍</button>
+        </div>
+    </div>
+</body>
+</html>
