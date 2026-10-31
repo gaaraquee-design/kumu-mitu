@@ -94,6 +94,25 @@
         </div>
     </div>
 
+    <!-- ⚖️ MODAL TÉRMINOS LEGALES, PORTAL DE CONTACTO (LEY 1480) Y HABEAS DATA (LEY 1581) -->
+    <div id="modalTerminosLegales" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[9996] hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl p-5 max-w-sm w-full max-h-[82vh] flex flex-col shadow-2xl border-t-4 border-[#2D0B3A]">
+            <div class="flex justify-between items-center border-b pb-2 mb-2">
+                <h3 class="font-extrabold text-sm text-[#2D0B3A]">⚖️ Marco Legal y Habeas Data Kumu</h3>
+                <button onclick="document.getElementById('modalTerminosLegales').classList.add('hidden')" class="text-gray-500 font-bold text-sm">✕</button>
+            </div>
+            <div class="overflow-y-auto kumu-scroll text-[11px] text-gray-700 space-y-2.5 pr-1 leading-relaxed">
+                <p><b>1. Naturaleza de Portal de Contacto (Art. 53 Ley 1480 de 2011):</b> <b>Kumu 🍄</b> opera exclusivamente como una plataforma tecnológica de contacto e intermediación digital (Marketplace B2B2C) en Mitú, Vaupés. Kumu <b>no prepara alimentos, no comercializa bebidas ni medicamentos por cuenta propia, ni presta servicios directos de transporte</b>.</p>
+                <p><b>2. Responsabilidad de los Comercios Aliados:</b> Cada restaurante, tienda, droguería o productor local exhibido en la plataforma es un comerciante independiente y único responsable de la calidad, inocuidad sanitaria, gramaje, precios, facturación y garantía de los productos ofrecidos, así como de la recepción directa de los pagos en sus cuentas Nequi / Bre-B o en efectivo.</p>
+                <p><b>3. Autonomía de los Repartidores Independientes:</b> Los domiciliarios que utilizan el panel logístico de Kumu actúan como contratistas independientes y autónomos, sin vínculo laboral, subordinación ni cumplimiento de horario obligatorio, percibiendo el 100% del valor de la tarifa de domicilio estipulada.</p>
+                <p><b>4. Política de Privacidad y Habeas Data (Ley 1581 de 2012):</b> Al registrar un pedido, el usuario autoriza de manera libre y expresa el tratamiento de sus datos básicos (Nombre, Teléfono WhatsApp, Dirección/Coordenadas GPS de entrega y Cédula en pedidos +18) con la única finalidad de gestionar la entrega de su orden con el comercio aliado y el repartidor independiente. No almacenamos claves bancarias ni datos financieros sensibles.</p>
+                <p><b>5. Prohibición de Venta a Menores (Ley 124 de 1994):</b> Todo pedido en la categoría Licores & Cigarrillos exige mayoría de edad (+18), registro de cédula y validación presencial de documento físico y PIN de 4 dígitos al momento de la entrega.</p>
+                <p><b>6. Tope de Seguridad en Efectivo:</b> Por seguridad de los comercios y repartidores, los pedidos que superen los $100.000 COP solo se procesan mediante transferencia previa verificada.</p>
+            </div>
+            <button onclick="document.getElementById('modalTerminosLegales').classList.add('hidden')" class="w-full mt-3 bg-[#2D0B3A] text-[#D4AF37] py-2 rounded-xl font-extrabold text-xs">He leído y estoy de acuerdo</button>
+        </div>
+    </div>
+
     <!-- 💬 BOTÓN FLOTANTE SOPORTE DIRECTO -->
     <a href="https://wa.me/573215698079?text=%C2%A1Hola!%20Necesito%20soporte%20con%20la%20app%20Kumu%20%F0%9F%8D%84" target="_blank" class="fixed bottom-16 right-4 bg-[#1B4D3E] hover:bg-[#0F382B] text-white w-12 h-12 rounded-full flex items-center justify-center shadow-xl z-40 text-2xl transition transform hover:scale-105 border-2 border-[#D4AF37]" title="Soporte Kumu">
         💬
@@ -129,6 +148,8 @@
         let windowComerciosCache = [];
         let windowProductosCache = [];
         let todosProductosGlobal = [];
+        let bannersPublicitariosCache = [];
+        let indiceBannerActual = 0;
         let productoIdSubiendoFoto = null;
         let gpsClienteActual = '';
 
@@ -138,16 +159,140 @@
         const MONTO_MINIMO_PEDIDO = 10000;
         const TOPE_MAXIMO_EFECTIVO = 100000;
         const NOMBRE_FILA_CONFIG_ADMIN = '__KUMU_ADMIN_CONFIG__';
-        let claveAdminCache = '1234'; // Se sincroniza automáticamente desde Supabase
+        const NOMBRE_FILA_BANNERS = '__KUMU_BANNERS__';
+        let claveAdminCache = '1234';
         const PIN_REPARTIDOR_OFICIAL = "2026";
 
         let fotoBase64Comercio = '';
         let fotoBase64Producto = '';
         let fotoBase64EditarLocal = '';
+        let fotoBase64Banner = '';
         let mapaLeaflet = null;
         let ultimoEstadoConocidoCliente = '';
 
-        // 🔐 SINCRONIZAR CLAVE DE ADMIN DESDE SUPABASE (SIN NECESIDAD DE SQL EXTRA)
+        // 📢 MOTOR DE BANNERS PUBLICITARIOS SINCRONIZADO EN SUPABASE
+        async function cargarBannersDesdeSupabase() {
+            try {
+                const { data } = await supabaseClient.from('comercios').select('*').eq('nombre', NOMBRE_FILA_BANNERS).maybeSingle();
+                if (data && data.direccion) {
+                    bannersPublicitariosCache = JSON.parse(data.direccion);
+                } else {
+                    bannersPublicitariosCache = [];
+                }
+            } catch (e) {
+                bannersPublicitariosCache = [];
+            }
+        }
+
+        async function guardarBannersEnSupabase(listaBanners) {
+            const textoJSON = JSON.stringify(listaBanners);
+            const { data: existente } = await supabaseClient.from('comercios').select('id').eq('nombre', NOMBRE_FILA_BANNERS).maybeSingle();
+            if (existente && existente.id) {
+                await supabaseClient.from('comercios').update({ direccion: textoJSON }).eq('id', existente.id);
+            } else {
+                await supabaseClient.from('comercios').insert([{
+                    nombre: NOMBRE_FILA_BANNERS,
+                    categoria: 'CONFIG',
+                    direccion: textoJSON,
+                    telefono: '0000',
+                    pin_local: '9999'
+                }]);
+            }
+            bannersPublicitariosCache = listaBanners;
+        }
+
+        async function agregarNuevoBannerPublicitario() {
+            const titulo = document.getElementById('bannerTitulo')?.value.trim();
+            const subtitulo = document.getElementById('bannerSubtitulo')?.value.trim();
+            const destino = document.getElementById('bannerDestino')?.value.trim();
+            const urlImg = document.getElementById('bannerFotoUrl')?.value.trim();
+            const imagen = fotoBase64Banner || urlImg;
+
+            if (!titulo || !destino) {
+                alert("⚠️ Ingresa al menos el Título del anuncio y el WhatsApp o Nombre del comercio anunciante.");
+                return;
+            }
+            const nuevo = {
+                id: Date.now(),
+                titulo,
+                subtitulo: subtitulo || 'Toca aquí para ver más información',
+                destino,
+                imagen: imagen || 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&auto=format&fit=crop&q=80'
+            };
+            const lista = [...bannersPublicitariosCache, nuevo];
+            await guardarBannersEnSupabase(lista);
+            fotoBase64Banner = '';
+            alert("📢 ¡Banner Publicitario publicado con éxito en la pantalla de Inicio!");
+            initApp();
+        }
+
+        async function eliminarBannerPublicitario(idBanner) {
+            const lista = bannersPublicitariosCache.filter(b => String(b.id) !== String(idBanner));
+            await guardarBannersEnSupabase(lista);
+            alert("🗑️ Banner eliminado.");
+            initApp();
+        }
+
+        function abrirAccionBanner(destino, tituloBanner) {
+            if (!destino) return;
+            const localEncontrado = (windowComerciosCache || []).find(c => c.nombre.toLowerCase().includes(destino.toLowerCase()));
+            if (localEncontrado) {
+                seleccionarComercioPorId(localEncontrado.id);
+                return;
+            }
+            const soloNumeros = destino.replace(/\D/g, '');
+            if (soloNumeros.length >= 10) {
+                const msg = `¡Hola! Vi tu anuncio *"${tituloBanner}"* en la app *Kumu 🍄* y quiero más información.`;
+                window.open(`https://wa.me/57${soloNumeros.slice(-10)}?text=${encodeURIComponent(msg)}`, '_blank');
+            } else if (destino.startsWith('http')) {
+                window.open(destino, '_blank');
+            }
+        }
+
+        function solicitarPautaPublicitariaKumu() {
+            const msg = `¡Hola! 📢 Vi el espacio publicitario en la app *Kumu 🍄* y quiero información y tarifas para anunciar mi negocio o evento en Mitú.`;
+            window.open(`https://wa.me/573215698079?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        function renderizarBannersPublicitarios() {
+            const cont = document.getElementById('cajaBannerPublicitario');
+            if (!cont) return;
+
+            const listaActiva = bannersPublicitariosCache.length > 0 ? bannersPublicitariosCache : [{
+                id: 'default_kumu',
+                titulo: '📢 ¡Anuncia tu Negocio o Evento en Kumu!',
+                subtitulo: 'La vitrina digital más grande de Mitú • Toca para pautar aquí',
+                destino: '3215698079',
+                imagen: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&auto=format&fit=crop&q=80'
+            }];
+
+            const b = listaActiva[indiceBannerActual % listaActiva.length];
+
+            cont.innerHTML = `
+                <div class="space-y-1">
+                    <div onclick="abrirAccionBanner('${(b.destino || '').replace(/'/g, '')}', '${(b.titulo || '').replace(/'/g, '')}')" class="relative rounded-2xl overflow-hidden shadow-md border-2 border-[#D4AF37] cursor-pointer group h-28 bg-[#2D0B3A]">
+                        <img src="${b.imagen}" class="w-full h-full object-cover opacity-55 group-hover:scale-105 transition duration-500" onerror="this.src='https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600'">
+                        <div class="absolute inset-0 bg-gradient-to-r from-[#2D0B3A]/90 via-[#2D0B3A]/60 to-transparent p-3.5 flex flex-col justify-between">
+                            <div class="flex justify-between items-center">
+                                <span class="bg-[#D4AF37] text-[#2D0B3A] text-[9px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider">✨ Destacado en Mitú</span>
+                                ${listaActiva.length > 1 ? `<span class="text-[9px] text-amber-200 font-bold">${(indiceBannerActual % listaActiva.length) + 1}/${listaActiva.length}</span>` : ''}
+                            </div>
+                            <div>
+                                <h3 class="text-white font-extrabold text-sm leading-tight truncate">${b.titulo}</h3>
+                                <p class="text-amber-200 text-[11px] font-medium truncate mt-0.5">${b.subtitulo}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center px-1">
+                        <span class="text-[10px] text-gray-500 font-medium">📢 Espacio patrocinado Kumu</span>
+                        <button onclick="solicitarPautaPublicitariaKumu()" class="text-[10px] font-extrabold text-[#C85A17] hover:underline flex items-center gap-0.5">
+                            ¿Quieres anunciar tu negocio o evento aquí? Toca para pautar ➔
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
         async function cargarClaveAdminDesdeSupabase() {
             try {
                 const { data } = await supabaseClient.from('comercios').select('pin_local').eq('nombre', NOMBRE_FILA_CONFIG_ADMIN).maybeSingle();
@@ -191,7 +336,6 @@
             }
         }
 
-        // 🛡️ SISTEMA ANTI-ADIVINADORES (3 INTENTOS FALLIDOS = 15 MINUTOS DE BLOQUEO)
         function verificarBloqueoIntentos() {
             const bloqueoHasta = Number(localStorage.getItem('kumu_bloqueo_pin_hasta') || 0);
             const ahora = Date.now();
@@ -253,11 +397,27 @@
             return '🍴 ' + limpio;
         }
 
-        // ⏱️ CRONÓMETRO GUARDIÁN KUMU (DETECTA PEDIDOS ESTANCADOS > 10 MINUTOS)
         function calcularMinutosEspera(creadoAt) {
             if (!creadoAt) return 0;
             const diffMs = Date.now() - new Date(creadoAt).getTime();
             return Math.max(0, Math.floor(diffMs / 60000));
+        }
+
+        // 🚀 SUBIDA INTELIGENTE V1: USA SUPABASE STORAGE (kumu-fotos) Y SI NO USA BASE64 COMPRIMIDO
+        async function subirArchivoStorageOBase64(file, callbackUrl) {
+            try {
+                const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+                const nombreArchivo = `img_${Date.now()}_${Math.floor(Math.random()*1000)}.${ext}`;
+                const { data, error } = await supabaseClient.storage.from('kumu-fotos').upload(nombreArchivo, file, { cacheControl: '3600', upsert: true });
+                if (!error && data) {
+                    const { data: pub } = supabaseClient.storage.from('kumu-fotos').getPublicUrl(nombreArchivo);
+                    if (pub && pub.publicUrl) {
+                        callbackUrl(pub.publicUrl);
+                        return;
+                    }
+                }
+            } catch (e) {}
+            comprimirImagenArchivo(file, callbackUrl);
         }
 
         async function guardarFotoProductoSegura(productoId, urlFinal, nuevoPrecio = null) {
@@ -291,8 +451,8 @@
         function procesarFotoPlatoExistente(event) {
             const file = event.target.files[0];
             if (!file || !productoIdSubiendoFoto) return;
-            comprimirImagenArchivo(file, async function(base64Optimizado) {
-                const res = await guardarFotoProductoSegura(productoIdSubiendoFoto, base64Optimizado);
+            subirArchivoStorageOBase64(file, async function(urlOptimizada) {
+                const res = await guardarFotoProductoSegura(productoIdSubiendoFoto, urlOptimizada);
                 if (!res.exito) alert("Error al subir la foto: " + res.error);
                 else { alert("📸 ¡Foto cargada y guardada con éxito en el plato!"); initApp(); }
             });
@@ -409,6 +569,12 @@
                     renderizarSeguimientoCliente(true);
                 }
             }, 8000);
+            setInterval(() => {
+                if (currentView === 'cliente' && !comercioSeleccionado && bannersPublicitariosCache.length > 1) {
+                    indiceBannerActual++;
+                    renderizarBannersPublicitarios();
+                }
+            }, 4500);
         });
 
         async function verificarClimaMitu() {
@@ -442,7 +608,6 @@
             const minApertura = hA * 60 + (mA || 0);
             const minCierre = hC * 60 + (mC || 0);
 
-            // Soporte de horario nocturno que cruza medianoche (ej: 08:00 a 02:00 AM)
             if (minCierre < minApertura) {
                 if (!(horaActual >= minApertura || horaActual <= minCierre)) return false;
                 if (comercio.dias_semana && Array.isArray(comercio.dias_semana) && comercio.dias_semana.length > 0) {
@@ -460,7 +625,7 @@
 
         async function initApp() {
             try {
-                await Promise.all([verificarClimaMitu(), cargarClaveAdminDesdeSupabase()]);
+                await Promise.all([verificarClimaMitu(), cargarClaveAdminDesdeSupabase(), cargarBannersDesdeSupabase()]);
                 const app = document.getElementById('app');
                 if (!app) return;
                 app.innerHTML = '';
@@ -470,6 +635,7 @@
                 else if (currentView === 'negocios') await renderNegociosView(app);
                 else if (currentView === 'domiciliario') await renderDomiciliarioView(app);
                 else if (currentView === 'cierre') await renderCierreView(app);
+                renderFooterLegal(app);
                 renderNav(app);
             } catch (err) { console.error("Error en initApp:", err); }
             finally { ocultarSplash(); }
@@ -503,6 +669,18 @@
             container.appendChild(header);
         }
 
+        function renderFooterLegal(container) {
+            const footer = document.createElement('div');
+            footer.className = 'px-4 py-3 text-center border-t bg-slate-50 text-[10px] text-gray-500 space-y-1';
+            footer.innerHTML = `
+                <p class="font-semibold text-gray-600">🍄 Kumu Marketplace • Mitú, Vaupés, Colombia</p>
+                <button onclick="document.getElementById('modalTerminosLegales').classList.remove('hidden')" class="underline text-[#1B4D3E] font-bold">
+                    ⚖️ Términos de Uso (Portal de Contacto Ley 1480) y Habeas Data (Ley 1581)
+                </button>
+            `;
+            container.appendChild(footer);
+        }
+
         async function activarModoAcceso() {
             clicksLogo++;
             if (clicksLogo >= 3) {
@@ -521,12 +699,13 @@
                     } else if (pass.trim() === PIN_REPARTIDOR_OFICIAL) {
                         limpiarIntentosFallidos();
                         modoRepartidorLogueado = true; modoAdminVisible = false; comercioLogueado = null; currentView = 'domiciliario';
-                        alert("🛵 Modo Repartidor Kumu Activado");
+                        alert("🛵 Modo Repartidor Independiente Kumu Activado");
                     } else {
-                        const { data: comercios } = await supabaseClient.from('comercios').select('*').eq('pin_local', pass.trim()).neq('nombre', NOMBRE_FILA_CONFIG_ADMIN);
-                        if (comercios && comercios.length > 0) {
+                        const { data: comercios } = await supabaseClient.from('comercios').select('*').eq('pin_local', pass.trim());
+                        const validos = (comercios || []).filter(c => !c.nombre.startsWith('__KUMU_'));
+                        if (validos.length > 0) {
                             limpiarIntentosFallidos();
-                            comercioLogueado = comercios[0]; modoAdminVisible = false; modoRepartidorLogueado = false; currentView = 'negocios';
+                            comercioLogueado = validos[0]; modoAdminVisible = false; modoRepartidorLogueado = false; currentView = 'negocios';
                             alert(`🏪 Sesión iniciada como Aliado: ${comercioLogueado.nombre}`);
                         } else {
                             registrarIntentoFallido();
@@ -559,12 +738,11 @@
 
         function switchView(view) { currentView = view; comercioSeleccionado = null; initApp(); }
 
-        // 🔍 ACTUALIZADOR DE LISTA DE COMERCIOS EN TIEMPO REAL SIN CERRAR EL TECLADO
         function actualizarListaComerciosDOM() {
             const lista = document.getElementById('listaComercios');
             if (!lista || categoriaFiltro === 'Sanvi') return;
 
-            let comerciosFiltrados = (windowComerciosCache || []).filter(c => c.nombre !== NOMBRE_FILA_CONFIG_ADMIN);
+            let comerciosFiltrados = (windowComerciosCache || []).filter(c => !c.nombre.startsWith('__KUMU_'));
             if (categoriaFiltro !== 'Todos') {
                 if (categoriaFiltro === 'Restaurantes & Comida Rápida') {
                     comerciosFiltrados = comerciosFiltrados.filter(c => ['Restaurantes & Comida Rápida', 'Restaurantes', 'Comida Rápida'].includes(c.categoria));
@@ -619,7 +797,6 @@
             }).join('');
         }
 
-        // 🕒 BOTÓN RÁPIDO PARA QUE EL ADMIN CAMBIE EL HORARIO DE TEXAS BURGERS EN 5 SEGUNDOS
         async function editarHorarioRapidoAdmin(comercioId) {
             const c = windowComerciosCache.find(item => item.id === comercioId);
             if (!c) return;
@@ -642,13 +819,26 @@
 
         async function renderClienteView(container) {
             const content = document.createElement('div');
-            content.className = 'p-4 flex-1 space-y-4';
+            content.className = 'p-4 flex-1 space-y-3.5';
             let ultimoPedido = null;
             try { ultimoPedido = JSON.parse(localStorage.getItem('kumu_ultimo_pedido')); } catch (e) {}
+            const misPedidosCount = Number(localStorage.getItem('kumu_mis_pedidos_contador') || 0);
 
             if (!comercioSeleccionado) {
                 content.innerHTML = `
                     <input type="text" id="inputBusqueda" oninput="buscarProductos(this.value)" value="${busquedaTexto}" placeholder="🔍 Buscar plato, medicina o local en Mitú..." class="w-full p-2.5 border border-amber-200 rounded-lg text-xs bg-amber-50/40 outline-none focus:ring-2 focus:ring-[#1B4D3E]">
+
+                    <!-- 📢 CARRUSEL DE BANNERS PUBLICITARIOS Y AUTOVENTA (F-01) -->
+                    <div id="cajaBannerPublicitario"></div>
+
+                    <!-- ⭐ FIDELIZACIÓN AUTOMÁTICA CLIENTE KUMU VIP (F-05) -->
+                    ${misPedidosCount > 0 ? `
+                        <div class="bg-amber-50 border border-[#D4AF37] px-3 py-1.5 rounded-xl flex justify-between items-center text-[11px]">
+                            <span class="font-bold text-[#2D0B3A]">⭐ Cliente Kumu VIP: <b>${misPedidosCount} pedido(s) realizados</b></span>
+                            <span class="text-[10px] bg-[#1B4D3E] text-[#D4AF37] px-2 py-0.5 rounded-full font-extrabold">Meta 10: Envío Gratis</span>
+                        </div>
+                    ` : ''}
+
                     ${ultimoPedido && ultimoPedido.items && ultimoPedido.items.length > 0 ? `
                         <div class="bg-gradient-to-r from-[#2D0B3A] to-[#1B4D3E] text-white p-3 rounded-xl border border-[#D4AF37] shadow-md flex justify-between items-center">
                             <div class="pr-2">
@@ -671,6 +861,8 @@
                     <div id="listaComercios" class="space-y-3">Cargando locales...</div>
                 `;
                 container.appendChild(content);
+
+                renderizarBannersPublicitarios();
 
                 if (categoriaFiltro === 'Sanvi') {
                     document.getElementById('listaComercios').innerHTML = `
@@ -702,7 +894,7 @@
                     if (!error && data) { comercios = data; localStorage.setItem('kumu_cache_comercios', JSON.stringify(data)); }
                     else { comercios = JSON.parse(localStorage.getItem('kumu_cache_comercios') || '[]'); }
                 } catch (e) { comercios = JSON.parse(localStorage.getItem('kumu_cache_comercios') || '[]'); }
-                windowComerciosCache = (comercios || []).filter(c => c.nombre !== NOMBRE_FILA_CONFIG_ADMIN);
+                windowComerciosCache = (comercios || []).filter(c => !c.nombre.startsWith('__KUMU_'));
 
                 renderizarBannerHoraFeliz(todosProductosGlobal, windowComerciosCache);
                 renderizarSeguimientoCliente(false);
@@ -710,14 +902,16 @@
             } else {
                 const abierto = estaComercioAbierto(comercioSeleccionado);
                 comercioSeleccionado.abierto = abierto;
+                const dirLimpia = (comercioSeleccionado.direccion || '').replace('[ENCARGO]', '').trim();
                 content.innerHTML = `
                     <button onclick="comercioSeleccionado=null; initApp();" class="text-sm text-[#1B4D3E] font-bold mb-2 flex items-center gap-1">← Volver a locales</button>
-                    <div class="flex justify-between items-center mb-2">
+                    <div class="flex justify-between items-center mb-1">
                         <h2 class="font-bold text-xl text-gray-800">${comercioSeleccionado.nombre}</h2>
                         <span class="text-xs px-2 py-1 rounded font-bold ${abierto ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'}">${abierto ? '🟢 ABIERTO' : '🔴 CERRADO'}</span>
                     </div>
+                    <p class="text-[11px] text-gray-500 mb-2">📍 Vendedor responsable: ${comercioSeleccionado.nombre} (${dirLimpia})</p>
                     <div class="bg-amber-50 border border-amber-200 p-3 rounded-lg text-xs text-amber-950 mb-3">
-                        <p class="font-bold mb-1">📲 Datos de Transferencia / Nequi / Bre-B:</p>
+                        <p class="font-bold mb-1">📲 Datos de Transferencia / Nequi / Bre-B del Comercio:</p>
                         <p class="text-sm font-bold text-amber-900">${comercioSeleccionado.telefono}</p>
                     </div>
                     <div id="barraCatProductos" class="flex space-x-2 overflow-x-auto kumu-scroll pb-2.5 text-xs mb-3"></div>
@@ -980,7 +1174,6 @@
             if (producto) agregarAlCarrito(producto);
         }
 
-        // 🔍 BÚSQUEDA INSTANTÁNEA EN MEMORIA (NO CIERRA EL TECLADO)
         function buscarProductos(val) {
             busquedaTexto = val;
             actualizarListaComerciosDOM();
@@ -1089,7 +1282,6 @@
             renderizarCarrito();
         }
 
-        // 📍 CAPTURAR UBICACIÓN GPS EXACTA DEL CLIENTE PARA EL DOMICILIARIO EN MITÚ
         function adjuntarUbicacionGPSCliente() {
             if (!navigator.geolocation) {
                 alert("Tu navegador no permite capturar ubicación GPS.");
@@ -1163,9 +1355,9 @@
                 ` : ''}
 
                 <div class="space-y-1 text-xs text-gray-600 border-t pt-2 bg-emerald-50/50 p-2.5 rounded-lg border">
-                    <div class="flex justify-between"><span>Subtotal:</span><span class="font-semibold">$${subtotalProductos.toLocaleString()} COP</span></div>
-                    <div class="flex justify-between text-emerald-800"><span>Domicilio ${estaLloviendo ? '🌧️' : '☀️'}:</span><span class="font-bold">$${tarifaDomicilio.toLocaleString()} COP</span></div>
-                    <div class="flex justify-between text-amber-900"><span>Servicio Kumu (10%):</span><span class="font-semibold">$${comisionKumu.toLocaleString()} COP</span></div>
+                    <div class="flex justify-between"><span>Subtotal (Comercio Aliado):</span><span class="font-semibold">$${subtotalProductos.toLocaleString()} COP</span></div>
+                    <div class="flex justify-between text-emerald-800"><span>Domicilio Repartidor ${estaLloviendo ? '🌧️' : '☀️'}:</span><span class="font-bold">$${tarifaDomicilio.toLocaleString()} COP</span></div>
+                    <div class="flex justify-between text-amber-900"><span>Uso Portal Kumu (10%):</span><span class="font-semibold">$${comisionKumu.toLocaleString()} COP</span></div>
                 </div>
                 <div class="flex justify-between font-bold text-base my-3 text-emerald-800"><span>Total a Pagar:</span><span class="text-lg">$${totalFinal.toLocaleString()} COP</span></div>
                 ${!cumpleMinto ? `<div class="bg-amber-100 border border-amber-300 text-amber-900 text-xs p-2 rounded-lg font-semibold mb-2">⚠️ Mínimo de compra: $${MONTO_MINIMO_PEDIDO.toLocaleString()} COP.</div>` : ''}
@@ -1191,6 +1383,14 @@
                     <div id="divTransferenciaInfo" class="bg-amber-50 border p-2.5 rounded-lg text-[11px] text-amber-900 font-semibold">
                         📸 Envía el <b>pantallazo de tu pago</b> al WhatsApp del restaurante al confirmar.
                     </div>
+
+                    <div class="bg-white p-2 rounded border border-gray-200 flex items-start gap-2 text-[10px] text-gray-600">
+                        <input type="checkbox" id="checkTerminosHabeas" checked class="mt-0.5 accent-[#1B4D3E]">
+                        <label for="checkTerminosHabeas">
+                            Acepto los <button type="button" onclick="document.getElementById('modalTerminosLegales').classList.remove('hidden')" class="underline font-bold text-[#1B4D3E]">Términos de Uso (Portal de Contacto Ley 1480) y Tratamiento de Datos (Ley 1581)</button>.
+                        </label>
+                    </div>
+
                     <button onclick="enviarPedido(${totalFinal}, ${subtotalProductos}, ${tarifaDomicilio}, ${comisionKumu}, ${tieneLicor})" ${!cumpleMinto ? 'disabled' : ''} class="w-full ${cumpleMinto ? 'btn-vaupes' : 'bg-gray-300 text-gray-500 cursor-not-allowed'} p-2.5 rounded-lg font-extrabold text-sm">Confirmar y Enviar por WhatsApp</button>
                 </div>
             `;
@@ -1205,6 +1405,11 @@
         }
 
         async function enviarPedido(total, subtotal, domicilio, comision, tieneLicor) {
+            const aceptaTerminos = document.getElementById('checkTerminosHabeas')?.checked;
+            if (!aceptaTerminos) {
+                alert("⚖️ Debes aceptar los Términos de Uso y la Política de Tratamiento de Datos Personales para procesar tu pedido.");
+                return;
+            }
             if (comercioSeleccionado) {
                 localStorage.setItem('ultimoComercioId', comercioSeleccionado.id);
                 localStorage.setItem('ultimoComercioNombre', comercioSeleccionado.nombre);
@@ -1236,6 +1441,9 @@
 
             if (error) alert('Error: ' + error.message);
             else { 
+                const contActual = Number(localStorage.getItem('kumu_mis_pedidos_contador') || 0) + 1;
+                localStorage.setItem('kumu_mis_pedidos_contador', String(contActual));
+
                 if (!tieneLicor && comercioSeleccionado) {
                     localStorage.setItem('kumu_ultimo_pedido', JSON.stringify({ comercioId: comercioSeleccionado.id, comercioNombre: comercioSeleccionado.nombre, resumen: detallePedido, items: carrito }));
                 }
@@ -1258,10 +1466,11 @@
         function cargarImagenGaleria(event, tipo) {
             const file = event.target.files[0];
             if (!file) return;
-            comprimirImagenArchivo(file, function(base64Optimizado) {
-                if (tipo === 'comercio') { fotoBase64Comercio = base64Optimizado; alert("📸 Foto de local cargada."); } 
-                else if (tipo === 'editar_local') { fotoBase64EditarLocal = base64Optimizado; alert("📸 Nueva foto de local cargada."); }
-                else { fotoBase64Producto = base64Optimizado; alert("📸 Foto de producto cargada."); }
+            subirArchivoStorageOBase64(file, function(urlOptimizada) {
+                if (tipo === 'comercio') { fotoBase64Comercio = urlOptimizada; alert("📸 Foto de local cargada."); } 
+                else if (tipo === 'editar_local') { fotoBase64EditarLocal = urlOptimizada; alert("📸 Nueva foto de local cargada."); }
+                else if (tipo === 'banner') { fotoBase64Banner = urlOptimizada; alert("📸 Imagen de Banner cargada."); }
+                else { fotoBase64Producto = urlOptimizada; alert("📸 Foto de producto cargada."); }
             });
         }
 
@@ -1275,8 +1484,8 @@
 
         function copiarTextoKitOperativo(tipo) {
             let texto = tipo === 'repartidor'
-                ? `🛵 *MANUAL REPARTIDORES KUMU*\n\n1️⃣ Entra a https://domicilios-mitu.vercel.app, toca 3 veces el logo e ingresa el PIN: *2026*.\n2️⃣ Toca "Tomar Pedido" con tu Nombre, Cédula y Teléfono.\n3️⃣ Toca "WhatsApp" y "GPS".\n4️⃣ Licores: Exige Cédula física e ingresa el PIN de 4 dígitos.\n5️⃣ Ganancia: 100% del domicilio.`
-                : `🤝 *ACUERDO COMERCIAL - KUMU*\n\n• Registro: $0.\n• Recaudo: 100% de tus platos.\n• Comisión Kumu: 10%.\n• Autonomía con tu PIN de local (3 clics en el logo).`;
+                ? `🛵 *MANUAL DE REPARTIDORES INDEPENDIENTES KUMU*\n\n1️⃣ Entra a https://domicilios-mitu.vercel.app, toca 3 veces el logo e ingresa el PIN: *2026*.\n2️⃣ Toca "Tomar Pedido" con tu Nombre, Cédula y Teléfono.\n3️⃣ Toca "WhatsApp" y "GPS".\n4️⃣ Licores: Exige Cédula física e ingresa el PIN de 4 dígitos.\n5️⃣ Ganancia: 100% del domicilio como contratista independiente.`
+                : `🤝 *ACUERDO DE PORTAL DE CONTACTO - KUMU*\n\n• Registro: $0.\n• Recaudo: 100% de tus platos.\n• Comisión Kumu: 10% (liquidada todos los lunes).\n• Regla de Seguridad: Verificar siempre en tu app Nequi/Banco que el dinero haya entrado antes de despachar.`;
             navigator.clipboard?.writeText(texto);
             alert("✅ Copiado al portapapeles.");
         }
@@ -1320,7 +1529,6 @@
                             <button onclick="ejecutarAuditoriaSaludKumu()" class="bg-[#C85A17] text-white px-2.5 py-1 rounded-lg text-[10px] font-extrabold shadow">🔍 Auditar</button>
                         </div>
                         <div id="boxResultadoAuditoria"></div>
-                        <!-- 🔐 CAMBIAR CLAVE MAESTRA DE ADMIN EN SUPABASE -->
                         <div class="bg-black/30 p-2.5 rounded-xl border border-white/20 space-y-1.5 mt-2">
                             <label class="block text-[10px] font-extrabold text-[#D4AF37] uppercase">🔐 Cambiar Clave Maestra Admin (Sincronizada en Supabase):</label>
                             <div class="flex gap-1.5">
@@ -1329,6 +1537,32 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- 📢 GESTOR DE BANNERS PUBLICITARIOS PATROCINADOS (F-01) -->
+                    <div class="bg-amber-50 border-2 border-[#C85A17] p-3 rounded-xl space-y-2 shadow-sm">
+                        <h3 class="font-extrabold text-xs uppercase text-[#2D0B3A]">📢 Gestor de Banners Publicitarios (Retail Media)</h3>
+                        <input type="text" id="bannerTitulo" placeholder="Título del anuncio (Ej. 2x1 Viernes o Almacén Moda Mitú)" class="w-full p-2 border rounded text-xs bg-white">
+                        <input type="text" id="bannerSubtitulo" placeholder="Subtítulo corto (Ej. Pide hoy con descuento especial)" class="w-full p-2 border rounded text-xs bg-white">
+                        <input type="text" id="bannerDestino" placeholder="WhatsApp del anunciante (Ej. 3101234567) o Nombre del Local" class="w-full p-2 border rounded text-xs bg-white">
+                        <div class="bg-white p-2 border rounded text-xs space-y-1">
+                            <label class="font-bold text-gray-600 block">🖼️ Imagen del Banner:</label>
+                            <input type="file" accept="image/*" onchange="cargarImagenGaleria(event, 'banner')" class="w-full text-xs">
+                            <input type="text" id="bannerFotoUrl" placeholder="o Pega URL de imagen" class="w-full p-1 border rounded text-[11px] mt-1">
+                        </div>
+                        <button onclick="agregarNuevoBannerPublicitario()" class="w-full bg-[#2D0B3A] text-[#D4AF37] p-2 rounded-lg text-xs font-extrabold shadow">➕ Publicar Banner en Inicio</button>
+                        ${bannersPublicitariosCache.length > 0 ? `
+                            <div class="pt-2 border-t space-y-1">
+                                <p class="text-[10px] font-bold text-gray-600 uppercase">Banners Activos (${bannersPublicitariosCache.length}):</p>
+                                ${bannersPublicitariosCache.map(b => `
+                                    <div class="flex justify-between items-center bg-white p-1.5 rounded border text-[11px]">
+                                        <span class="font-bold truncate max-w-[210px]">${b.titulo} (${b.destino})</span>
+                                        <button onclick="eliminarBannerPublicitario('${b.id}')" class="bg-red-600 text-white px-2 py-0.5 rounded text-[10px] font-bold">🗑️</button>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+
                     <div class="bg-emerald-50 border border-emerald-300 p-2.5 rounded-xl flex justify-between items-center gap-2 text-xs">
                         <span class="font-bold text-emerald-950 text-[11px]">📋 Copiar WA:</span>
                         <div class="flex gap-1.5">
@@ -1384,9 +1618,13 @@
                         <button onclick="crearProducto()" class="w-full bg-[#1B4D3E] text-[#D4AF37] p-2 rounded text-xs font-bold">Agregar Producto</button>
                     </div>
                 `;
-                const { data: comercios } = await supabaseClient.from('comercios').select('*').neq('nombre', NOMBRE_FILA_CONFIG_ADMIN);
+                const { data: comercios } = await supabaseClient.from('comercios').select('*');
                 const select = document.getElementById('selectLocalProd');
-                if (comercios && select) { comercios.forEach(c => { const opt = document.createElement('option'); opt.value = c.id; opt.textContent = c.nombre; select.appendChild(opt); }); }
+                if (comercios && select) {
+                    comercios.filter(c => !c.nombre.startsWith('__KUMU_')).forEach(c => {
+                        const opt = document.createElement('option'); opt.value = c.id; opt.textContent = c.nombre; select.appendChild(opt);
+                    });
+                }
                 ejecutarAuditoriaSaludKumu();
             } else if (comercioLogueado) {
                 const diasActuales = (comercioLogueado.dias_semana || [0,1,2,3,4,5,6]).map(Number);
@@ -1415,7 +1653,6 @@
                         </div>
                         <button onclick="guardarInfoGeneralAliado()" class="w-full btn-vaupes py-1.5 rounded text-xs font-bold">Guardar Cambios</button>
                     </div>
-                    <!-- ⚙️ HORARIO Y DÍAS RESTAURADO PARA EL ALIADO -->
                     <div class="bg-white border rounded-xl p-3 shadow-sm space-y-2">
                         <h3 class="font-bold text-xs uppercase text-gray-600 border-b pb-1">🕒 Horario y Días de Apertura</h3>
                         <div class="grid grid-cols-2 gap-2">
@@ -1460,6 +1697,11 @@
             }
         }
 
+        function publicarCarreraGrupoRepartidores(nombreLocal, direccionEntrega, totalPedido) {
+            const msg = `🛵 *¡CARRERA DISPONIBLE EN KUMU!* 🍄\n\n🏪 *Recoger en:* ${nombreLocal}\n📍 *Entregar en:* ${direccionEntrega.split('|')[0]}\n💰 *Total Pedido:* $${Number(totalPedido).toLocaleString()} COP\n\n👉 *El primero en entrar a la app (PIN 2026) y tocar "Tomar Pedido" se adjudica la carrera:* https://domicilios-mitu.vercel.app`;
+            window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
         async function renderPedidosAliado() {
             const cont = document.getElementById('listaPedidosAliadoLocal');
             if (!cont || !comercioLogueado) return;
@@ -1470,14 +1712,17 @@
             cont.innerHTML = activos.map(p => {
                 const mins = calcularMinutosEspera(p.creado_at);
                 const estancado = mins >= 10 && p.estado !== 'En Camino';
+                const esTransferencia = (p.direccion_entrega || '').includes('Transferencia');
                 return `
                     <div class="bg-white border ${estancado ? 'border-2 border-red-500' : ''} rounded-lg p-2.5 text-xs space-y-1.5 shadow-sm">
                         ${estancado ? `<div class="bg-red-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded animate-pulse">🚨 GUARDIÁN KUMU: Lleva ${mins} min esperando</div>` : `<div class="text-[10px] text-gray-500 font-semibold">⏱️ Hace ${mins} min</div>`}
                         <div class="flex justify-between items-center"><span class="font-bold text-gray-900">👤 ${p.cliente_nombre}</span><span class="text-[10px] bg-amber-100 text-amber-900 px-2 py-0.5 rounded font-bold">${p.estado}</span></div>
                         <p class="text-[11px] text-gray-700">${p.direccion_entrega}</p>
                         <p class="font-bold text-emerald-800">Total: $${Number(p.total).toLocaleString()} COP</p>
-                        <div class="flex gap-1.5 pt-1">
-                            ${p.estado !== 'En Preparación' && p.estado !== 'En Camino' ? `<button onclick="aceptarPedidoRestaurante('${p.id}', '${p.cliente_nombre.replace(/'/g, '')}', '${p.cliente_telefono || ''}')" class="flex-1 bg-[#1B4D3E] text-[#D4AF37] py-1.5 rounded font-bold text-[11px]">👨‍🍳 Aceptar y Avisar Cliente</button>` : `<span class="text-[10px] text-emerald-700 font-bold">✅ Pedido Aceptado</span>`}
+                        ${esTransferencia ? `<div class="bg-amber-50 border border-amber-300 p-1.5 rounded text-[10px] text-amber-950 font-semibold">🛡️ Anti-Fraude: Verifica que el dinero haya entrado en tu app Nequi/Banco antes de despachar.</div>` : ''}
+                        <div class="flex flex-wrap gap-1.5 pt-1">
+                            ${p.estado !== 'En Preparación' && p.estado !== 'En Camino' ? `<button onclick="aceptarPedidoRestaurante('${p.id}', '${p.cliente_nombre.replace(/'/g, '')}', '${p.cliente_telefono || ''}')" class="flex-1 bg-[#1B4D3E] text-[#D4AF37] py-1.5 px-2 rounded font-bold text-[11px]">👨‍🍳 1. Aceptar Pedido</button>` : `<span class="text-[10px] text-emerald-700 font-bold self-center">✅ En Cocina</span>`}
+                            <button onclick="publicarCarreraGrupoRepartidores('${comercioLogueado.nombre.replace(/'/g, '')}', '${p.direccion_entrega.replace(/'/g, '')}', ${p.total})" class="flex-1 bg-[#C85A17] text-white py-1.5 px-2 rounded font-bold text-[11px]">🛵 2. Pedir Moto WA</button>
                         </div>
                     </div>
                 `;
@@ -1576,8 +1821,11 @@
             const content = document.createElement('div');
             content.className = 'p-4 flex-1 space-y-3';
             content.innerHTML = `
-                <div class="flex justify-between items-center"><h2 class="font-bold text-lg text-gray-800">🛵 Panel Repartidor</h2><button onclick="initApp()" class="bg-[#1B4D3E] text-[#D4AF37] px-2.5 py-1 rounded text-[11px] font-bold shadow">🔄 Refrescar</button></div>
-                <div id="listaPedidos" class="space-y-3 mt-3">Cargando pedidos...</div>
+                <div class="flex justify-between items-center"><h2 class="font-bold text-lg text-gray-800">🛵 Panel Repartidor Independiente</h2><button onclick="initApp()" class="bg-[#1B4D3E] text-[#D4AF37] px-2.5 py-1 rounded text-[11px] font-bold shadow">🔄 Refrescar</button></div>
+                <div class="bg-purple-50 border border-purple-200 p-2.5 rounded-xl text-[10px] text-[#2D0B3A] leading-relaxed">
+                    <b>⚖️ Modalidad de Uso Autónomo:</b> Al tomar un pedido en este portal de contacto, actúas como <b>repartidor independiente</b> sin subordinación ni horario obligatorio, percibiendo el 100% del valor del domicilio ($4.000 seco / $5.000 lluvia).
+                </div>
+                <div id="listaPedidos" class="space-y-3 mt-2">Cargando pedidos...</div>
             `;
             container.appendChild(content);
 
@@ -1598,11 +1846,12 @@
                 const yaFin = p.estado.includes('Entregado') || p.estado.includes('Cancelado');
                 const mins = calcularMinutosEspera(p.creado_at);
                 const estancado = !yaFin && mins >= 10 && !infoLimpia;
+                const nombreComercio = p.comercios ? p.comercios.nombre : 'Comercio';
 
                 return `
                     <div class="bg-white border rounded-xl p-3 shadow-sm space-y-2 ${esLicor ? 'border-[#C85A17] bg-amber-50/20' : ''} ${estancado ? 'border-2 border-red-600' : ''} ${yaFin ? 'opacity-70 bg-gray-50' : ''}">
                         ${estancado ? `<div class="bg-red-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded animate-pulse">🚨 GUARDIÁN KUMU: Pedido lleva ${mins} min sin repartidor</div>` : (!yaFin ? `<div class="text-[10px] text-gray-500 font-semibold">⏱️ Creado hace ${mins} min</div>` : '')}
-                        <div class="flex justify-between items-center"><span class="font-bold text-sm text-[#1B4D3E]">🏪 ${p.comercios ? p.comercios.nombre : 'Pedido'}</span><span class="text-xs bg-amber-100 px-2 py-0.5 rounded font-semibold">${p.estado}</span></div>
+                        <div class="flex justify-between items-center"><span class="font-bold text-sm text-[#1B4D3E]">🏪 ${nombreComercio}</span><span class="text-xs bg-amber-100 px-2 py-0.5 rounded font-semibold">${p.estado}</span></div>
                         ${esLicor && !yaFin ? `<div class="bg-[#1B4D3E] text-[#D4AF37] font-bold text-[10px] p-2 rounded text-center space-y-1"><p>🔞 PIN DE SEGURIDAD REQUERIDO</p><div class="flex space-x-1 pt-1"><input type="number" id="pinInput_${p.id}" placeholder="PIN" class="w-full p-1 border rounded text-xs text-center font-bold text-black"><button onclick="verificarPinYEntregar('${p.id}', '${pinEsperado}')" class="bg-[#C85A17] text-white px-3 py-1 rounded text-xs font-bold">Validar</button></div></div>` : ''}
                         <p class="text-xs text-gray-700"><b>Cliente:</b> ${p.cliente_nombre}</p>
                         <p class="text-xs text-gray-700"><b>Detalles:</b> ${p.direccion_entrega}</p>
@@ -1654,7 +1903,6 @@
             alert('✅ Caja liquidada correctamente.'); initApp();
         }
 
-        // ✋ CANDADO ANTI-COLISIÓN DE REPARTIDORES AL TOMAR PEDIDO
         async function tomarPedidoConDatos(pedidoId) {
             const { data: verif } = await supabaseClient.from('pedidos').select('domiciliario_info, estado').eq('id', pedidoId).maybeSingle();
             if (verif && verif.domiciliario_info && verif.domiciliario_info.trim() !== '') {
@@ -1664,9 +1912,9 @@
             }
 
             const g = JSON.parse(localStorage.getItem('kumu_domi_frecuente') || '{"nombre":"","cedula":"","tel":""}');
-            const nombre = prompt("Tu Nombre:", g.nombre); if (!nombre?.trim()) return;
-            const cedula = prompt("Tu Cédula:", g.cedula); if (!cedula?.trim()) return;
-            const tel = prompt("Tu Teléfono:", g.tel); if (!tel?.trim()) return;
+            const nombre = prompt("⚖️ Actuando como Repartidor Independiente.\nIngresa tu Nombre y Apellido:", g.nombre); if (!nombre?.trim()) return;
+            const cedula = prompt("Tu Número de Cédula:", g.cedula); if (!cedula?.trim()) return;
+            const tel = prompt("Tu Teléfono / WhatsApp:", g.tel); if (!tel?.trim()) return;
 
             localStorage.setItem('kumu_domi_frecuente', JSON.stringify({ nombre: nombre.trim(), cedula: cedula.trim(), tel: tel.trim() }));
             const { data: hist } = await supabaseClient.from('pedidos').select('domiciliario_info').ilike('estado', '%Entregado%');
@@ -1707,10 +1955,10 @@
             `;
             container.appendChild(content);
 
-            let qC = supabaseClient.from('comercios').select('*').neq('nombre', NOMBRE_FILA_CONFIG_ADMIN);
+            let qC = supabaseClient.from('comercios').select('*');
             if (comercioLogueado) { qC = qC.eq('id', comercioLogueado.id); localSeleccionadoAnalitica = comercioLogueado.id; }
-            const { data: comercios } = await qC;
-            if (!comercios) return;
+            const { data: comerciosRaw } = await qC;
+            const comercios = (comerciosRaw || []).filter(c => !c.nombre.startsWith('__KUMU_'));
             windowComerciosCache = comercios;
 
             const divTabs = document.getElementById('pestañasLocalesAnalitica');
@@ -1722,10 +1970,9 @@
 
         function cambiarFiltroFecha(f) { filtroFechaAnalitica = f; initApp(); }
 
-        // 📲 ENVIAR ESTADO DE CUENTA Y COBRO DEL 10% POR WHATSAPP AL ALIADO
         function enviarCobroComisionWhatsApp(nombreLocal, telLocal, cantPedidos, totalPlatos, totalComision) {
             const telLimpio = (telLocal || '').toString().split('|')[0].replace(/\D/g, '');
-            const msg = `📊 *ESTADO DE CUENTA OFICIAL - KUMU MITÚ 🍄*\n\n*Comercio Aliado:* ${nombreLocal}\n*Periodo Liquidado:* ${filtroFechaAnalitica.toUpperCase()}\n*Pedidos Completados:* ${cantPedidos}\n\n🟢 *Total Ventas en Platos (100% tuyo):* $${Number(totalPlatos).toLocaleString()} COP\n🍄 *Comisión Servicio Kumu (10%):* $${Number(totalComision).toLocaleString()} COP\n\n📲 Puedes transferir el valor de la comisión ($${Number(totalComision).toLocaleString()} COP) a nuestra cuenta oficial Nequi/Bre-B: *3215698079*.\n¡Gracias por crecer junto a Kumu! 🚀`;
+            const msg = `📊 *ESTADO DE CUENTA OFICIAL - KUMU MITÚ 🍄*\n\n*Comercio Aliado:* ${nombreLocal}\n*Periodo Liquidado:* ${filtroFechaAnalitica.toUpperCase()}\n*Pedidos Completados:* ${cantPedidos}\n\n🟢 *Total Ventas en Platos (100% tuyo):* $${Number(totalPlatos).toLocaleString()} COP\n🍄 *Comisión Servicio Portal Kumu (10%):* $${Number(totalComision).toLocaleString()} COP\n\n📲 Puedes transferir el valor de la comisión ($${Number(totalComision).toLocaleString()} COP) a nuestra cuenta oficial Nequi/Bre-B: *3215698079*.\n¡Gracias por crecer junto a Kumu! 🚀`;
             if (telLimpio) {
                 window.open(`https://wa.me/57${telLimpio}?text=${encodeURIComponent(msg)}`, '_blank');
             } else {
@@ -1833,7 +2080,6 @@
                         </div>
                     </div>
 
-                    <!-- 🤝 CONCILIACIÓN DE EFECTIVO EN BOLSILLO -->
                     ${noLiq.length > 0 && modoAdminVisible ? `
                         <div class="bg-red-50 border border-red-300 p-3 rounded-xl space-y-2">
                             <h4 class="font-extrabold text-xs text-red-900 uppercase">💵 Efectivo Pendiente por Recibir (${noLiq.length})</h4>
@@ -1936,7 +2182,6 @@
             localStorage.removeItem('ultimoComercioId'); localStorage.removeItem('ultimoComercioNombre');
         }
 
-        // 🔐 BORRADO CONECTADO A LA CLAVE MAESTRA DE SUPABASE
         async function eliminarProducto(productoId) {
             await cargarClaveAdminDesdeSupabase();
             if (prompt("🔐 Ingresa tu Clave Maestra de Administrador:") !== claveAdminCache) { alert("❌ Clave incorrecta"); return; }
