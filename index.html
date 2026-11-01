@@ -28,6 +28,11 @@
             animation: spin 1s linear infinite;
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes floatMacaw {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-5px) rotate(4deg); }
+        }
+        .guacamaya-animada { animation: floatMacaw 2.6s ease-in-out infinite; }
         .kumu-header { background: linear-gradient(135deg, #2D0B3A 0%, #1B4D3E 100%); border-bottom: 2px solid #C85A17; }
         .btn-vaupes { background-color: #C85A17; color: white; }
         .btn-vaupes:hover { background-color: #A04000; }
@@ -66,13 +71,14 @@
     <!-- MODAL AYUDA INSTALACIÓN PWA -->
     <div id="modalInstalar" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[9995] hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl p-6 text-center max-w-xs space-y-3 shadow-2xl border-t-4 border-[#C85A17]">
-            <div class="text-4xl">📲</div>
+            <div class="text-4xl">🍄📲</div>
             <h3 class="font-bold text-base text-gray-900">Instalar Kumu en tu Celular</h3>
             <div class="text-left bg-purple-50 p-3 rounded-xl border border-purple-200 space-y-2 text-xs text-purple-900">
-                <p><b>En Android (Chrome):</b> Toca los 3 puntos ⋮ arriba a la derecha y selecciona <b>"Añadir a la pantalla principal"</b>.</p>
+                <p><b>En Android (Chrome):</b> Toca los 3 puntos ⋮ arriba a la derecha y selecciona <b>"Añadir a la pantalla principal"</b> o <b>"Instalar aplicación"</b>.</p>
                 <p><b>En iPhone (Safari):</b> Toca el botón Compartir ⎋ abajo y selecciona <b>"Añadir a Inicio"</b>.</p>
             </div>
-            <button onclick="document.getElementById('modalInstalar').classList.add('hidden')" class="w-full btn-vaupes py-2 rounded-xl font-bold text-xs">Entendido</button>
+            <button onclick="marcarPWAInstaladaOCerrada(true)" class="w-full btn-vaupes py-2 rounded-xl font-bold text-xs">¡Listo, ya la instalé!</button>
+            <button onclick="document.getElementById('modalInstalar').classList.add('hidden')" class="w-full text-gray-500 py-1 text-[11px] font-semibold">Cerrar por ahora</button>
         </div>
     </div>
 
@@ -103,20 +109,64 @@
             </div>
             <div class="overflow-y-auto kumu-scroll text-[11px] text-gray-700 space-y-2.5 pr-1 leading-relaxed">
                 <p><b>1. Naturaleza de Portal de Contacto (Art. 53 Ley 1480 de 2011):</b> <b>Kumu 🍄</b> opera exclusivamente como una plataforma tecnológica de contacto e intermediación digital (Marketplace B2B2C) en Mitú, Vaupés. Kumu <b>no prepara alimentos, no comercializa bebidas ni medicamentos por cuenta propia, ni presta servicios directos de transporte</b>.</p>
-                <p><b>2. Responsabilidad de los Comercios Aliados:</b> Cada restaurante, tienda, droguería o productor local exhibido en la plataforma es un comerciante independiente y único responsable de la calidad, inocuidad sanitaria, gramaje, precios, facturación y garantía de los productos ofrecidos, así como de la recepción directa de los pagos en sus cuentas Nequi / Bre-B o en efectivo.</p>
+                <p><b>2. Responsabilidad de los Comercios Aliados:</b> Cada restaurante, tienda, droguería, emprendedor o productor local exhibido en la plataforma es un comerciante independiente y único responsable de la calidad, inocuidad sanitaria, gramaje, precios, facturación y garantía de los productos ofrecidos, así como de la recepción directa de los pagos en sus cuentas Nequi / Bre-B o en efectivo.</p>
                 <p><b>3. Autonomía de los Repartidores Independientes:</b> Los domiciliarios que utilizan el panel logístico de Kumu actúan como contratistas independientes y autónomos, sin vínculo laboral, subordinación ni cumplimiento de horario obligatorio, percibiendo el 100% del valor de la tarifa de domicilio estipulada.</p>
-                <p><b>4. Política de Privacidad y Habeas Data (Ley 1581 de 2012):</b> Al registrar un pedido, el usuario autoriza de manera libre y expresa el tratamiento de sus datos básicos (Nombre, Teléfono WhatsApp, Dirección/Coordenadas GPS de entrega y Cédula en pedidos +18) con la única finalidad de gestionar la entrega de su orden con el comercio aliado y el repartidor independiente. No almacenamos claves bancarias ni datos financieros sensibles.</p>
+                <p><b>4. Política de Privacidad y Habeas Data (Ley 1581 de 2012):</b> Al confirmar un pedido, el usuario autoriza de manera libre, previa y expresa el tratamiento de sus datos básicos (Nombre, Teléfono WhatsApp, Dirección/Coordenadas GPS de entrega y Cédula en pedidos +18) con la única finalidad de gestionar la entrega de su orden con el comercio aliado y el repartidor independiente. No almacenamos claves bancarias ni datos financieros sensibles.</p>
                 <p><b>5. Prohibición de Venta a Menores (Ley 124 de 1994):</b> Todo pedido en la categoría Licores & Cigarrillos exige mayoría de edad (+18), registro de cédula y validación presencial de documento físico y PIN de 4 dígitos al momento de la entrega.</p>
                 <p><b>6. Tope de Seguridad en Efectivo:</b> Por seguridad de los comercios y repartidores, los pedidos que superen los $100.000 COP solo se procesan mediante transferencia previa verificada.</p>
             </div>
-            <button onclick="document.getElementById('modalTerminosLegales').classList.add('hidden')" class="w-full mt-3 bg-[#2D0B3A] text-[#D4AF37] py-2 rounded-xl font-extrabold text-xs">He leído y estoy de acuerdo</button>
+            <button onclick="document.getElementById('modalTerminosLegales').classList.add('hidden')" class="w-full mt-3 bg-[#2D0B3A] text-[#D4AF37] py-2 rounded-xl font-extrabold text-xs">Entendido</button>
         </div>
     </div>
 
-    <!-- 💬 BOTÓN FLOTANTE SOPORTE DIRECTO -->
-    <a href="https://wa.me/573215698079?text=%C2%A1Hola!%20Necesito%20soporte%20con%20la%20app%20Kumu%20%F0%9F%8D%84" target="_blank" class="fixed bottom-16 right-4 bg-[#1B4D3E] hover:bg-[#0F382B] text-white w-12 h-12 rounded-full flex items-center justify-center shadow-xl z-40 text-2xl transition transform hover:scale-105 border-2 border-[#D4AF37]" title="Soporte Kumu">
-        💬
-    </a>
+    <!-- 🦜 MODAL ASISTENTE VIRTUAL "GUACAMAYA KUMU IA" (SOPORTE NIVEL 1 Y ESCALADO A WHATSAPP) -->
+    <div id="modalGuacamayaIA" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-[9997] hidden flex items-end sm:items-center justify-center p-3">
+        <div class="bg-white rounded-2xl max-w-sm w-full overflow-hidden shadow-2xl border-2 border-[#D4AF37] flex flex-col max-h-[85vh]">
+            <div class="bg-gradient-to-r from-[#2D0B3A] via-[#1B4D3E] to-[#C85A17] p-3.5 text-white flex justify-between items-center">
+                <div class="flex items-center space-x-2.5">
+                    <div class="w-11 h-11 rounded-full bg-white/15 border-2 border-[#D4AF37] flex items-center justify-center text-2xl guacamaya-animada">🦜</div>
+                    <div>
+                        <h3 class="font-extrabold text-xs text-[#D4AF37] uppercase tracking-wide">Guacamaya Kumu IA</h3>
+                        <p class="text-[10px] text-emerald-200 font-medium">Asistente Inteligente de Mitú • En línea</p>
+                    </div>
+                </div>
+                <button onclick="cerrarGuacamayaIA()" class="bg-black/30 hover:bg-black/50 text-white w-7 h-7 rounded-full text-xs font-bold">✕</button>
+            </div>
+
+            <div id="chatHistorialGuacamaya" class="p-3.5 overflow-y-auto kumu-scroll space-y-2.5 flex-1 bg-slate-50 text-xs">
+                <div class="bg-white border border-emerald-200 p-2.5 rounded-xl shadow-sm text-gray-800 leading-relaxed">
+                    ¡Hola! Soy la <b>Guacamaya IA de Kumu 🦜🍄</b>. Estoy aquí para ayudarte en segundos. Toca una opción rápida o escríbeme tu duda abajo:
+                </div>
+                <div class="grid grid-cols-1 gap-1.5 pt-1">
+                    <button onclick="responderGuacamayaIA('pagos')" class="text-left bg-amber-50 hover:bg-amber-100 border border-amber-300 px-3 py-2 rounded-xl text-[11px] font-bold text-[#2D0B3A]">💳 ¿Cómo pago por Nequi / Bre-B o Efectivo?</button>
+                    <button onclick="responderGuacamayaIA('vender')" class="text-left bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 px-3 py-2 rounded-xl text-[11px] font-bold text-[#1B4D3E]">🚀 Quiero vender en Kumu (con o sin local físico)</button>
+                    <button onclick="responderGuacamayaIA('encargo')" class="text-left bg-purple-50 hover:bg-purple-100 border border-purple-300 px-3 py-2 rounded-xl text-[11px] font-bold text-[#2D0B3A]">⏳ ¿Cómo funcionan los productos "Bajo Pedido"?</button>
+                    <button onclick="responderGuacamayaIA('clima')" class="text-left bg-blue-50 hover:bg-blue-100 border border-blue-200 px-3 py-2 rounded-xl text-[11px] font-bold text-blue-950">🌧️ ¿Por qué el domicilio vale $4.000 o $5.000?</button>
+                    <button onclick="responderGuacamayaIA('instalar')" class="text-left bg-gray-100 hover:bg-gray-200 border border-gray-300 px-3 py-2 rounded-xl text-[11px] font-bold text-gray-800">📲 ¿Cómo instalo el hongo de Kumu en mi celular?</button>
+                </div>
+            </div>
+
+            <div class="p-2.5 bg-white border-t space-y-2">
+                <div class="flex space-x-1.5">
+                    <input type="text" id="inputPreguntaGuacamaya" onkeydown="if(event.key==='Enter') enviarPreguntaTextoGuacamaya()" placeholder="Escribe tu duda aquí (ej. pedido, pauta, sanvi)..." class="flex-1 p-2 border rounded-xl text-xs bg-slate-50 outline-none focus:ring-1 focus:ring-[#1B4D3E]">
+                    <button onclick="enviarPreguntaTextoGuacamaya()" class="bg-[#1B4D3E] text-[#D4AF37] px-3 py-2 rounded-xl font-extrabold text-xs">Enviar</button>
+                </div>
+                <a href="https://wa.me/573215698079?text=%C2%A1Hola!%20Vengo%20del%20asistente%20Guacamaya%20IA%20y%20necesito%20ayuda%20de%20Soporte%20Central%20Kumu%20%F0%9F%8D%84" target="_blank" class="block w-full text-center bg-[#C85A17] hover:bg-amber-800 text-white py-2 rounded-xl font-extrabold text-[11px] shadow">
+                    📲 Hablar con Soporte Central Kumu (WhatsApp)
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🦜 BOTÓN FLOTANTE DE LA GUACAMAYA ANIMADA KUMU -->
+    <div class="fixed bottom-16 right-3 z-40 flex items-center space-x-1.5">
+        <div id="burbujaSaludoGuacamaya" onclick="abrirGuacamayaIA()" class="bg-[#2D0B3A] text-[#D4AF37] text-[10px] font-extrabold px-2.5 py-1.5 rounded-full shadow-lg border border-[#D4AF37] cursor-pointer transition-opacity duration-500">
+            🦜 ¿Dudas? Pregúntame
+        </div>
+        <button onclick="abrirGuacamayaIA()" class="bg-gradient-to-tr from-[#C85A17] via-[#1B4D3E] to-[#2D0B3A] text-white w-13 h-13 p-2.5 rounded-full flex items-center justify-center shadow-2xl border-2 border-[#D4AF37] text-2xl guacamaya-animada" title="Asistente Guacamaya IA Kumu">
+            🦜
+        </button>
+    </div>
 
     <!-- INPUT OCULTO PARA SUBIR FOTO DIRECTAMENTE A CUALQUIER PRODUCTO EXISTENTE -->
     <input type="file" id="inputSubirFotoPlatoExistente" accept="image/*" class="hidden" onchange="procesarFotoPlatoExistente(event)">
@@ -150,8 +200,10 @@
         let todosProductosGlobal = [];
         let bannersPublicitariosCache = [];
         let indiceBannerActual = 0;
+        let pausaCarruselHasta = 0;
         let productoIdSubiendoFoto = null;
         let gpsClienteActual = '';
+        let deepLinkProcesado = false;
 
         let estaLloviendo = false;
         let tarifaDomicilio = 4000;
@@ -170,6 +222,193 @@
         let mapaLeaflet = null;
         let ultimoEstadoConocidoCliente = '';
 
+        // ➕ ADICIONES POR DEFECTO DE TEXAS BURGERS (PARA NO PERDERLAS NUNCA)
+        const ADICIONES_TEXAS_DEFAULT = [
+            { nombre: 'Queso X2', precio: 4000 },
+            { nombre: 'Papa Francesa', precio: 6000 },
+            { nombre: 'Papa Criolla', precio: 6000 },
+            { nombre: 'Salchicha Amer.', precio: 6000 },
+            { nombre: 'Chorizo', precio: 6000 },
+            { nombre: 'Carne Res', precio: 8000 },
+            { nombre: 'Carne Desmechada', precio: 8000 }
+        ];
+
+        // 📢 3 BANNERS ROTATIVOS ESTRATÉGICOS POR DEFECTO EN MITÚ
+        const BANNERS_ESTRATEGICOS_DEFAULT = [
+            {
+                id: 'default_vitrina_sin_local',
+                etiqueta: '🚀 VITRINA GRATIS EN MITÚ',
+                titulo: '¿Vendes desde casa? ¡Entra GRATIS a Kumu!',
+                subtitulo: 'Sin local físico • Únete a la vitrina comercial más grande del Vaupés',
+                destino: 'WA_EMPRENDEDOR',
+                imagen: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=700&auto=format&fit=crop&q=80'
+            },
+            {
+                id: 'default_publicidad_kumu',
+                etiqueta: '📢 PUBLICIDAD Y EVENTOS',
+                titulo: '¡Anuncia tu Marca, Promo o Evento Aquí!',
+                subtitulo: 'Llega directo al celular de cientos de clientes en Mitú • Toca para pautar',
+                destino: 'WA_PAUTA',
+                imagen: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=700&auto=format&fit=crop&q=80'
+            },
+            {
+                id: 'default_ecosistema_kumu',
+                etiqueta: '🍄 EL SABOR Y COMERCIO DEL VAUPÉS',
+                titulo: 'Restaurantes, Licores, Droguería y Encargos',
+                subtitulo: 'Pide en 1 clic con tarifa justa y pronto cosecha campesina en Sanvi',
+                destino: 'CATALOGO',
+                imagen: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=700&auto=format&fit=crop&q=80'
+            }
+        ];
+
+        // 📱 DETECCIÓN INTELIGENTE DE MODO APP INSTALADA (STANDALONE PWA)
+        function yaTienePWAInstaladaOCerrada() {
+            try {
+                const esStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+                if (esStandalone) {
+                    localStorage.setItem('kumu_pwa_instalada', '1');
+                    return true;
+                }
+                if (localStorage.getItem('kumu_pwa_instalada') === '1') return true;
+                if (sessionStorage.getItem('kumu_banner_pwa_cerrado') === '1') return true;
+            } catch (e) {}
+            return false;
+        }
+
+        function marcarPWAInstaladaOCerrada(permanente = false) {
+            try {
+                if (permanente) localStorage.setItem('kumu_pwa_instalada', '1');
+                else sessionStorage.setItem('kumu_banner_pwa_cerrado', '1');
+            } catch (e) {}
+            const modal = document.getElementById('modalInstalar');
+            if (modal) modal.classList.add('hidden');
+            const banner = document.getElementById('bannerSuperiorPWA');
+            if (banner) banner.remove();
+        }
+
+        window.addEventListener('appinstalled', () => {
+            marcarPWAInstaladaOCerrada(true);
+        });
+
+        // 🧠 EXTRACTOR Y CODIFICADOR DE METADATOS ZERO-SQL DEL COMERCIO (VIP, ENCARGO, FECHA, ADICIONES)
+        function extraerMetadatosComercio(comercio) {
+            const rawDir = (comercio && comercio.direccion) || '';
+            const esVIP = rawDir.includes('[VIP]');
+            const esEncargo = rawDir.includes('[ENCARGO]');
+
+            let fechaEncargo = '';
+            const matchFecha = rawDir.match(/\[FECHA:([^\]]+)\]/);
+            if (matchFecha && matchFecha[1]) fechaEncargo = matchFecha[1].trim();
+
+            let textoAdicionesRaw = '';
+            const matchAdic = rawDir.match(/\[ADICIONES:([^\]]+)\]/);
+            if (matchAdic && matchAdic[1]) textoAdicionesRaw = matchAdic[1].trim();
+
+            let listaAdiciones = [];
+            if (textoAdicionesRaw) {
+                textoAdicionesRaw.split(',').forEach(par => {
+                    const partes = par.split(':');
+                    if (partes.length >= 2) {
+                        const nom = partes[0].trim();
+                        let num = Number(partes[1].replace(/\D/g, ''));
+                        if (num > 0 && num < 1000) num *= 1000;
+                        if (nom && num > 0) listaAdiciones.push({ nombre: nom, precio: num });
+                    }
+                });
+            } else if ((comercio?.nombre || '').toLowerCase().includes('texas')) {
+                listaAdiciones = ADICIONES_TEXAS_DEFAULT;
+                textoAdicionesRaw = ADICIONES_TEXAS_DEFAULT.map(a => `${a.nombre}:${a.precio}`).join(', ');
+            }
+
+            const dirLimpia = rawDir
+                .replace(/\[VIP\]/g, '')
+                .replace(/\[ENCARGO\]/g, '')
+                .replace(/\[FECHA:[^\]]*\]/g, '')
+                .replace(/\[ADICIONES:[^\]]*\]/g, '')
+                .trim();
+
+            return { esVIP, esEncargo, fechaEncargo, listaAdiciones, textoAdicionesRaw, dirLimpia };
+        }
+
+        function construirDireccionConMetadatos(dirLimpia, esVIP, esEncargo, fechaEncargo, textoAdiciones) {
+            let final = (dirLimpia || '').replace(/\[(VIP|ENCARGO|FECHA:[^\]]*|ADICIONES:[^\]]*)\]/g, '').trim();
+            if (esVIP) final += ' [VIP]';
+            if (esEncargo) final += ' [ENCARGO]';
+            if (fechaEncargo && fechaEncargo.trim() !== '') {
+                final += ` [FECHA:${fechaEncargo.replace(/[\[\]]/g, '').trim()}]`;
+            }
+            if (textoAdiciones && textoAdiciones.trim() !== '') {
+                final += ` [ADICIONES:${textoAdiciones.replace(/[\[\]]/g, '').trim()}]`;
+            }
+            return final.trim();
+        }
+
+        // 🦜 LÓGICA DEL ASISTENTE VIRTUAL "GUACAMAYA KUMU IA"
+        function abrirGuacamayaIA() {
+            const modal = document.getElementById('modalGuacamayaIA');
+            if (modal) modal.classList.remove('hidden');
+            const burbuja = document.getElementById('burbujaSaludoGuacamaya');
+            if (burbuja) burbuja.classList.add('hidden');
+        }
+
+        function cerrarGuacamayaIA() {
+            const modal = document.getElementById('modalGuacamayaIA');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        function agregarMensajeChatGuacamaya(preguntaUsuario, respuestaBot) {
+            const cont = document.getElementById('chatHistorialGuacamaya');
+            if (!cont) return;
+            cont.innerHTML += `
+                <div class="flex justify-end">
+                    <div class="bg-[#1B4D3E] text-white px-3 py-1.5 rounded-xl max-w-[80%] text-[11px] font-semibold">${preguntaUsuario}</div>
+                </div>
+                <div class="bg-white border border-amber-300 p-2.5 rounded-xl shadow-sm text-gray-800 text-[11px] leading-relaxed">
+                    🦜 <b>Guacamaya IA:</b> ${respuestaBot}
+                </div>
+            `;
+            cont.scrollTop = cont.scrollHeight;
+        }
+
+        function responderGuacamayaIA(tema) {
+            if (tema === 'pagos') {
+                agregarMensajeChatGuacamaya('💳 ¿Cómo funcionan los pagos?', 'Puedes pagar por <b>Transferencia (Nequi / Bre-B)</b> o en <b>Efectivo</b> (hasta $100.000 COP). Al elegir Transferencia, dentro del carrito verás el número de cuenta del local con el botón <b>"📋 Copiar Número"</b> y luego envías el pantallazo por WhatsApp al confirmar.');
+            } else if (tema === 'vender') {
+                agregarMensajeChatGuacamaya('🚀 Quiero vender en Kumu', '¡En Kumu <b>no necesitas tener un local físico</b>! Si vendes postres, comidas desde casa, productos de chagra (Sanvi) o tienes un restaurante, puedes entrar <b>GRATIS</b> a la vitrina digital más grande del Vaupés. Toca abajo en <b>"Hablar con Soporte Central Kumu"</b> para activarte hoy mismo.');
+            } else if (tema === 'encargo') {
+                agregarMensajeChatGuacamaya('⏳ ¿Qué es Bajo Pedido / Por Encargo?', 'Los locales con etiqueta <b>"⏳ Bajo Pedido"</b> preparan productos especiales o por encargo. Puedes apartar tus productos cualquier día de la semana indicando en el carrito para qué fecha y hora los necesitas.');
+            } else if (tema === 'clima') {
+                agregarMensajeChatGuacamaya('🌧️ ¿Por qué cambia el domicilio?', 'Kumu se conecta por satélite al clima de Mitú en vivo: en tiempo seco la carrera vale <b>$4.000 COP</b> y cuando llueve sube automáticamente a <b>$5.000 COP</b> (100% para apoyar el esfuerzo del repartidor bajo la lluvia).');
+            } else if (tema === 'instalar') {
+                cerrarGuacamayaIA();
+                document.getElementById('modalInstalar').classList.remove('hidden');
+            }
+        }
+
+        function enviarPreguntaTextoGuacamaya() {
+            const input = document.getElementById('inputPreguntaGuacamaya');
+            if (!input || !input.value.trim()) return;
+            const q = input.value.trim();
+            const lower = q.toLowerCase();
+            input.value = '';
+
+            if (lower.includes('nequi') || lower.includes('cuenta') || lower.includes('pago') || lower.includes('efectivo') || lower.includes('transferencia')) {
+                responderGuacamayaIA('pagos');
+            } else if (lower.includes('vender') || lower.includes('local') || lower.includes('afiliar') || lower.includes('publicidad') || lower.includes('banner') || lower.includes('anunciar')) {
+                responderGuacamayaIA('vender');
+            } else if (lower.includes('encargo') || lower.includes('apartar') || lower.includes('postre') || lower.includes('bajo pedido')) {
+                responderGuacamayaIA('encargo');
+            } else if (lower.includes('lluvia') || lower.includes('clima') || lower.includes('4000') || lower.includes('5000') || lower.includes('tarifa')) {
+                responderGuacamayaIA('clima');
+            } else if (lower.includes('instalar') || lower.includes('icono') || lower.includes('hongo')) {
+                responderGuacamayaIA('instalar');
+            } else if (lower.includes('sanvi') || lower.includes('campesino') || lower.includes('chagra')) {
+                agregarMensajeChatGuacamaya(q, '🌾 <b>Sanvi</b> es nuestro mercado campesino dentro de Kumu para conectar sin intermediarios a las familias de Mitú con productos frescos de la chagra (fariña, casabe, frutas y cosecha local).');
+            } else {
+                agregarMensajeChatGuacamaya(q, 'Para atender esta solicitud específica de inmediato, toca el botón naranja de abajo <b>"📲 Hablar con Soporte Central Kumu (WhatsApp)"</b> y nuestro equipo te responderá en vivo.');
+            }
+        }
+
         // 📢 MOTOR DE BANNERS PUBLICITARIOS SINCRONIZADO EN SUPABASE
         async function cargarBannersDesdeSupabase() {
             try {
@@ -182,6 +421,13 @@
             } catch (e) {
                 bannersPublicitariosCache = [];
             }
+        }
+
+        function obtenerListaBannersActivos() {
+            if (bannersPublicitariosCache && bannersPublicitariosCache.length > 0) {
+                return [...bannersPublicitariosCache, ...BANNERS_ESTRATEGICOS_DEFAULT].slice(0, 4);
+            }
+            return BANNERS_ESTRATEGICOS_DEFAULT;
         }
 
         async function guardarBannersEnSupabase(listaBanners) {
@@ -214,15 +460,16 @@
             }
             const nuevo = {
                 id: Date.now(),
+                etiqueta: '✨ DESTACADO EN MITÚ',
                 titulo,
                 subtitulo: subtitulo || 'Toca aquí para ver más información',
                 destino,
                 imagen: imagen || 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&auto=format&fit=crop&q=80'
             };
-            const lista = [...bannersPublicitariosCache, nuevo];
+            const lista = [nuevo, ...bannersPublicitariosCache].slice(0, 4);
             await guardarBannersEnSupabase(lista);
             fotoBase64Banner = '';
-            alert("📢 ¡Banner Publicitario publicado con éxito en la pantalla de Inicio!");
+            alert("📢 ¡Banner Publicitario publicado en el carrusel rotativo de Inicio!");
             initApp();
         }
 
@@ -233,8 +480,38 @@
             initApp();
         }
 
+        function cambiarSlideBannerManual(delta, e) {
+            if (e) e.stopPropagation();
+            pausaCarruselHasta = Date.now() + 10000;
+            const lista = obtenerListaBannersActivos();
+            indiceBannerActual = (indiceBannerActual + delta + lista.length) % lista.length;
+            renderizarBannersPublicitarios();
+        }
+
+        function irASlideBanner(idx, e) {
+            if (e) e.stopPropagation();
+            pausaCarruselHasta = Date.now() + 10000;
+            indiceBannerActual = idx;
+            renderizarBannersPublicitarios();
+        }
+
         function abrirAccionBanner(destino, tituloBanner) {
             if (!destino) return;
+            if (destino === 'WA_EMPRENDEDOR') {
+                const msg = `¡Hola Soporte Central Kumu! 🚀 Vi el anuncio en la app y quiero registrar GRATIS mi emprendimiento en la vitrina comercial más grande del Vaupés.`;
+                window.open(`https://wa.me/573215698079?text=${encodeURIComponent(msg)}`, '_blank');
+                return;
+            }
+            if (destino === 'WA_PAUTA') {
+                const msg = `¡Hola Soporte Central Kumu! 📢 Quiero conocer las tarifas para anunciar mi negocio, promoción o evento en el Banner principal de Kumu.`;
+                window.open(`https://wa.me/573215698079?text=${encodeURIComponent(msg)}`, '_blank');
+                return;
+            }
+            if (destino === 'CATALOGO') {
+                const el = document.getElementById('listaComercios');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+                return;
+            }
             const localEncontrado = (windowComerciosCache || []).find(c => c.nombre.toLowerCase().includes(destino.toLowerCase()));
             if (localEncontrado) {
                 seleccionarComercioPorId(localEncontrado.id);
@@ -249,46 +526,36 @@
             }
         }
 
-        function solicitarPautaPublicitariaKumu() {
-            const msg = `¡Hola! 📢 Vi el espacio publicitario en la app *Kumu 🍄* y quiero información y tarifas para anunciar mi negocio o evento en Mitú.`;
-            window.open(`https://wa.me/573215698079?text=${encodeURIComponent(msg)}`, '_blank');
-        }
-
+        // 📢 CARRUSEL DINÁMICO DE 3-4 ANUNCIOS ROTATIVOS (SIN TEXTO EXTERNO REPETIDO DEBAJO)
         function renderizarBannersPublicitarios() {
             const cont = document.getElementById('cajaBannerPublicitario');
             if (!cont) return;
 
-            const listaActiva = bannersPublicitariosCache.length > 0 ? bannersPublicitariosCache : [{
-                id: 'default_kumu',
-                titulo: '📢 ¡Anuncia tu Negocio o Evento en Kumu!',
-                subtitulo: 'La vitrina digital más grande de Mitú • Toca para pautar aquí',
-                destino: '3215698079',
-                imagen: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&auto=format&fit=crop&q=80'
-            }];
-
-            const b = listaActiva[indiceBannerActual % listaActiva.length];
+            const listaActiva = obtenerListaBannersActivos();
+            const total = listaActiva.length;
+            const idxActual = ((indiceBannerActual % total) + total) % total;
+            const b = listaActiva[idxActual];
 
             cont.innerHTML = `
-                <div class="space-y-1">
-                    <div onclick="abrirAccionBanner('${(b.destino || '').replace(/'/g, '')}', '${(b.titulo || '').replace(/'/g, '')}')" class="relative rounded-2xl overflow-hidden shadow-md border-2 border-[#D4AF37] cursor-pointer group h-28 bg-[#2D0B3A]">
-                        <img src="${b.imagen}" class="w-full h-full object-cover opacity-55 group-hover:scale-105 transition duration-500" onerror="this.src='https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600'">
-                        <div class="absolute inset-0 bg-gradient-to-r from-[#2D0B3A]/90 via-[#2D0B3A]/60 to-transparent p-3.5 flex flex-col justify-between">
-                            <div class="flex justify-between items-center">
-                                <span class="bg-[#D4AF37] text-[#2D0B3A] text-[9px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider">✨ Destacado en Mitú</span>
-                                ${listaActiva.length > 1 ? `<span class="text-[9px] text-amber-200 font-bold">${(indiceBannerActual % listaActiva.length) + 1}/${listaActiva.length}</span>` : ''}
-                            </div>
-                            <div>
-                                <h3 class="text-white font-extrabold text-sm leading-tight truncate">${b.titulo}</h3>
-                                <p class="text-amber-200 text-[11px] font-medium truncate mt-0.5">${b.subtitulo}</p>
-                            </div>
+                <div onclick="abrirAccionBanner('${(b.destino || '').replace(/'/g, '')}', '${(b.titulo || '').replace(/'/g, '')}')" class="relative rounded-2xl overflow-hidden shadow-md border-2 border-[#D4AF37] cursor-pointer group h-28 bg-[#2D0B3A] select-none">
+                    <img src="${b.imagen}" class="w-full h-full object-cover opacity-50 group-hover:scale-105 transition duration-500" onerror="this.src='https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600'">
+                    <div class="absolute inset-0 bg-gradient-to-r from-[#2D0B3A]/95 via-[#2D0B3A]/70 to-transparent px-7 py-2.5 flex flex-col justify-between">
+                        <div class="flex justify-between items-center">
+                            <span class="bg-[#D4AF37] text-[#2D0B3A] text-[9px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider">${b.etiqueta || '✨ DESTACADO EN MITÚ'}</span>
+                            <span class="text-[9px] text-amber-200 font-bold bg-black/35 px-1.5 py-0.5 rounded">${idxActual + 1}/${total}</span>
+                        </div>
+                        <div class="my-auto">
+                            <h3 class="text-white font-extrabold text-xs sm:text-sm leading-tight line-clamp-1">${b.titulo}</h3>
+                            <p class="text-amber-200 text-[10px] sm:text-[11px] font-medium line-clamp-2 mt-0.5 leading-snug">${b.subtitulo}</p>
+                        </div>
+                        <div class="flex justify-center space-x-1.5 pt-0.5">
+                            ${listaActiva.map((_, i) => `
+                                <button type="button" onclick="irASlideBanner(${i}, event)" class="h-1.5 rounded-full transition-all ${i === idxActual ? 'w-5 bg-[#D4AF37]' : 'w-1.5 bg-white/50'}"></button>
+                            `).join('')}
                         </div>
                     </div>
-                    <div class="flex justify-between items-center px-1">
-                        <span class="text-[10px] text-gray-500 font-medium">📢 Espacio patrocinado Kumu</span>
-                        <button onclick="solicitarPautaPublicitariaKumu()" class="text-[10px] font-extrabold text-[#C85A17] hover:underline flex items-center gap-0.5">
-                            ¿Quieres anunciar tu negocio o evento aquí? Toca para pautar ➔
-                        </button>
-                    </div>
+                    <button type="button" onclick="cambiarSlideBannerManual(-1, event)" class="absolute left-1 top-1/2 -translate-y-1/2 bg-black/35 hover:bg-black/60 text-white w-5 h-7 rounded-full flex items-center justify-center text-xs font-bold">‹</button>
+                    <button type="button" onclick="cambiarSlideBannerManual(1, event)" class="absolute right-1 top-1/2 -translate-y-1/2 bg-black/35 hover:bg-black/60 text-white w-5 h-7 rounded-full flex items-center justify-center text-xs font-bold">›</button>
                 </div>
             `;
         }
@@ -302,6 +569,20 @@
             } catch (e) {}
         }
 
+        // 👁️ VISOR DE CONTRASEÑA ADMIN ANTES DE CONFIRMAR (PUNTO 7)
+        function toggleVerClaveAdmin() {
+            const inp = document.getElementById('inputNuevaClaveAdmin');
+            const btn = document.getElementById('btnOjitoClaveAdmin');
+            if (!inp) return;
+            if (inp.type === 'password') {
+                inp.type = 'text';
+                if (btn) btn.textContent = '🙈';
+            } else {
+                inp.type = 'password';
+                if (btn) btn.textContent = '👁️';
+            }
+        }
+
         async function cambiarClaveMaestraSupabase() {
             const nueva = document.getElementById('inputNuevaClaveAdmin')?.value.trim();
             if (!nueva || nueva.length < 4) {
@@ -312,6 +593,8 @@
                 alert("⚠️ No uses 2026 porque ese es el PIN de los repartidores.");
                 return;
             }
+            if (!confirm(`🔐 ¿Confirmas guardar "${nueva}" como tu nueva Clave Maestra de Administrador?`)) return;
+
             const { data: existente } = await supabaseClient.from('comercios').select('id').eq('nombre', NOMBRE_FILA_CONFIG_ADMIN).maybeSingle();
             let errGuardar = null;
             if (existente && existente.id) {
@@ -331,7 +614,7 @@
                 alert("Error al guardar clave en Supabase: " + errGuardar.message);
             } else {
                 claveAdminCache = nueva;
-                alert(`🔐 ¡Clave Maestra actualizada con éxito en Supabase! Tu nueva clave es: ${nueva}`);
+                alert(`🔐 ¡Clave Maestra actualizada con éxito en Supabase!`);
                 document.getElementById('inputNuevaClaveAdmin').value = '';
             }
         }
@@ -403,7 +686,6 @@
             return Math.max(0, Math.floor(diffMs / 60000));
         }
 
-        // 🚀 SUBIDA INTELIGENTE V1: USA SUPABASE STORAGE (kumu-fotos) Y SI NO USA BASE64 COMPRIMIDO
         async function subirArchivoStorageOBase64(file, callbackUrl) {
             try {
                 const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
@@ -533,7 +815,12 @@
         function evaluarPromoHoraFeliz(producto) {
             let precioBase = Number(producto.precio) < 1000 ? Number(producto.precio) * 1000 : Number(producto.precio);
             let descRaw = producto.descripcion || '';
-            let descLimpia = descRaw.replace(/\[PROMO:\d+\|\d{2}:\d{2}-\d{2}:\d{2}\]/g, '').replace(/\[IMG:[^\]]+\]/g, '').trim();
+            const esFavorito = descRaw.includes('[FAV]');
+            let descLimpia = descRaw
+                .replace(/\[PROMO:\d+\|\d{2}:\d{2}-\d{2}:\d{2}\]/g, '')
+                .replace(/\[IMG:[^\]]+\]/g, '')
+                .replace(/\[FAV\]/g, '')
+                .trim();
 
             const match = descRaw.match(/\[PROMO:(\d+)\|(\d{2}:\d{2}-\d{2}:\d{2})\]/);
             if (match) {
@@ -549,11 +836,80 @@
                 const minsFin = hF * 60 + (mF || 0);
                 const dentro = minsFin < minsInicio ? (minsActual >= minsInicio || minsActual <= minsFin) : (minsActual >= minsInicio && minsActual <= minsFin);
                 if (dentro && precioOferta < precioBase) {
-                    return { activa: true, precioFinal: precioOferta, precioNormal: precioBase, horario: rango, descLimpia };
+                    return { activa: true, esFavorito, precioFinal: precioOferta, precioNormal: precioBase, horario: rango, descLimpia };
                 }
-                return { activa: false, precioFinal: precioBase, precioNormal: precioBase, horario: rango, descLimpia };
+                return { activa: false, esFavorito, precioFinal: precioBase, precioNormal: precioBase, horario: rango, descLimpia };
             }
-            return { activa: false, precioFinal: precioBase, precioNormal: precioBase, horario: null, descLimpia };
+            return { activa: false, esFavorito, precioFinal: precioBase, precioNormal: precioBase, horario: null, descLimpia };
+        }
+
+        // 🔥 ALTERNAR INSIGNIA "MÁS PEDIDO" EN PLATOS ESTRELLA (PUNTO 11.1)
+        async function toggleFavoritoProducto(productoId) {
+            const p = windowProductosCache.find(item => String(item.id) === String(productoId));
+            if (!p) return;
+            let desc = p.descripcion || '';
+            if (desc.includes('[FAV]')) {
+                desc = desc.replace(/\[FAV\]/g, '').trim();
+            } else {
+                desc = `${desc} [FAV]`.trim();
+            }
+            const { error } = await supabaseClient.from('productos').update({ descripcion: desc }).eq('id', productoId);
+            if (error) alert("Error: " + error.message);
+            else initApp();
+        }
+
+        // 👑 ALTERNAR INSIGNIA "CORONA VIP" EN COMERCIOS PATROCINADOS (PUNTO 8)
+        async function toggleCoronaComercio(comercioId) {
+            const c = windowComerciosCache.find(item => String(item.id) === String(comercioId));
+            if (!c) return;
+            const meta = extraerMetadatosComercio(c);
+            const nuevaDir = construirDireccionConMetadatos(meta.dirLimpia, !meta.esVIP, meta.esEncargo, meta.fechaEncargo, meta.textoAdicionesRaw);
+            const { error } = await supabaseClient.from('comercios').update({ direccion: nuevaDir }).eq('id', comercioId);
+            if (error) alert("Error: " + error.message);
+            else {
+                alert(!meta.esVIP ? `👑 ¡Corona VIP activada para ${c.nombre}! Ahora aparece en el puesto #1.` : `Corona VIP desactivada para ${c.nombre}.`);
+                initApp();
+            }
+        }
+
+        // ➕ CONFIGURAR ADICIONES PROPIAS Y FECHA DE ENCARGO DESDE ADMIN
+        async function configurarAdicionesYEncargoAdmin(comercioId) {
+            const c = windowComerciosCache.find(item => String(item.id) === String(comercioId));
+            if (!c) return;
+            const meta = extraerMetadatosComercio(c);
+
+            const nuevasAdic = prompt(`➕ ADICIONES PROPIAS DE ${c.nombre.toUpperCase()}:\nFormato: Nombre:Precio separados por coma (o deja vacío si no maneja adiciones):`, meta.textoAdicionesRaw || '');
+            if (nuevasAdic === null) return;
+
+            const modoEncargo = confirm(`⏳ ¿${c.nombre} trabaja bajo modalidad "Bajo Pedido / Por Encargo"?\n\nAceptar = Sí (Bajo Pedido / Encargo)\nCancelar = No (Entrega Inmediata)`);
+            let nuevaFechaEncargo = meta.fechaEncargo;
+            if (modoEncargo) {
+                const f = prompt(`📅 Si ${c.nombre} tiene un día/hora fijo de entrega para esta semana, escríbelo aquí (Ej: "Sábado 3:00 PM") o deja vacío para que solo el cliente elija:`, meta.fechaEncargo || '');
+                if (f !== null) nuevaFechaEncargo = f.trim();
+            } else {
+                nuevaFechaEncargo = '';
+            }
+
+            const nuevaDir = construirDireccionConMetadatos(meta.dirLimpia, meta.esVIP, modoEncargo, nuevaFechaEncargo, nuevasAdic.trim());
+            const { error } = await supabaseClient.from('comercios').update({ direccion: nuevaDir }).eq('id', comercioId);
+            if (error) alert("Error: " + error.message);
+            else {
+                alert(`✅ Configuración de Adiciones y Modalidad actualizada para ${c.nombre}.`);
+                initApp();
+            }
+        }
+
+        // 📲 COPIAR ENLACE DIRECTO A LA TIENDA PARA ESTADOS DE WHATSAPP (PUNTO 11.4)
+        function copiarEnlaceDirectoTiendaWA(comercioId, nombreLocal, e) {
+            if (e) e.stopPropagation();
+            const urlDirecta = `${window.location.origin}${window.location.pathname}?local=${encodeURIComponent(comercioId)}`;
+            const textoEstado = `🔥 ¡Pide fácil en *${nombreLocal}* por *Kumu 🍄* directo a tu casa en Mitú!\n👉 Toca aquí para ver nuestro menú: ${urlDirecta}`;
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(textoEstado);
+                alert(`📲 ¡Enlace directo para Estados de WhatsApp copiado!\n\n${textoEstado}`);
+            } else {
+                prompt("Copia este enlace para tus Estados de WhatsApp:", textoEstado);
+            }
         }
 
         function ocultarSplash() {
@@ -561,18 +917,27 @@
             if (splash) { splash.style.opacity = '0'; splash.style.visibility = 'hidden'; setTimeout(() => splash.remove(), 600); }
         }
 
+        // ÚNICO DISPARADOR DE ARRANQUE (EVITA DUPLICACIÓN DEL PIE DE PÁGINA LEGAL)
         window.addEventListener('DOMContentLoaded', () => {
             initApp();
+            verificarCalificacionPendiente();
             setTimeout(ocultarSplash, 3000);
+            setTimeout(() => {
+                const burbuja = document.getElementById('burbujaSaludoGuacamaya');
+                if (burbuja) burbuja.classList.add('hidden');
+            }, 6500);
             setInterval(() => {
                 if (currentView === 'cliente' && !comercioSeleccionado && categoriaFiltro !== 'Sanvi') {
                     renderizarSeguimientoCliente(true);
                 }
             }, 8000);
             setInterval(() => {
-                if (currentView === 'cliente' && !comercioSeleccionado && bannersPublicitariosCache.length > 1) {
-                    indiceBannerActual++;
-                    renderizarBannersPublicitarios();
+                if (currentView === 'cliente' && !comercioSeleccionado && Date.now() > pausaCarruselHasta) {
+                    const lista = obtenerListaBannersActivos();
+                    if (lista.length > 1) {
+                        indiceBannerActual = (indiceBannerActual + 1) % lista.length;
+                        renderizarBannersPublicitarios();
+                    }
                 }
             }, 4500);
         });
@@ -593,6 +958,10 @@
 
         function estaComercioAbierto(comercio) {
             if (comercio.activo === false) return false;
+            const meta = extraerMetadatosComercio(comercio);
+            // Si es Bajo Pedido / Por Encargo, su vitrina permanece abierta para recibir reservas
+            if (meta.esEncargo) return true;
+
             const ahora = new Date();
             const horaActual = ahora.getHours() * 60 + ahora.getMinutes();
 
@@ -641,12 +1010,18 @@
             finally { ocultarSplash(); }
         }
 
+        // 📱 RENDER BANNER PWA (SE OCULTA AUTOMÁTICAMENTE SI YA LA INSTALARON)
         function renderBannerPWA(container) {
+            if (yaTienePWAInstaladaOCerrada()) return;
             const banner = document.createElement('div');
+            banner.id = 'bannerSuperiorPWA';
             banner.className = 'bg-[#1B4D3E] text-white px-3 py-2 text-xs flex justify-between items-center border-b border-[#C85A17]/40';
             banner.innerHTML = `
-                <span>🍄 Instala <b>Kumu</b> en tu celular</span>
-                <button onclick="document.getElementById('modalInstalar').classList.remove('hidden')" class="bg-[#C85A17] text-white font-extrabold px-2.5 py-1 rounded text-[10px]">Añadir</button>
+                <span>🍄 Instala el acceso directo de <b>Kumu</b></span>
+                <div class="flex items-center space-x-1.5">
+                    <button onclick="document.getElementById('modalInstalar').classList.remove('hidden')" class="bg-[#C85A17] text-white font-extrabold px-2.5 py-1 rounded text-[10px]">Añadir</button>
+                    <button onclick="marcarPWAInstaladaOCerrada(false)" class="text-amber-200 hover:text-white px-1.5 font-bold text-xs" title="Ocultar">✕</button>
+                </div>
             `;
             container.appendChild(banner);
         }
@@ -670,7 +1045,10 @@
         }
 
         function renderFooterLegal(container) {
+            const existente = document.getElementById('footerLegalUnicoKumu');
+            if (existente) existente.remove();
             const footer = document.createElement('div');
+            footer.id = 'footerLegalUnicoKumu';
             footer.className = 'px-4 py-3 text-center border-t bg-slate-50 text-[10px] text-gray-500 space-y-1';
             footer.innerHTML = `
                 <p class="font-semibold text-gray-600">🍄 Kumu Marketplace • Mitú, Vaupés, Colombia</p>
@@ -736,7 +1114,22 @@
             container.appendChild(nav);
         }
 
-        function switchView(view) { currentView = view; comercioSeleccionado = null; initApp(); }
+        function switchView(view) {
+            currentView = view;
+            comercioSeleccionado = null;
+            if (window.location.search.includes('local=')) {
+                window.history.replaceState({}, '', window.location.pathname);
+            }
+            initApp();
+        }
+
+        function volverALocalesInicio() {
+            comercioSeleccionado = null;
+            if (window.location.search.includes('local=')) {
+                window.history.replaceState({}, '', window.location.pathname);
+            }
+            initApp();
+        }
 
         function actualizarListaComerciosDOM() {
             const lista = document.getElementById('listaComercios');
@@ -758,39 +1151,58 @@
                 comerciosFiltrados = comerciosFiltrados.filter(c => c.nombre.toLowerCase().includes(q) || idsConPlato.includes(c.id));
             }
 
+            // 👑 ORDENAR PONIENDO PRIMERO LOS COMERCIOS CON CORONA VIP
+            comerciosFiltrados.sort((a, b) => {
+                const vipA = extraerMetadatosComercio(a).esVIP ? 1 : 0;
+                const vipB = extraerMetadatosComercio(b).esVIP ? 1 : 0;
+                return vipB - vipA;
+            });
+
             if (comerciosFiltrados.length === 0) {
                 lista.innerHTML = `<p class="text-sm text-gray-500 italic">No se encontraron resultados para tu búsqueda.</p>`;
                 return;
             }
 
+            const textoTiempoInmediato = estaLloviendo ? '🌧️ 35-45 min (Lluvia en Mitú)' : '⚡ Entrega Inmediata (25-35 min)';
+
             lista.innerHTML = comerciosFiltrados.map(c => {
                 const abierto = estaComercioAbierto(c);
+                const meta = extraerMetadatosComercio(c);
                 const imagenLocal = c.imagen_url || c.imagen || 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=200';
-                const horarioTexto = (c.hora_apertura && c.hora_cierre) ? ` • 🕒 ${c.hora_apertura} - ${c.hora_cierre}` : '';
-                const esPorEncargo = (c.direccion || '').includes('[ENCARGO]');
-                const dirLimpia = (c.direccion || '').replace('[ENCARGO]', '').trim();
+                const horarioTexto = (!meta.esEncargo && c.hora_apertura && c.hora_cierre) ? ` • 🕒 ${c.hora_apertura} - ${c.hora_cierre}` : '';
+
+                let badgeEstado = '';
+                if (meta.esEncargo) {
+                    badgeEstado = `<span class="text-[10px] px-2 py-0.5 rounded-full font-bold bg-purple-100 text-purple-900 border border-purple-300">🟣 APARTAR / ENCARGO</span>`;
+                } else {
+                    badgeEstado = `<span class="text-[10px] px-2 py-0.5 rounded-full font-bold ${abierto ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'}">${abierto ? '🟢 ABIERTO' : '🔴 CERRADO'}</span>`;
+                }
 
                 return `
-                    <div onclick="seleccionarComercioPorId('${c.id}')" class="bg-white border rounded-xl p-3 shadow-sm flex items-center space-x-3 cursor-pointer hover:border-[#1B4D3E] transition ${!abierto ? 'opacity-60 bg-gray-50' : ''}">
+                    <div onclick="seleccionarComercioPorId('${c.id}')" class="bg-white ${meta.esVIP ? 'border-2 border-[#D4AF37] bg-amber-50/20 shadow-md' : 'border shadow-sm'} rounded-xl p-3 flex items-center space-x-3 cursor-pointer hover:border-[#1B4D3E] transition ${!abierto ? 'opacity-60 bg-gray-50' : ''}">
                         <img src="${imagenLocal}" class="w-16 h-16 rounded-lg object-cover border flex-shrink-0" alt="${c.nombre}" onerror="this.src='https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=200'">
-                        <div class="flex-1">
-                            <div class="flex justify-between items-center">
-                                <h3 class="font-bold text-gray-800">${c.nombre}</h3>
-                                <span class="text-[10px] px-2 py-0.5 rounded-full font-bold ${abierto ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'}">${abierto ? '🟢 ABIERTO' : '🔴 CERRADO'}</span>
+                        <div class="flex-1 min-w-0">
+                            ${meta.esVIP ? `<span class="inline-block bg-gradient-to-r from-[#2D0B3A] to-[#C85A17] text-[#D4AF37] text-[9px] font-extrabold px-2 py-0.5 rounded-full mb-0.5">👑 RECOMENDADO VIP</span>` : ''}
+                            <div class="flex justify-between items-center gap-1">
+                                <h3 class="font-bold text-gray-800 truncate">${c.nombre}</h3>
+                                ${badgeEstado}
                             </div>
-                            <div class="mt-0.5">
-                                <span class="inline-block text-[9px] px-2 py-0.5 rounded font-bold ${esPorEncargo ? 'bg-purple-100 text-purple-900' : 'bg-amber-100 text-amber-900'}">
-                                    ${esPorEncargo ? '⏳ Bajo Pedido / Por Encargo' : '⚡ Entrega Inmediata (25-35 min)'}
+                            <div class="mt-0.5 flex flex-wrap gap-1 items-center">
+                                <span class="inline-block text-[9px] px-2 py-0.5 rounded font-bold ${meta.esEncargo ? 'bg-purple-100 text-purple-900' : 'bg-amber-100 text-amber-900'}">
+                                    ${meta.esEncargo ? `⏳ Bajo Pedido ${meta.fechaEncargo ? '• ' + meta.fechaEncargo : '(Reserva tu entrega)'}` : textoTiempoInmediato}
                                 </span>
+                                <button onclick="copiarEnlaceDirectoTiendaWA('${c.id}', '${c.nombre.replace(/'/g, '')}', event)" class="text-[9px] bg-emerald-50 text-[#1B4D3E] border border-emerald-300 px-1.5 py-0.5 rounded font-bold" title="Copiar link directo para Estado de WhatsApp">📲 Link WA</button>
                             </div>
                             ${modoAdminVisible ? `
                                 <div class="flex flex-wrap gap-1 mt-2">
+                                    <button onclick="event.stopPropagation(); toggleCoronaComercio('${c.id}')" class="px-2 py-0.5 rounded text-[10px] font-bold ${meta.esVIP ? 'bg-[#D4AF37] text-[#2D0B3A]' : 'bg-gray-200 text-gray-700'}">👑 Corona</button>
+                                    <button onclick="event.stopPropagation(); configurarAdicionesYEncargoAdmin('${c.id}')" class="bg-purple-700 text-white font-bold py-0.5 px-2 rounded text-[10px]">➕ Adiciones/Encargo</button>
                                     <button onclick="event.stopPropagation(); toggleActivoLocal('${c.id}', ${c.activo !== false})" class="px-2 py-0.5 rounded text-[10px] font-bold ${c.activo !== false ? 'bg-amber-600 text-white' : 'bg-emerald-600 text-white'}">${c.activo !== false ? '🛑 Apagar' : '🟢 Encender'}</button>
                                     <button onclick="event.stopPropagation(); editarHorarioRapidoAdmin('${c.id}')" class="bg-blue-600 text-white font-bold py-0.5 px-2 rounded text-[10px]">🕒 Horario</button>
-                                    <button onclick="event.stopPropagation(); eliminarComercio('${c.id}')" class="bg-red-600 hover:bg-red-800 text-white font-bold py-0.5 px-2 rounded text-[10px]">🗑️ Eliminar</button>
+                                    <button onclick="event.stopPropagation(); eliminarComercio('${c.id}')" class="bg-red-600 hover:bg-red-800 text-white font-bold py-0.5 px-2 rounded text-[10px]">🗑️</button>
                                 </div>
                             ` : ''}
-                            <p class="text-xs text-gray-500 mt-1">${c.categoria} • ${dirLimpia}${horarioTexto}</p>
+                            <p class="text-xs text-gray-500 mt-1 truncate">${c.categoria} • ${meta.dirLimpia}${horarioTexto}</p>
                         </div>
                     </div>
                 `;
@@ -826,12 +1238,11 @@
 
             if (!comercioSeleccionado) {
                 content.innerHTML = `
-                    <input type="text" id="inputBusqueda" oninput="buscarProductos(this.value)" value="${busquedaTexto}" placeholder="🔍 Buscar plato, medicina o local en Mitú..." class="w-full p-2.5 border border-amber-200 rounded-lg text-xs bg-amber-50/40 outline-none focus:ring-2 focus:ring-[#1B4D3E]">
+                    <input type="text" id="inputBusqueda" oninput="buscarProductos(this.value)" value="${busquedaTexto}" placeholder="🔍 Buscar plato, medicina, postre o local en Mitú..." class="w-full p-2.5 border border-amber-200 rounded-lg text-xs bg-amber-50/40 outline-none focus:ring-2 focus:ring-[#1B4D3E]">
 
-                    <!-- 📢 CARRUSEL DE BANNERS PUBLICITARIOS Y AUTOVENTA (F-01) -->
+                    <!-- 📢 CARRUSEL DINÁMICO DE BANNERS (3-4 ANUNCIOS ROTATIVOS, SIN TEXTO REPETIDO ABAJO) -->
                     <div id="cajaBannerPublicitario"></div>
 
-                    <!-- ⭐ FIDELIZACIÓN AUTOMÁTICA CLIENTE KUMU VIP (F-05) -->
                     ${misPedidosCount > 0 ? `
                         <div class="bg-amber-50 border border-[#D4AF37] px-3 py-1.5 rounded-xl flex justify-between items-center text-[11px]">
                             <span class="font-bold text-[#2D0B3A]">⭐ Cliente Kumu VIP: <b>${misPedidosCount} pedido(s) realizados</b></span>
@@ -896,23 +1307,51 @@
                 } catch (e) { comercios = JSON.parse(localStorage.getItem('kumu_cache_comercios') || '[]'); }
                 windowComerciosCache = (comercios || []).filter(c => !c.nombre.startsWith('__KUMU_'));
 
+                // 🔗 VERIFICAR SI EL CLIENTE ENTRÓ DESDE UN LINK DIRECTO DE ESTADO DE WHATSAPP (?local=...)
+                if (!deepLinkProcesado && window.location.search.includes('local=')) {
+                    deepLinkProcesado = true;
+                    const paramLocal = new URLSearchParams(window.location.search).get('local');
+                    if (paramLocal) {
+                        const encontrado = windowComerciosCache.find(c => String(c.id) === String(paramLocal) || c.nombre.toLowerCase().includes(paramLocal.toLowerCase()));
+                        if (encontrado) {
+                            seleccionarComercioPorId(encontrado.id);
+                            return;
+                        }
+                    }
+                }
+
                 renderizarBannerHoraFeliz(todosProductosGlobal, windowComerciosCache);
                 renderizarSeguimientoCliente(false);
                 actualizarListaComerciosDOM();
             } else {
                 const abierto = estaComercioAbierto(comercioSeleccionado);
                 comercioSeleccionado.abierto = abierto;
-                const dirLimpia = (comercioSeleccionado.direccion || '').replace('[ENCARGO]', '').trim();
+                const meta = extraerMetadatosComercio(comercioSeleccionado);
+
                 content.innerHTML = `
-                    <button onclick="comercioSeleccionado=null; initApp();" class="text-sm text-[#1B4D3E] font-bold mb-2 flex items-center gap-1">← Volver a locales</button>
                     <div class="flex justify-between items-center mb-1">
-                        <h2 class="font-bold text-xl text-gray-800">${comercioSeleccionado.nombre}</h2>
-                        <span class="text-xs px-2 py-1 rounded font-bold ${abierto ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'}">${abierto ? '🟢 ABIERTO' : '🔴 CERRADO'}</span>
+                        <button onclick="volverALocalesInicio()" class="text-sm text-[#1B4D3E] font-bold flex items-center gap-1">← Volver a locales</button>
+                        <button onclick="copiarEnlaceDirectoTiendaWA('${comercioSeleccionado.id}', '${comercioSeleccionado.nombre.replace(/'/g, '')}', event)" class="bg-emerald-50 border border-emerald-300 text-[#1B4D3E] px-2.5 py-1 rounded-lg text-[10px] font-extrabold">📲 Compartir Link Tienda</button>
                     </div>
-                    <p class="text-[11px] text-gray-500 mb-2">📍 Vendedor responsable: ${comercioSeleccionado.nombre} (${dirLimpia})</p>
-                    <div class="bg-amber-50 border border-amber-200 p-3 rounded-lg text-xs text-amber-950 mb-3">
-                        <p class="font-bold mb-1">📲 Datos de Transferencia / Nequi / Bre-B del Comercio:</p>
-                        <p class="text-sm font-bold text-amber-900">${comercioSeleccionado.telefono}</p>
+                    <div class="flex justify-between items-center mb-1">
+                        <h2 class="font-bold text-xl text-gray-800">${meta.esVIP ? '👑 ' : ''}${comercioSeleccionado.nombre}</h2>
+                        <span class="text-xs px-2 py-1 rounded font-bold ${meta.esEncargo ? 'bg-purple-100 text-purple-900' : (abierto ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800')}">
+                            ${meta.esEncargo ? '🟣 ABIERTO PARA APARTAR' : (abierto ? '🟢 ABIERTO' : '🔴 CERRADO')}
+                        </span>
+                    </div>
+                    <p class="text-[11px] text-gray-500 mb-2">📍 Vendedor responsable: ${comercioSeleccionado.nombre} (${meta.dirLimpia})</p>
+                    ${meta.esEncargo ? `
+                        <div class="bg-purple-50 border border-purple-300 p-2.5 rounded-xl text-xs text-purple-950 mb-2">
+                            <p class="font-extrabold">⏳ Modalidad Bajo Pedido / Por Encargo</p>
+                            <p class="text-[11px] mt-0.5">${meta.fechaEncargo ? `📅 <b>Entrega programada por el local:</b> ${meta.fechaEncargo}.` : 'Puedes apartar tus productos hoy e indicar abajo en el carrito para qué día y hora los necesitas.'}</p>
+                        </div>
+                    ` : ''}
+                    <div class="bg-amber-50 border border-amber-200 p-3 rounded-lg text-xs text-amber-950 mb-3 flex justify-between items-center gap-2">
+                        <div>
+                            <p class="font-bold mb-0.5">📲 Cuenta Nequi / Bre-B del Comercio:</p>
+                            <p class="text-sm font-extrabold text-amber-900">${comercioSeleccionado.telefono}</p>
+                        </div>
+                        <button onclick="copiarCuentaComercio('${(comercioSeleccionado.telefono || '').replace(/'/g, '')}')" class="bg-[#2D0B3A] text-[#D4AF37] px-2.5 py-1.5 rounded-lg text-[10px] font-extrabold flex-shrink-0 shadow">📋 Copiar</button>
                     </div>
                     <div id="barraCatProductos" class="flex space-x-2 overflow-x-auto kumu-scroll pb-2.5 text-xs mb-3"></div>
                     <div id="listaProductos" class="space-y-3 mt-1">Cargando menú...</div>
@@ -947,10 +1386,17 @@
                 if (!productos || productos.length === 0) {
                     pList.innerHTML = `<p class="text-sm text-gray-500 italic">Este local aún no tiene productos registrados.</p>`;
                 } else {
-                    let productosFiltrados = productos;
+                    let productosFiltrados = [...productos];
                     if (categoriaProductoFiltro !== 'Todos') {
-                        productosFiltrados = productos.filter(p => normalizarCategoriaPlato(p.categoria) === categoriaProductoFiltro);
+                        productosFiltrados = productosFiltrados.filter(p => normalizarCategoriaPlato(p.categoria) === categoriaProductoFiltro);
                     }
+                    // 🔥 ORDENAR PONIENDO PRIMERO LOS PLATOS "MÁS PEDIDOS"
+                    productosFiltrados.sort((a, b) => {
+                        const favA = (a.descripcion || '').includes('[FAV]') ? 1 : 0;
+                        const favB = (b.descripcion || '').includes('[FAV]') ? 1 : 0;
+                        return favB - favA;
+                    });
+
                     if (productosFiltrados.length === 0) {
                         pList.innerHTML = `<p class="text-sm text-gray-500 italic">No hay productos en la pestaña "${obtenerTextoConEmojiCategoria(categoriaProductoFiltro)}".</p>`;
                     } else {
@@ -962,10 +1408,13 @@
                             const catActual = normalizarCategoriaPlato(p.categoria);
 
                             return `
-                                <div class="bg-white border ${promoInfo.activa ? 'border-2 border-[#C85A17] bg-amber-50/30' : ''} rounded-xl p-2.5 flex items-center justify-between space-x-3 shadow-sm ${!estaDisponible ? 'opacity-50' : ''}">
+                                <div class="bg-white border ${promoInfo.activa ? 'border-2 border-[#C85A17] bg-amber-50/30' : (promoInfo.esFavorito ? 'border-2 border-[#D4AF37]' : '')} rounded-xl p-2.5 flex items-center justify-between space-x-3 shadow-sm ${!estaDisponible ? 'opacity-50' : ''}">
                                     <img src="${imgProd}" class="w-16 h-16 rounded-lg object-cover border-2 border-[#D4AF37]/50 flex-shrink-0" onerror="this.src='https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=300'">
                                     <div class="flex-1">
-                                        ${promoInfo.activa ? `<span class="inline-block bg-[#C85A17] text-white text-[9px] font-extrabold px-2 py-0.5 rounded-full mb-0.5">🔥 HORA FELIZ (${promoInfo.horario})</span>` : ''}
+                                        <div class="flex flex-wrap gap-1 mb-0.5">
+                                            ${promoInfo.esFavorito ? `<span class="inline-block bg-amber-100 text-[#C85A17] border border-[#C85A17] text-[9px] font-extrabold px-2 py-0.5 rounded-full">🔥 MÁS PEDIDO</span>` : ''}
+                                            ${promoInfo.activa ? `<span class="inline-block bg-[#C85A17] text-white text-[9px] font-extrabold px-2 py-0.5 rounded-full">⚡ HORA FELIZ (${promoInfo.horario})</span>` : ''}
+                                        </div>
                                         <h4 class="font-bold text-sm text-gray-800">${p.nombre} ${!estaDisponible ? '<span class="text-red-600 font-bold text-[10px]">(Agotado)</span>' : ''}</h4>
                                         <p class="text-[11px] text-gray-600 whitespace-pre-line leading-relaxed">${promoInfo.descLimpia}</p>
                                         <div class="flex items-center gap-1.5 mt-0.5">
@@ -973,7 +1422,7 @@
                                             <p class="text-xs font-extrabold text-[#1B4D3E]">$${promoInfo.precioFinal.toLocaleString()} COP</p>
                                         </div>
                                         ${(modoAdminVisible || comercioLogueado) ? `
-                                            <div class="flex flex-wrap items-center gap-1.5 mt-1.5">
+                                            <div class="flex flex-wrap items-center gap-1 mt-1.5">
                                                 <select onchange="cambiarCategoriaProducto('${p.id}', this.value)" class="p-1 border rounded text-[10px] bg-amber-50 font-semibold text-amber-900">
                                                     <option value="Hamburguesas" ${catActual==='Hamburguesas'?'selected':''}>🍔 Hamburguesas</option>
                                                     <option value="Salchipapas" ${catActual==='Salchipapas'?'selected':''}>🍟 Salchipapas</option>
@@ -981,9 +1430,10 @@
                                                     <option value="Carnes" ${catActual==='Carnes'?'selected':''}>🥩 Carnes</option>
                                                     <option value="Bebidas" ${catActual==='Bebidas'?'selected':''}>🥤 Bebidas</option>
                                                 </select>
-                                                <button onclick="event.stopPropagation(); abrirSelectorFotoPlato('${p.id}')" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-0.5 px-2 rounded text-[10px]">📂 Subir Foto</button>
-                                                ${modoAdminVisible ? `<button onclick="event.stopPropagation(); editarPrecioFotoProducto('${p.id}')" class="bg-blue-600 text-white font-bold py-0.5 px-2 rounded text-[10px]">✏️ Precio/URL</button>` : ''}
-                                                <button onclick="event.stopPropagation(); programarHoraFelizPlato('${p.id}')" class="bg-[#2D0B3A] text-[#D4AF37] font-bold py-0.5 px-2 rounded text-[10px]">⏰ Hora Feliz</button>
+                                                <button onclick="event.stopPropagation(); toggleFavoritoProducto('${p.id}')" class="px-1.5 py-0.5 rounded text-[10px] font-bold ${promoInfo.esFavorito ? 'bg-[#C85A17] text-white' : 'bg-gray-200 text-gray-700'}" title="Marcar como Más Pedido">🔥</button>
+                                                <button onclick="event.stopPropagation(); abrirSelectorFotoPlato('${p.id}')" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-0.5 px-2 rounded text-[10px]">📂 Foto</button>
+                                                ${modoAdminVisible ? `<button onclick="event.stopPropagation(); editarPrecioFotoProducto('${p.id}')" class="bg-blue-600 text-white font-bold py-0.5 px-2 rounded text-[10px]">✏️ Precio</button>` : ''}
+                                                <button onclick="event.stopPropagation(); programarHoraFelizPlato('${p.id}')" class="bg-[#2D0B3A] text-[#D4AF37] font-bold py-0.5 px-2 rounded text-[10px]">⏰ Promo</button>
                                                 <button onclick="event.stopPropagation(); eliminarProducto('${p.id}')" class="bg-red-600 hover:bg-red-800 text-white font-bold py-0.5 px-2 rounded text-[10px]">🗑️</button>
                                             </div>
                                         ` : ''}
@@ -995,6 +1445,18 @@
                     }
                 }
                 renderizarCarrito();
+            }
+        }
+
+        // 📋 COPIAR NÚMERO DE CUENTA NEQUI / BRE-B EN 1 TOQUE (PUNTO 10)
+        function copiarCuentaComercio(textoCuenta) {
+            const numeros = (textoCuenta || '').match(/\d{7,15}/g);
+            const aCopiar = (numeros && numeros.length > 0) ? numeros[0] : textoCuenta;
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(aCopiar);
+                alert(`📋 ¡Número de cuenta copiado al portapapeles!: ${aCopiar}\n\nYa puedes pegarlo directamente en tu app Nequi o Banco.`);
+            } else {
+                prompt("Copia este número de cuenta:", aCopiar);
             }
         }
 
@@ -1055,16 +1517,16 @@
             const infoActual = evaluarPromoHoraFeliz(p);
             const precioOferta = prompt(`⏰ HORA FELIZ PARA: ${p.nombre}\nPrecio normal: $${infoActual.precioNormal.toLocaleString()}\nIngresa el Precio de Promo (o 0 para desactivar):`, infoActual.activa ? infoActual.precioFinal : '');
             if (precioOferta === null) return;
-            let descLimpia = infoActual.descLimpia;
+            let descBase = infoActual.descLimpia + (infoActual.esFavorito ? ' [FAV]' : '');
             if (Number(precioOferta) <= 0) {
-                await supabaseClient.from('productos').update({ descripcion: descLimpia }).eq('id', productoId);
+                await supabaseClient.from('productos').update({ descripcion: descBase.trim() }).eq('id', productoId);
                 alert("✅ Promoción desactivada."); initApp(); return;
             }
             const horario = prompt("🕒 Rango de hora militar (Ej: 18:00-20:00):", infoActual.horario || "18:00-20:00");
             if (!horario || !horario.includes('-')) { alert("⚠️ Usa el formato HH:MM-HH:MM"); return; }
             let numPrecio = Number(precioOferta);
             if (numPrecio < 1000) numPrecio *= 1000;
-            const { error } = await supabaseClient.from('productos').update({ descripcion: `${descLimpia} [PROMO:${numPrecio}|${horario.trim()}]`.trim() }).eq('id', productoId);
+            const { error } = await supabaseClient.from('productos').update({ descripcion: `${descBase} [PROMO:${numPrecio}|${horario.trim()}]`.trim() }).eq('id', productoId);
             if (error) alert("Error: " + error.message); else { alert(`🎉 ¡Hora Feliz activada!`); initApp(); }
         }
 
@@ -1079,7 +1541,7 @@
 
             if (ultimoEstadoConocidoCliente && ultimoEstadoConocidoCliente !== p.estado) {
                 reproducirTonoAlerta('exito');
-                if (p.estado === 'En Preparación') alert(`👨‍🍳 ¡El restaurante ya aceptó tu pedido y lo está preparando!`);
+                if (p.estado === 'En Preparación') alert(`👨‍🍳 ¡El comercio ya aceptó tu pedido y lo está preparando!`);
                 else if (p.estado === 'En Camino') alert(`🛵 ¡Tu repartidor va en camino!`);
                 else if (p.estado.includes('Entregado')) { alert(`🎉 ¡Pedido entregado!`); verificarCalificacionPendiente(); }
             }
@@ -1116,7 +1578,7 @@
                     </div>
                     <div class="grid grid-cols-4 gap-1 text-center pt-1">
                         <div class="p-1.5 rounded-lg ${pasoActual >= 1 ? 'bg-[#1B4D3E] text-[#D4AF37] font-bold' : 'bg-gray-200 text-gray-500'} text-[10px]"><div>📩</div>1. Enviado</div>
-                        <div class="p-1.5 rounded-lg ${pasoActual >= 2 ? 'bg-[#1B4D3E] text-[#D4AF37] font-bold' : 'bg-gray-200 text-gray-500'} text-[10px]"><div>👨‍🍳</div>2. Cocinando</div>
+                        <div class="p-1.5 rounded-lg ${pasoActual >= 2 ? 'bg-[#1B4D3E] text-[#D4AF37] font-bold' : 'bg-gray-200 text-gray-500'} text-[10px]"><div>👨‍🍳</div>2. Preparando</div>
                         <div class="p-1.5 rounded-lg ${pasoActual >= 3 ? 'bg-[#C85A17] text-white font-bold' : 'bg-gray-200 text-gray-500'} text-[10px]"><div>🛵</div>3. En Camino</div>
                         <div class="p-1.5 rounded-lg bg-gray-200 text-gray-500 text-[10px]"><div>✅</div>4. Llegó</div>
                     </div>
@@ -1161,7 +1623,7 @@
         }
 
         function seleccionarComercioPorId(id) {
-            const comercio = windowComerciosCache.find(c => c.id === id);
+            const comercio = windowComerciosCache.find(c => String(c.id) === String(id));
             if (!comercio) return;
             if (comercio.categoria === 'Licores & Cigarrillos' && !esMayorEdad) { document.getElementById('modalEdad').classList.remove('hidden'); return; }
             comercioSeleccionado = { ...comercio, abierto: estaComercioAbierto(comercio) };
@@ -1237,7 +1699,7 @@
 
         function agregarAdicionRapidaCarrito(nombreAdicion, precioAdicion) {
             if (!comercioSeleccionado) return;
-            const idAdicion = `adicion_${nombreAdicion.replace(/\s+/g, '_').toLowerCase()}`;
+            const idAdicion = `adicion_${comercioSeleccionado.id}_${nombreAdicion.replace(/\s+/g, '_').toLowerCase()}`;
             const existe = carrito.find(item => item.id === idAdicion);
             if (existe) { existe.cantidad += 1; }
             else {
@@ -1314,8 +1776,10 @@
             const superaTopeEfectivo = totalFinal > TOPE_MAXIMO_EFECTIVO;
             const datosFrecuentes = obtenerClienteFrecuente();
 
+            const metaLocal = extraerMetadatosComercio(comercioSeleccionado);
             const catComercioActual = (comercioSeleccionado && comercioSeleccionado.categoria) || '';
-            const mostrarAdicionesComida = ['Restaurantes & Comida Rápida', 'Restaurantes', 'Comida Rápida'].includes(catComercioActual);
+            const esRestauranteComida = ['Restaurantes & Comida Rápida', 'Restaurantes', 'Comida Rápida'].includes(catComercioActual);
+            const adicionesDelLocal = esRestauranteComida ? metaLocal.listaAdiciones : [];
 
             resumen.innerHTML = `
                 <h3 class="font-bold text-gray-800 mb-2">Tu Pedido en Kumu (${carrito.reduce((a,b)=>a+b.cantidad,0)})</h3>
@@ -1339,17 +1803,16 @@
                     `).join('')}
                 </div>
 
-                ${mostrarAdicionesComida ? `
+                <!-- ➕ ADICIONES PROPIAS Y PERSONALIZADAS DE ESTE LOCAL (PUNTO 4) -->
+                ${adicionesDelLocal.length > 0 ? `
                     <div class="bg-amber-50/90 border border-[#C85A17]/40 p-2.5 rounded-xl mb-3 space-y-1.5">
-                        <p class="text-[11px] font-extrabold text-[#2D0B3A]">➕ ¿Deseas agregar una Adición en 1 toque?</p>
+                        <p class="text-[11px] font-extrabold text-[#2D0B3A]">➕ Adiciones de ${comercioSeleccionado.nombre} (1 toque):</p>
                         <div class="flex flex-wrap gap-1.5">
-                            <button onclick="agregarAdicionRapidaCarrito('Queso X2', 4000)" class="bg-white hover:bg-amber-100 border border-amber-300 text-gray-800 px-2 py-1 rounded-lg text-[10px] font-bold shadow-sm">+ Queso X2 ($4k)</button>
-                            <button onclick="agregarAdicionRapidaCarrito('Papa Francesa', 6000)" class="bg-white hover:bg-amber-100 border border-amber-300 text-gray-800 px-2 py-1 rounded-lg text-[10px] font-bold shadow-sm">+ Papa Francesa ($6k)</button>
-                            <button onclick="agregarAdicionRapidaCarrito('Papa Criolla', 6000)" class="bg-white hover:bg-amber-100 border border-amber-300 text-gray-800 px-2 py-1 rounded-lg text-[10px] font-bold shadow-sm">+ Papa Criolla ($6k)</button>
-                            <button onclick="agregarAdicionRapidaCarrito('Salchicha Americana', 6000)" class="bg-white hover:bg-amber-100 border border-amber-300 text-gray-800 px-2 py-1 rounded-lg text-[10px] font-bold shadow-sm">+ Salchicha Amer. ($6k)</button>
-                            <button onclick="agregarAdicionRapidaCarrito('Chorizo', 6000)" class="bg-white hover:bg-amber-100 border border-amber-300 text-gray-800 px-2 py-1 rounded-lg text-[10px] font-bold shadow-sm">+ Chorizo ($6k)</button>
-                            <button onclick="agregarAdicionRapidaCarrito('Carne de Res', 8000)" class="bg-white hover:bg-amber-100 border border-amber-300 text-gray-800 px-2 py-1 rounded-lg text-[10px] font-bold shadow-sm">+ Carne Res ($8k)</button>
-                            <button onclick="agregarAdicionRapidaCarrito('Carne Desmechada', 8000)" class="bg-white hover:bg-amber-100 border border-amber-300 text-gray-800 px-2 py-1 rounded-lg text-[10px] font-bold shadow-sm">+ Carne Desmechada ($8k)</button>
+                            ${adicionesDelLocal.map(ad => `
+                                <button onclick="agregarAdicionRapidaCarrito('${ad.nombre.replace(/'/g, '')}', ${ad.precio})" class="bg-white hover:bg-amber-100 border border-amber-300 text-gray-800 px-2 py-1 rounded-lg text-[10px] font-bold shadow-sm">
+                                    + ${ad.nombre} ($${Math.round(ad.precio/1000)}k)
+                                </button>
+                            `).join('')}
                         </div>
                     </div>
                 ` : ''}
@@ -1364,11 +1827,44 @@
                 ${superaTopeEfectivo ? `<div class="bg-purple-100 border border-purple-400 text-[#2D0B3A] text-[11px] p-2 rounded-lg font-bold mb-2">🛡️ Por seguridad, los pedidos superiores a $100.000 COP se procesan exclusivamente mediante Transferencia previa.</div>` : ''}
 
                 <div class="space-y-2 bg-gray-50 p-3 rounded-lg border">
+                    <!-- ⏳ SELECTOR DUAL PARA PEDIDOS "BAJO PEDIDO / POR ENCARGO" (PUNTO 9) -->
+                    ${metaLocal.esEncargo ? `
+                        <div class="bg-purple-50 border border-purple-300 p-2.5 rounded-xl space-y-1.5">
+                            <p class="text-[11px] font-extrabold text-purple-950">📅 Reserva Bajo Pedido / Por Encargo</p>
+                            ${metaLocal.fechaEncargo ? `<p class="text-[10px] text-purple-900 font-semibold">📌 Fecha programada por el local: <b>${metaLocal.fechaEncargo}</b></p>` : ''}
+                            <label class="block text-[10px] font-bold text-purple-900">¿Para qué día y hora deseas recibir o apartar tu pedido?</label>
+                            <input type="text" id="fechaEntregaEncargoCliente" value="${metaLocal.fechaEncargo || ''}" placeholder="Ej. Sábado 3:00 PM o Mañana 12:30 PM" class="w-full p-2 border border-purple-300 rounded text-xs bg-white font-semibold">
+                            <p class="text-[10px] text-purple-800">💡 Los encargos se apartan realizando transferencia o abono previo al comercio.</p>
+                        </div>
+                    ` : ''}
+
                     <label class="block text-[11px] font-bold text-gray-700">Forma de Pago:</label>
                     <select id="metodoPago" onchange="toggleMetodoPago(this.value)" class="w-full p-2 border rounded text-xs bg-white font-semibold">
                         <option value="Transferencia" selected>Transferencia (Nequi / Bre-B)</option>
                         ${!superaTopeEfectivo ? `<option value="Efectivo">Efectivo (Pago al Repartidor - Máx. $100k)</option>` : ''}
                     </select>
+
+                    <!-- 💳 VISUALIZACIÓN DIRECTA DE LA CUENTA DEL LOCAL EN EL CARRITO + COPIADO EN 1 CLIC (PUNTO 10) -->
+                    <div id="divTransferenciaInfo" class="bg-amber-50 border-2 border-[#D4AF37] p-2.5 rounded-xl space-y-1.5">
+                        <div class="flex justify-between items-center gap-2">
+                            <div>
+                                <p class="text-[10px] font-extrabold text-[#2D0B3A] uppercase">📲 Transfiere $${totalFinal.toLocaleString()} COP a esta cuenta:</p>
+                                <p class="text-xs font-extrabold text-amber-950 mt-0.5">${comercioSeleccionado.telefono}</p>
+                            </div>
+                            <button type="button" onclick="copiarCuentaComercio('${(comercioSeleccionado.telefono || '').replace(/'/g, '')}')" class="bg-[#2D0B3A] text-[#D4AF37] px-2.5 py-1.5 rounded-lg text-[10px] font-extrabold shadow flex-shrink-0">
+                                📋 Copiar Cuenta
+                            </button>
+                        </div>
+                        <p class="text-[10px] text-amber-900 font-semibold border-t border-amber-200 pt-1">
+                            📸 Al confirmar se abrirá el WhatsApp de <b>${comercioSeleccionado.nombre}</b> para que envíes el pantallazo del pago.
+                        </p>
+                    </div>
+
+                    <div id="divEfectivoCambio" class="bg-emerald-50 border p-2.5 rounded-lg space-y-1">
+                        <label class="block text-[11px] font-bold text-emerald-900">💵 ¿Con qué billete vas a pagar?</label>
+                        <input type="number" id="pagaConBillete" placeholder="Ej. 50000" class="w-full p-2 border rounded text-xs bg-white font-semibold">
+                    </div>
+
                     <input type="text" id="nombreCliente" value="${datosFrecuentes.nombre}" placeholder="Tu Nombre Completo" class="w-full p-2 border rounded text-xs">
                     <input type="text" id="telefonoCliente" value="${datosFrecuentes.telefono}" placeholder="Tu WhatsApp" class="w-full p-2 border rounded text-xs">
                     ${tieneLicor ? '<input type="text" id="cedulaCliente" placeholder="Nro. Cédula (+18)" class="w-full p-2 border rounded text-xs bg-emerald-50 font-semibold">' : ''}
@@ -1376,20 +1872,11 @@
                     <button type="button" id="btnGpsCliente" onclick="adjuntarUbicacionGPSCliente()" class="w-full bg-[#2D0B3A] text-[#D4AF37] py-1.5 px-2 rounded-lg text-[11px] font-bold shadow">
                         📍 Adjuntar mi ubicación GPS actual (Opcional)
                     </button>
-                    <div id="divEfectivoCambio" class="bg-emerald-50 border p-2.5 rounded-lg space-y-1">
-                        <label class="block text-[11px] font-bold text-emerald-900">💵 ¿Con qué billete vas a pagar?</label>
-                        <input type="number" id="pagaConBillete" placeholder="Ej. 50000" class="w-full p-2 border rounded text-xs bg-white font-semibold">
-                    </div>
-                    <div id="divTransferenciaInfo" class="bg-amber-50 border p-2.5 rounded-lg text-[11px] text-amber-900 font-semibold">
-                        📸 Envía el <b>pantallazo de tu pago</b> al WhatsApp del restaurante al confirmar.
-                    </div>
 
-                    <div class="bg-white p-2 rounded border border-gray-200 flex items-start gap-2 text-[10px] text-gray-600">
-                        <input type="checkbox" id="checkTerminosHabeas" checked class="mt-0.5 accent-[#1B4D3E]">
-                        <label for="checkTerminosHabeas">
-                            Acepto los <button type="button" onclick="document.getElementById('modalTerminosLegales').classList.remove('hidden')" class="underline font-bold text-[#1B4D3E]">Términos de Uso (Portal de Contacto Ley 1480) y Tratamiento de Datos (Ley 1581)</button>.
-                        </label>
-                    </div>
+                    <!-- ⚖️ ACEPTACIÓN LEGAL POR ACTO POSITIVO SIN BLOQUEAR AL CLIENTE (PUNTO 5) -->
+                    <p class="text-[10px] text-gray-500 text-center leading-tight pt-1">
+                        Al presionar el botón inferior aceptas los <button type="button" onclick="document.getElementById('modalTerminosLegales').classList.remove('hidden')" class="underline font-bold text-[#1B4D3E]">Términos de Uso (Ley 1480) y Habeas Data (Ley 1581)</button>.
+                    </p>
 
                     <button onclick="enviarPedido(${totalFinal}, ${subtotalProductos}, ${tarifaDomicilio}, ${comisionKumu}, ${tieneLicor})" ${!cumpleMinto ? 'disabled' : ''} class="w-full ${cumpleMinto ? 'btn-vaupes' : 'bg-gray-300 text-gray-500 cursor-not-allowed'} p-2.5 rounded-lg font-extrabold text-sm">Confirmar y Enviar por WhatsApp</button>
                 </div>
@@ -1405,11 +1892,6 @@
         }
 
         async function enviarPedido(total, subtotal, domicilio, comision, tieneLicor) {
-            const aceptaTerminos = document.getElementById('checkTerminosHabeas')?.checked;
-            if (!aceptaTerminos) {
-                alert("⚖️ Debes aceptar los Términos de Uso y la Política de Tratamiento de Datos Personales para procesar tu pedido.");
-                return;
-            }
             if (comercioSeleccionado) {
                 localStorage.setItem('ultimoComercioId', comercioSeleccionado.id);
                 localStorage.setItem('ultimoComercioNombre', comercioSeleccionado.nombre);
@@ -1420,9 +1902,14 @@
             const metodoPago = document.getElementById('metodoPago').value;
             const pagaCon = document.getElementById('pagaConBillete')?.value.trim() || '';
             const cedula = document.getElementById('cedulaCliente')?.value.trim() || '';
+            const metaLocal = extraerMetadatosComercio(comercioSeleccionado);
+            const fechaEncargoCliente = document.getElementById('fechaEntregaEncargoCliente')?.value.trim() || '';
 
             if (!nombre || !telefono || !direccion || (tieneLicor && !cedula) || (metodoPago === 'Efectivo' && !pagaCon)) { 
                 alert('Por favor completa todos los datos (incluyendo barrio y referencia).'); return; 
+            }
+            if (metaLocal.esEncargo && !fechaEncargoCliente) {
+                alert('📅 Por favor indica para qué día y hora deseas apartar tu pedido.'); return;
             }
 
             guardarClienteFrecuente(nombre, telefono, direccion);
@@ -1430,8 +1917,9 @@
             const detallePedido = carrito.map(i => `${i.cantidad}x ${i.nombre} ${i.notas ? '('+i.notas+')' : ''}`).join(', ');
             let infoPagoTexto = metodoPago === 'Efectivo' ? `Efectivo (Paga con: $${Number(pagaCon).toLocaleString()})` : `Transferencia (Enviará pantallazo)`;
             const tagLicor = tieneLicor ? ` 🔞 [LICOR - CC: ${cedula}] [PIN: ${pinSeguro}]` : '';
+            const tagEncargo = metaLocal.esEncargo ? ` [ENCARGO PARA: ${fechaEncargoCliente}]` : '';
             const tagMapaCliente = gpsClienteActual ? ` | MapaCliente: ${gpsClienteActual}` : '';
-            const desgloseDireccion = `${direccion}${tagMapaCliente} [Pago: ${infoPagoTexto}]${tagLicor} | Detalle: ${detallePedido} | Sub: ${subtotal} | Domi: ${domicilio}`;
+            const desgloseDireccion = `${direccion}${tagEncargo}${tagMapaCliente} [Pago: ${infoPagoTexto}]${tagLicor} | Detalle: ${detallePedido} | Sub: ${subtotal} | Domi: ${domicilio}`;
             const estadoInicial = metodoPago === 'Efectivo' ? 'Pendiente Efectivo' : 'Por Verificar Pago';
 
             const { data: pedCreado, error } = await supabaseClient.from('pedidos').insert([{ 
@@ -1449,9 +1937,11 @@
                 }
                 if (pedCreado && pedCreado.id) { localStorage.setItem('kumu_pedido_activo_id', pedCreado.id); ultimoEstadoConocidoCliente = estadoInicial; }
 
-                let mensajeWA = `Hola *${comercioSeleccionado.nombre}*, acabo de hacer un pedido en *Kumu 🛵*:\n\n*Pedido:* ${detallePedido}\n*Método de Pago:* ${infoPagoTexto}\n*Total:* $${total.toLocaleString()} COP\n*Cliente:* ${nombre}${tieneLicor ? '\n*CC:* '+cedula : ''}\n*Dirección:* ${direccion}`;
+                let mensajeWA = `Hola *${comercioSeleccionado.nombre}*, acabo de hacer un pedido en *Kumu 🛵*:\n\n*Pedido:* ${detallePedido}`;
+                if (metaLocal.esEncargo) mensajeWA += `\n📅 *Fecha/Hora Acordada (Bajo Pedido):* ${fechaEncargoCliente}`;
+                mensajeWA += `\n*Método de Pago:* ${infoPagoTexto}\n*Total:* $${total.toLocaleString()} COP\n*Cliente:* ${nombre}${tieneLicor ? '\n*CC:* '+cedula : ''}\n*Dirección:* ${direccion}`;
                 if (gpsClienteActual) mensajeWA += `\n📍 *Ubicación GPS Exacta:* ${gpsClienteActual}`;
-                if (metodoPago === 'Transferencia') mensajeWA += `\n\n📸 *Adjunto mi pantallazo de pago.*`;
+                if (metodoPago === 'Transferencia') mensajeWA += `\n\n📸 *Adjunto mi pantallazo de pago a la cuenta ${comercioSeleccionado.telefono}.*`;
                 else if (pagaCon && (Number(pagaCon) - total > 0)) mensajeWA += `\n💵 *Paga con:* $${Number(pagaCon).toLocaleString()} (Llevar cambio de $${(Number(pagaCon) - total).toLocaleString()})`;
 
                 if (tieneLicor) { mensajeWA += `\n\n🔒 *PIN DE SEGURIDAD:* ${pinSeguro}`; alert(`¡Pedido registrado! 🔑 Tu CÓDIGO PIN es: KUMU-${pinSeguro}.`); }
@@ -1529,18 +2019,22 @@
                             <button onclick="ejecutarAuditoriaSaludKumu()" class="bg-[#C85A17] text-white px-2.5 py-1 rounded-lg text-[10px] font-extrabold shadow">🔍 Auditar</button>
                         </div>
                         <div id="boxResultadoAuditoria"></div>
+                        <!-- 🔐 CAMBIAR CLAVE MAESTRA CON BOTÓN DEL OJITO (PUNTO 7) -->
                         <div class="bg-black/30 p-2.5 rounded-xl border border-white/20 space-y-1.5 mt-2">
                             <label class="block text-[10px] font-extrabold text-[#D4AF37] uppercase">🔐 Cambiar Clave Maestra Admin (Sincronizada en Supabase):</label>
-                            <div class="flex gap-1.5">
-                                <input type="password" id="inputNuevaClaveAdmin" placeholder="Nueva clave secreta Admin..." class="flex-1 p-1.5 rounded text-xs text-gray-900 font-bold">
+                            <div class="flex gap-1.5 items-center">
+                                <div class="relative flex-1">
+                                    <input type="password" id="inputNuevaClaveAdmin" placeholder="Nueva clave secreta Admin..." class="w-full p-1.5 pr-8 rounded text-xs text-gray-900 font-bold">
+                                    <button type="button" id="btnOjitoClaveAdmin" onclick="toggleVerClaveAdmin()" class="absolute right-1.5 top-1/2 -translate-y-1/2 text-sm" title="Mostrar / Ocultar clave">👁️</button>
+                                </div>
                                 <button onclick="cambiarClaveMaestraSupabase()" class="bg-[#D4AF37] text-[#2D0B3A] px-3 py-1.5 rounded font-extrabold text-[11px]">Guardar</button>
                             </div>
                         </div>
                     </div>
 
-                    <!-- 📢 GESTOR DE BANNERS PUBLICITARIOS PATROCINADOS (F-01) -->
+                    <!-- 📢 GESTOR DE BANNERS PUBLICITARIOS PATROCINADOS -->
                     <div class="bg-amber-50 border-2 border-[#C85A17] p-3 rounded-xl space-y-2 shadow-sm">
-                        <h3 class="font-extrabold text-xs uppercase text-[#2D0B3A]">📢 Gestor de Banners Publicitarios (Retail Media)</h3>
+                        <h3 class="font-extrabold text-xs uppercase text-[#2D0B3A]">📢 Gestor del Carrusel de Banners (3-4 Anuncios)</h3>
                         <input type="text" id="bannerTitulo" placeholder="Título del anuncio (Ej. 2x1 Viernes o Almacén Moda Mitú)" class="w-full p-2 border rounded text-xs bg-white">
                         <input type="text" id="bannerSubtitulo" placeholder="Subtítulo corto (Ej. Pide hoy con descuento especial)" class="w-full p-2 border rounded text-xs bg-white">
                         <input type="text" id="bannerDestino" placeholder="WhatsApp del anunciante (Ej. 3101234567) o Nombre del Local" class="w-full p-2 border rounded text-xs bg-white">
@@ -1549,10 +2043,10 @@
                             <input type="file" accept="image/*" onchange="cargarImagenGaleria(event, 'banner')" class="w-full text-xs">
                             <input type="text" id="bannerFotoUrl" placeholder="o Pega URL de imagen" class="w-full p-1 border rounded text-[11px] mt-1">
                         </div>
-                        <button onclick="agregarNuevoBannerPublicitario()" class="w-full bg-[#2D0B3A] text-[#D4AF37] p-2 rounded-lg text-xs font-extrabold shadow">➕ Publicar Banner en Inicio</button>
+                        <button onclick="agregarNuevoBannerPublicitario()" class="w-full bg-[#2D0B3A] text-[#D4AF37] p-2 rounded-lg text-xs font-extrabold shadow">➕ Publicar Banner en Carrusel</button>
                         ${bannersPublicitariosCache.length > 0 ? `
                             <div class="pt-2 border-t space-y-1">
-                                <p class="text-[10px] font-bold text-gray-600 uppercase">Banners Activos (${bannersPublicitariosCache.length}):</p>
+                                <p class="text-[10px] font-bold text-gray-600 uppercase">Banners Personalizados Activos (${bannersPublicitariosCache.length}):</p>
                                 ${bannersPublicitariosCache.map(b => `
                                     <div class="flex justify-between items-center bg-white p-1.5 rounded border text-[11px]">
                                         <span class="font-bold truncate max-w-[210px]">${b.titulo} (${b.destino})</span>
@@ -1560,7 +2054,7 @@
                                     </div>
                                 `).join('')}
                             </div>
-                        ` : ''}
+                        ` : `<p class="text-[10px] text-gray-500 italic">Rotando los 3 banners estratégicos de Kumu por defecto.</p>`}
                     </div>
 
                     <div class="bg-emerald-50 border border-emerald-300 p-2.5 rounded-xl flex justify-between items-center gap-2 text-xs">
@@ -1578,12 +2072,17 @@
                             <option value="Licores & Cigarrillos">🍺 Licores & Cigarrillos 🔞</option>
                             <option value="Droguería">💊 Droguería</option>
                         </select>
-                        <select id="negModalidad" class="w-full p-2 border rounded text-xs bg-amber-50 font-semibold">
+                        <select id="negModalidad" onchange="document.getElementById('divFechaEncargoNuevo').classList.toggle('hidden', this.value!=='ENCARGO')" class="w-full p-2 border rounded text-xs bg-amber-50 font-semibold">
                             <option value="INMEDIATA">⚡ Entrega Inmediata (25-35 min)</option>
                             <option value="ENCARGO">⏳ Bajo Pedido / Por Encargo (Emprendedor desde casa)</option>
                         </select>
+                        <div id="divFechaEncargoNuevo" class="hidden bg-purple-50 p-2 rounded border border-purple-200 space-y-1">
+                            <label class="block text-[10px] font-bold text-purple-900">📅 Día/Hora fija de entrega del local (Opcional):</label>
+                            <input type="text" id="negFechaEncargo" placeholder="Ej. Entregas Sábados 3:00 PM (o deja vacío)" class="w-full p-1.5 border rounded text-xs bg-white">
+                        </div>
                         <input type="text" id="negDir" placeholder="Dirección o Barrio en Mitú" class="w-full p-2 border rounded text-xs">
-                        <input type="text" id="negTel" placeholder="WhatsApp / Nro de Cuenta Nequi o Bre-B" class="w-full p-2 border rounded text-xs">
+                        <input type="text" id="negTel" placeholder="WhatsApp y Cuenta Nequi / Bre-B (Ej. 3101234567)" class="w-full p-2 border rounded text-xs">
+                        <input type="text" id="negAdiciones" placeholder="➕ Adiciones propias (Ej: Queso:4000, Tocineta:5000) o vacío" class="w-full p-2 border rounded text-xs bg-white">
                         <input type="text" id="negPin" placeholder="PIN Privado del Local (Ej: 5555)" class="w-full p-2 border rounded text-xs bg-amber-50 font-bold">
                         <div class="grid grid-cols-2 gap-2">
                             <div><label class="block text-[10px] font-bold text-gray-600">Apertura:</label><input type="time" id="negApertura" value="08:00" class="w-full p-1.5 border rounded text-xs"></div>
@@ -1628,11 +2127,11 @@
                 ejecutarAuditoriaSaludKumu();
             } else if (comercioLogueado) {
                 const diasActuales = (comercioLogueado.dias_semana || [0,1,2,3,4,5,6]).map(Number);
-                const dirLimpia = (comercioLogueado.direccion || '').replace('[ENCARGO]', '').trim();
+                const meta = extraerMetadatosComercio(comercioLogueado);
                 content.innerHTML = `
                     <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-xl flex justify-between items-center">
                         <div><h2 class="font-bold text-base text-emerald-950">🏪 ${comercioLogueado.nombre}</h2><p class="text-xs text-emerald-800">Panel de Aliado Kumu</p></div>
-                        <span class="text-[10px] bg-[#1B4D3E] text-white px-2 py-0.5 rounded font-bold">Sesión Activa</span>
+                        <button onclick="copiarEnlaceDirectoTiendaWA('${comercioLogueado.id}', '${comercioLogueado.nombre.replace(/'/g, '')}', event)" class="bg-[#1B4D3E] text-[#D4AF37] px-2.5 py-1 rounded-lg text-[10px] font-extrabold shadow">📲 Link Estado WA</button>
                     </div>
                     <div class="bg-amber-50 border-2 border-[#C85A17] rounded-xl p-3 shadow-sm space-y-2">
                         <div class="flex justify-between items-center border-b border-amber-200 pb-1">
@@ -1642,10 +2141,18 @@
                         <div id="listaPedidosAliadoLocal" class="space-y-2">Cargando pedidos...</div>
                     </div>
                     <div class="bg-white border rounded-xl p-3 shadow-sm space-y-2">
-                        <h3 class="font-bold text-xs uppercase text-gray-600 border-b pb-1">✏️ Editar Datos y Foto</h3>
-                        <input type="text" id="editNombreLocal" value="${comercioLogueado.nombre || ''}" class="w-full p-1.5 border rounded text-xs">
-                        <input type="text" id="editTelLocal" value="${comercioLogueado.telefono || ''}" class="w-full p-1.5 border rounded text-xs">
-                        <input type="text" id="editDirLocal" value="${dirLimpia}" class="w-full p-1.5 border rounded text-xs">
+                        <h3 class="font-bold text-xs uppercase text-gray-600 border-b pb-1">✏️ Editar Datos, Adiciones y Modalidad</h3>
+                        <input type="text" id="editNombreLocal" value="${comercioLogueado.nombre || ''}" placeholder="Nombre del Local" class="w-full p-1.5 border rounded text-xs">
+                        <input type="text" id="editTelLocal" value="${comercioLogueado.telefono || ''}" placeholder="WhatsApp y Cuenta Nequi / Bre-B" class="w-full p-1.5 border rounded text-xs">
+                        <input type="text" id="editDirLocal" value="${meta.dirLimpia}" placeholder="Dirección o Barrio" class="w-full p-1.5 border rounded text-xs">
+                        <div>
+                            <label class="block text-[10px] font-bold text-gray-600">➕ Adiciones Propias (Nombre:Precio separados por coma):</label>
+                            <input type="text" id="editAdicionesLocal" value="${meta.textoAdicionesRaw}" placeholder="Ej: Queso Extra:4000, Tocineta:5000" class="w-full p-1.5 border rounded text-xs bg-amber-50/40">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-purple-900">📅 Día/Hora de Entrega (Si trabajas Bajo Pedido / Encargo):</label>
+                            <input type="text" id="editFechaEncargoLocal" value="${meta.fechaEncargo}" placeholder="Ej: Entregas Sábado 3:00 PM (o deja vacío)" class="w-full p-1.5 border rounded text-xs bg-purple-50/40">
+                        </div>
                         <div class="bg-gray-50 p-2 border rounded text-xs space-y-1">
                             <label class="font-bold text-gray-600 block">🖼️ Cambiar Foto:</label>
                             <input type="file" accept="image/*" onchange="cargarImagenGaleria(event, 'editar_local')" class="w-full text-xs">
@@ -1734,7 +2241,7 @@
             if (error) { alert("Error: " + error.message); return; }
             const telLimpio = (telCliente || '').replace(/\D/g, '');
             if (telLimpio) {
-                window.open(`https://wa.me/57${telLimpio}?text=${encodeURIComponent(`¡Hola *${nombreCliente}*! 👨‍🍳 En *${comercioLogueado?.nombre || 'el restaurante'}* ya aceptamos tu pedido por *Kumu 🍄* y lo estamos preparando.`)}`, '_blank');
+                window.open(`https://wa.me/57${telLimpio}?text=${encodeURIComponent(`¡Hola *${nombreCliente}*! 👨‍🍳 En *${comercioLogueado?.nombre || 'el comercio'}* ya aceptamos tu pedido por *Kumu 🍄* y lo estamos preparando.`)}`, '_blank');
             }
             initApp();
         }
@@ -1744,14 +2251,17 @@
             const nombre = document.getElementById('editNombreLocal').value.trim();
             const telefono = document.getElementById('editTelLocal').value.trim();
             const dirBase = document.getElementById('editDirLocal').value.trim();
-            const eraEncargo = (comercioLogueado.direccion || '').includes('[ENCARGO]');
-            const direccion = eraEncargo ? `${dirBase} [ENCARGO]` : dirBase;
+            const adicionesTxt = document.getElementById('editAdicionesLocal')?.value.trim() || '';
+            const fechaEncargoTxt = document.getElementById('editFechaEncargoLocal')?.value.trim() || '';
+            const meta = extraerMetadatosComercio(comercioLogueado);
+            const esEncargo = meta.esEncargo || fechaEncargoTxt !== '';
+            const direccion = construirDireccionConMetadatos(dirBase, meta.esVIP, esEncargo, fechaEncargoTxt, adicionesTxt);
             const imagen_url = fotoBase64EditarLocal || document.getElementById('editFotoUrlLocal').value.trim() || comercioLogueado.imagen_url;
             if (!nombre || !telefono || !dirBase) { alert("Completa todos los campos."); return; }
 
             const { error } = await supabaseClient.from('comercios').update({ nombre, telefono, direccion, imagen_url }).eq('id', comercioLogueado.id);
             if (error) alert("Error: " + error.message);
-            else { Object.assign(comercioLogueado, { nombre, telefono, direccion, imagen_url }); fotoBase64EditarLocal = ''; alert("✅ Actualizado."); initApp(); }
+            else { Object.assign(comercioLogueado, { nombre, telefono, direccion, imagen_url }); fotoBase64EditarLocal = ''; alert("✅ Datos y adiciones actualizados."); initApp(); }
         }
 
         async function renderProductosAliado() {
@@ -1768,9 +2278,10 @@
                     <div class="flex justify-between items-center bg-gray-50 p-2 rounded border text-xs gap-2">
                         <img src="${obtenerImagenProducto(p)}" class="w-12 h-12 rounded object-cover border flex-shrink-0">
                         <div class="flex-1">
-                            <p class="font-bold text-gray-800">${p.nombre}</p>
+                            <p class="font-bold text-gray-800">${infoPromo.esFavorito ? '🔥 ' : ''}${p.nombre}</p>
                             <p class="text-[10px] text-emerald-700 font-semibold">$${infoPromo.precioFinal.toLocaleString()} COP</p>
                             <div class="flex flex-wrap gap-1 mt-1">
+                                <button onclick="event.stopPropagation(); toggleFavoritoProducto('${p.id}')" class="px-1.5 py-0.5 rounded text-[10px] font-bold ${infoPromo.esFavorito ? 'bg-[#C85A17] text-white' : 'bg-gray-200 text-gray-700'}">🔥 Favorito</button>
                                 <button onclick="event.stopPropagation(); abrirSelectorFotoPlato('${p.id}')" class="bg-emerald-700 text-white font-bold py-0.5 px-1.5 rounded text-[10px]">📂 Subir Foto</button>
                                 <button onclick="event.stopPropagation(); eliminarProducto('${p.id}')" class="bg-red-600 text-white font-bold py-0.5 px-1.5 rounded text-[10px]">🗑️</button>
                             </div>
@@ -1790,18 +2301,20 @@
             const nombre = document.getElementById('negNombre').value.trim();
             const categoria = document.getElementById('negCat').value;
             const modalidad = document.getElementById('negModalidad')?.value || 'INMEDIATA';
+            const fechaEncargo = document.getElementById('negFechaEncargo')?.value.trim() || '';
+            const adicionesPropias = document.getElementById('negAdiciones')?.value.trim() || '';
             const dirInput = document.getElementById('negDir').value.trim();
-            const direccion = modalidad === 'ENCARGO' ? `${dirInput} [ENCARGO]` : dirInput;
+            const direccion = construirDireccionConMetadatos(dirInput, false, modalidad === 'ENCARGO', fechaEncargo, adicionesPropias);
             const telefono = document.getElementById('negTel').value.trim();
             const pin_local = document.getElementById('negPin').value.trim() || '0000';
             const hora_apertura = document.getElementById('negApertura')?.value || '08:00';
             const hora_cierre = document.getElementById('negCierre')?.value || '23:59';
             const imagen_url = fotoBase64Comercio || document.getElementById('negFotoUrl').value.trim();
-            if (!nombre || !dirInput || !telefono || !pin_local) { alert('Completa todos los campos.'); return; }
+            if (!nombre || !dirInput || !telefono || !pin_local) { alert('Completa todos los campos obligatorios.'); return; }
             let d = { nombre, categoria, direccion, telefono, pin_local, hora_apertura, hora_cierre };
             if (imagen_url) d.imagen_url = imagen_url;
             const { error } = await supabaseClient.from('comercios').insert([d]);
-            if (error) alert('Error: ' + error.message); else { alert('¡Comercio registrado!'); fotoBase64Comercio = ''; initApp(); }
+            if (error) alert('Error: ' + error.message); else { alert('¡Comercio registrado con éxito!'); fotoBase64Comercio = ''; initApp(); }
         }
 
         async function crearProducto() {
@@ -1863,7 +2376,7 @@
                                 <button onclick="transmitirGPSPedido('${p.id}')" class="bg-[#2D0B3A] text-[#D4AF37] font-bold py-1.5 px-2 rounded text-[11px]">📍 GPS</button>
                             </div>
                             <div id="mapaCliente_${p.id}" class="hidden h-44 w-full rounded-lg border-2 border-[#2D0B3A] mt-2"></div>
-                            ${modoAdminVisible && p.estado !== 'En Preparación' && p.estado !== 'En Camino' ? `<button onclick="actualizarEstado('${p.id}', 'En Preparación')" class="w-full bg-amber-100 text-amber-950 border py-1.5 rounded-lg text-[11px] font-extrabold mt-1">👨‍🍳 Marcar Cocinando</button>` : ''}
+                            ${modoAdminVisible && p.estado !== 'En Preparación' && p.estado !== 'En Camino' ? `<button onclick="actualizarEstado('${p.id}', 'En Preparación')" class="w-full bg-amber-100 text-amber-950 border py-1.5 rounded-lg text-[11px] font-extrabold mt-1">👨‍🍳 Marcar Preparando</button>` : ''}
                             <div class="flex space-x-2 pt-1">
                                 ${!infoLimpia ? `<button onclick="tomarPedidoConDatos('${p.id}')" class="flex-1 btn-vaupes py-1.5 rounded-lg text-xs font-bold">✋ Tomar Pedido</button>` : `<button onclick="actualizarEstado('${p.id}', 'Entregado')" class="flex-1 bg-emerald-600 text-white py-1.5 rounded-lg text-xs font-bold">✅ Entregado</button>`}
                                 ${modoAdminVisible ? `<button onclick="cancelarPedidoConMotivo('${p.id}')" class="bg-gray-200 text-gray-700 py-1.5 px-2 rounded-lg text-xs font-bold">❌</button>` : ''}
@@ -2197,8 +2710,6 @@
             await supabaseClient.from('comercios').delete().eq('id', comercioId);
             alert("✅ Local eliminado"); initApp();
         }
-
-        window.onload = () => { initApp(); verificarCalificacionPendiente(); };
     </script>
 
     <!-- Tarjeta flotante para calificación de un solo toque -->
