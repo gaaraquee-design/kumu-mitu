@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Kumu 🛵 | Domicilios Mitú</title>
+    <title>Kumu 🛵 | Domicilios y Vitrina Digital Mitú</title>
     <meta name="apple-mobile-web-app-title" content="Kumu">
     <meta name="application-name" content="Kumu">
     <meta name="theme-color" content="#2D0B3A">
@@ -58,12 +58,12 @@
             </div>
             <div class="pt-2">
                 <div class="text-[#D4AF37] text-sm">★★★★★</div>
-                <p class="text-[10px] tracking-wider text-emerald-300 font-semibold uppercase mt-0.5">El Sabor de Mitú • 100% Garantizado</p>
+                <p class="text-[10px] tracking-wider text-emerald-300 font-semibold uppercase mt-0.5">La Vitrina Digital de Mitú • 100% Garantizado</p>
             </div>
         </div>
         <div class="flex flex-col items-center space-y-3 pb-6">
             <div class="loader-spinner"></div>
-            <p class="text-[11px] text-amber-200 font-medium animate-pulse">Cargando la mejor app de Mitú...</p>
+            <p class="text-[11px] text-amber-200 font-medium animate-pulse">Cargando el ecosistema Kumu...</p>
             <p class="text-[10px] text-amber-400 underline">(Toca aquí si la carga tarda)</p>
         </div>
     </div>
@@ -109,17 +109,17 @@
             </div>
             <div class="overflow-y-auto kumu-scroll text-[11px] text-gray-700 space-y-2.5 pr-1 leading-relaxed">
                 <p><b>1. Naturaleza de Portal de Contacto (Art. 53 Ley 1480 de 2011):</b> <b>Kumu 🍄</b> opera exclusivamente como una plataforma tecnológica de contacto e intermediación digital (Marketplace B2B2C) en Mitú, Vaupés. Kumu <b>no prepara alimentos, no comercializa bebidas ni medicamentos por cuenta propia, ni presta servicios directos de transporte</b>.</p>
-                <p><b>2. Responsabilidad de los Comercios Aliados:</b> Cada restaurante, tienda, droguería, emprendedor o productor local exhibido en la plataforma es un comerciante independiente y único responsable de la calidad, inocuidad sanitaria, gramaje, precios, facturación y garantía de los productos ofrecidos, así como de la recepción directa de los pagos en sus cuentas Nequi / Bre-B o en efectivo.</p>
+                <p><b>2. Responsabilidad de los Comercios, Emprendedores y Productores:</b> Cada restaurante, tienda, droguería, emprendedor desde casa o productor campesino en Sanvi exhibido en la plataforma es un vendedor independiente y único responsable de la calidad, inocuidad sanitaria, gramaje, precios, cumplimiento de encargos, facturación y garantía de los productos ofrecidos, así como de la recepción de los pagos en sus cuentas Nequi / Bre-B o en efectivo.</p>
                 <p><b>3. Autonomía de los Repartidores Independientes:</b> Los domiciliarios que utilizan el panel logístico de Kumu actúan como contratistas independientes y autónomos, sin vínculo laboral, subordinación ni cumplimiento de horario obligatorio, percibiendo el 100% del valor de la tarifa de domicilio estipulada.</p>
                 <p><b>4. Política de Privacidad y Habeas Data (Ley 1581 de 2012):</b> Al confirmar un pedido, el usuario autoriza de manera libre, previa y expresa el tratamiento de sus datos básicos (Nombre, Teléfono WhatsApp, Dirección/Coordenadas GPS de entrega y Cédula en pedidos +18) con la única finalidad de gestionar la entrega de su orden con el comercio aliado y el repartidor independiente. No almacenamos claves bancarias ni datos financieros sensibles.</p>
                 <p><b>5. Prohibición de Venta a Menores (Ley 124 de 1994):</b> Todo pedido en la categoría Licores & Cigarrillos exige mayoría de edad (+18), registro de cédula y validación presencial de documento físico y PIN de 4 dígitos al momento de la entrega.</p>
-                <p><b>6. Tope de Seguridad en Efectivo:</b> Por seguridad de los comercios y repartidores, los pedidos que superen los $100.000 COP solo se procesan mediante transferencia previa verificada.</p>
+                <p><b>6. Tope de Seguridad en Efectivo y Encargos:</b> Por seguridad de los comercios y repartidores, los pedidos que superen los $100.000 COP y las reservas personalizadas Bajo Pedido se procesan mediante transferencia o abono previo verificado.</p>
             </div>
             <button onclick="document.getElementById('modalTerminosLegales').classList.add('hidden')" class="w-full mt-3 bg-[#2D0B3A] text-[#D4AF37] py-2 rounded-xl font-extrabold text-xs">Entendido</button>
         </div>
     </div>
 
-    <!-- 🦜 MODAL ASISTENTE VIRTUAL "GUACAMAYA KUMU IA" (SOPORTE NIVEL 1 Y ESCALADO A WHATSAPP) -->
+    <!-- 🦜 MODAL ASISTENTE VIRTUAL "GUACAMAYA KUMU IA" -->
     <div id="modalGuacamayaIA" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-[9997] hidden flex items-end sm:items-center justify-center p-3">
         <div class="bg-white rounded-2xl max-w-sm w-full overflow-hidden shadow-2xl border-2 border-[#D4AF37] flex flex-col max-h-[85vh]">
             <div class="bg-gradient-to-r from-[#2D0B3A] via-[#1B4D3E] to-[#C85A17] p-3.5 text-white flex justify-between items-center">
@@ -140,6 +140,7 @@
                 <div class="grid grid-cols-1 gap-1.5 pt-1">
                     <button onclick="responderGuacamayaIA('pagos')" class="text-left bg-amber-50 hover:bg-amber-100 border border-amber-300 px-3 py-2 rounded-xl text-[11px] font-bold text-[#2D0B3A]">💳 ¿Cómo pago por Nequi / Bre-B o Efectivo?</button>
                     <button onclick="responderGuacamayaIA('vender')" class="text-left bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 px-3 py-2 rounded-xl text-[11px] font-bold text-[#1B4D3E]">🚀 Quiero vender en Kumu (con o sin local físico)</button>
+                    <button onclick="responderGuacamayaIA('sanvi')" class="text-left bg-lime-50 hover:bg-lime-100 border border-lime-400 px-3 py-2 rounded-xl text-[11px] font-bold text-[#1B4D3E]">🌾 ¿Cómo compro o vendo cosecha en Sanvi?</button>
                     <button onclick="responderGuacamayaIA('encargo')" class="text-left bg-purple-50 hover:bg-purple-100 border border-purple-300 px-3 py-2 rounded-xl text-[11px] font-bold text-[#2D0B3A]">⏳ ¿Cómo funcionan los productos "Bajo Pedido"?</button>
                     <button onclick="responderGuacamayaIA('clima')" class="text-left bg-blue-50 hover:bg-blue-100 border border-blue-200 px-3 py-2 rounded-xl text-[11px] font-bold text-blue-950">🌧️ ¿Por qué el domicilio vale $4.000 o $5.000?</button>
                     <button onclick="responderGuacamayaIA('instalar')" class="text-left bg-gray-100 hover:bg-gray-200 border border-gray-300 px-3 py-2 rounded-xl text-[11px] font-bold text-gray-800">📲 ¿Cómo instalo el hongo de Kumu en mi celular?</button>
@@ -148,7 +149,7 @@
 
             <div class="p-2.5 bg-white border-t space-y-2">
                 <div class="flex space-x-1.5">
-                    <input type="text" id="inputPreguntaGuacamaya" onkeydown="if(event.key==='Enter') enviarPreguntaTextoGuacamaya()" placeholder="Escribe tu duda aquí (ej. pedido, pauta, sanvi)..." class="flex-1 p-2 border rounded-xl text-xs bg-slate-50 outline-none focus:ring-1 focus:ring-[#1B4D3E]">
+                    <input type="text" id="inputPreguntaGuacamaya" onkeydown="if(event.key==='Enter') enviarPreguntaTextoGuacamaya()" placeholder="Escribe tu duda aquí (ej. ropa, postres, sanvi)..." class="flex-1 p-2 border rounded-xl text-xs bg-slate-50 outline-none focus:ring-1 focus:ring-[#1B4D3E]">
                     <button onclick="enviarPreguntaTextoGuacamaya()" class="bg-[#1B4D3E] text-[#D4AF37] px-3 py-2 rounded-xl font-extrabold text-xs">Enviar</button>
                 </div>
                 <a href="https://wa.me/573215698079?text=%C2%A1Hola!%20Vengo%20del%20asistente%20Guacamaya%20IA%20y%20necesito%20ayuda%20de%20Soporte%20Central%20Kumu%20%F0%9F%8D%84" target="_blank" class="block w-full text-center bg-[#C85A17] hover:bg-amber-800 text-white py-2 rounded-xl font-extrabold text-[11px] shadow">
@@ -198,6 +199,7 @@
         let windowComerciosCache = [];
         let windowProductosCache = [];
         let todosProductosGlobal = [];
+        let conteoPedidosPorComercio = {};
         let bannersPublicitariosCache = [];
         let indiceBannerActual = 0;
         let pausaCarruselHasta = 0;
@@ -222,7 +224,6 @@
         let mapaLeaflet = null;
         let ultimoEstadoConocidoCliente = '';
 
-        // ➕ ADICIONES POR DEFECTO DE TEXAS BURGERS (PARA NO PERDERLAS NUNCA)
         const ADICIONES_TEXAS_DEFAULT = [
             { nombre: 'Queso X2', precio: 4000 },
             { nombre: 'Papa Francesa', precio: 6000 },
@@ -233,7 +234,6 @@
             { nombre: 'Carne Desmechada', precio: 8000 }
         ];
 
-        // 📢 3 BANNERS ROTATIVOS ESTRATÉGICOS POR DEFECTO EN MITÚ
         const BANNERS_ESTRATEGICOS_DEFAULT = [
             {
                 id: 'default_vitrina_sin_local',
@@ -253,15 +253,14 @@
             },
             {
                 id: 'default_ecosistema_kumu',
-                etiqueta: '🍄 EL SABOR Y COMERCIO DEL VAUPÉS',
-                titulo: 'Restaurantes, Licores, Droguería y Encargos',
-                subtitulo: 'Pide en 1 clic con tarifa justa y pronto cosecha campesina en Sanvi',
+                etiqueta: '🌾 SANVI Y EMPRENDEDORES',
+                titulo: 'Comida, Ropa, Postres y Cosecha en 1 Clic',
+                subtitulo: 'Apoya a nuestros emprendedores y al campesinado del Vaupés sin intermediarios',
                 destino: 'CATALOGO',
                 imagen: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=700&auto=format&fit=crop&q=80'
             }
         ];
 
-        // 📱 DETECCIÓN INTELIGENTE DE MODO APP INSTALADA (STANDALONE PWA)
         function yaTienePWAInstaladaOCerrada() {
             try {
                 const esStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
@@ -290,11 +289,13 @@
             marcarPWAInstaladaOCerrada(true);
         });
 
-        // 🧠 EXTRACTOR Y CODIFICADOR DE METADATOS ZERO-SQL DEL COMERCIO (VIP, ENCARGO, FECHA, ADICIONES)
+        // 🧠 EXTRACTOR Y CODIFICADOR DE METADATOS ZERO-SQL DEL COMERCIO (VIP, ENCARGO, ABONO50, ASISTIDO, FECHA, ADICIONES)
         function extraerMetadatosComercio(comercio) {
             const rawDir = (comercio && comercio.direccion) || '';
             const esVIP = rawDir.includes('[VIP]');
-            const esEncargo = rawDir.includes('[ENCARGO]');
+            const esEncargo = rawDir.includes('[ENCARGO]') || (comercio && comercio.categoria === 'Sanvi');
+            const exigeAbono50 = rawDir.includes('[ABONO50]');
+            const esAsistido = rawDir.includes('[ASISTIDO]');
 
             let fechaEncargo = '';
             const matchFecha = rawDir.match(/\[FECHA:([^\]]+)\]/);
@@ -323,17 +324,21 @@
             const dirLimpia = rawDir
                 .replace(/\[VIP\]/g, '')
                 .replace(/\[ENCARGO\]/g, '')
+                .replace(/\[ABONO50\]/g, '')
+                .replace(/\[ASISTIDO\]/g, '')
                 .replace(/\[FECHA:[^\]]*\]/g, '')
                 .replace(/\[ADICIONES:[^\]]*\]/g, '')
                 .trim();
 
-            return { esVIP, esEncargo, fechaEncargo, listaAdiciones, textoAdicionesRaw, dirLimpia };
+            return { esVIP, esEncargo, exigeAbono50, esAsistido, fechaEncargo, listaAdiciones, textoAdicionesRaw, dirLimpia };
         }
 
-        function construirDireccionConMetadatos(dirLimpia, esVIP, esEncargo, fechaEncargo, textoAdiciones) {
-            let final = (dirLimpia || '').replace(/\[(VIP|ENCARGO|FECHA:[^\]]*|ADICIONES:[^\]]*)\]/g, '').trim();
+        function construirDireccionConMetadatos(dirLimpia, esVIP, esEncargo, fechaEncargo, textoAdiciones, exigeAbono50 = false, esAsistido = false) {
+            let final = (dirLimpia || '').replace(/\[(VIP|ENCARGO|ABONO50|ASISTIDO|FECHA:[^\]]*|ADICIONES:[^\]]*)\]/g, '').trim();
             if (esVIP) final += ' [VIP]';
             if (esEncargo) final += ' [ENCARGO]';
+            if (exigeAbono50) final += ' [ABONO50]';
+            if (esAsistido) final += ' [ASISTIDO]';
             if (fechaEncargo && fechaEncargo.trim() !== '') {
                 final += ` [FECHA:${fechaEncargo.replace(/[\[\]]/g, '').trim()}]`;
             }
@@ -372,11 +377,13 @@
 
         function responderGuacamayaIA(tema) {
             if (tema === 'pagos') {
-                agregarMensajeChatGuacamaya('💳 ¿Cómo funcionan los pagos?', 'Puedes pagar por <b>Transferencia (Nequi / Bre-B)</b> o en <b>Efectivo</b> (hasta $100.000 COP). Al elegir Transferencia, dentro del carrito verás el número de cuenta del local con el botón <b>"📋 Copiar Número"</b> y luego envías el pantallazo por WhatsApp al confirmar.');
+                agregarMensajeChatGuacamaya('💳 ¿Cómo funcionan los pagos?', 'Puedes pagar por <b>Transferencia (Nequi / Bre-B)</b> o en <b>Efectivo</b> (hasta $100.000 COP). Al elegir Transferencia, dentro del carrito verás el número de cuenta del local con el botón <b>"📋 Copiar Cuenta"</b> y luego envías el pantallazo por WhatsApp al confirmar.');
             } else if (tema === 'vender') {
-                agregarMensajeChatGuacamaya('🚀 Quiero vender en Kumu', '¡En Kumu <b>no necesitas tener un local físico</b>! Si vendes postres, comidas desde casa, productos de chagra (Sanvi) o tienes un restaurante, puedes entrar <b>GRATIS</b> a la vitrina digital más grande del Vaupés. Toca abajo en <b>"Hablar con Soporte Central Kumu"</b> para activarte hoy mismo.');
+                agregarMensajeChatGuacamaya('🚀 Quiero vender en Kumu', '¡En Kumu <b>no necesitas tener un local físico</b>! Si vendes tortas, postres, ropa, calzado, artesanías o tienes un restaurante, puedes entrar <b>GRATIS</b> a la vitrina comercial más grande del Vaupés. Toca abajo en <b>"Hablar con Soporte Central Kumu"</b> para activarte hoy mismo.');
+            } else if (tema === 'sanvi') {
+                agregarMensajeChatGuacamaya('🌾 ¿Cómo funciona Sanvi?', '<b>Sanvi</b> conecta sin intermediarios a las chagras y campesinos del Vaupés con las familias de Mitú. Puedes apartar fariña, casabe, plátano, frutas y canastas campesinas entre semana para entrega fresca en tu puerta.');
             } else if (tema === 'encargo') {
-                agregarMensajeChatGuacamaya('⏳ ¿Qué es Bajo Pedido / Por Encargo?', 'Los locales con etiqueta <b>"⏳ Bajo Pedido"</b> preparan productos especiales o por encargo. Puedes apartar tus productos cualquier día de la semana indicando en el carrito para qué fecha y hora los necesitas.');
+                agregarMensajeChatGuacamaya('⏳ ¿Qué es Bajo Pedido / Por Encargo?', 'Los emprendedores con etiqueta <b>"⏳ Bajo Pedido"</b> preparan productos especiales o por lote. Puedes apartar tus productos cualquier día indicando en el carrito para qué fecha y hora los necesitas (con transferencia total o abono del 50%).');
             } else if (tema === 'clima') {
                 agregarMensajeChatGuacamaya('🌧️ ¿Por qué cambia el domicilio?', 'Kumu se conecta por satélite al clima de Mitú en vivo: en tiempo seco la carrera vale <b>$4.000 COP</b> y cuando llueve sube automáticamente a <b>$5.000 COP</b> (100% para apoyar el esfuerzo del repartidor bajo la lluvia).');
             } else if (tema === 'instalar') {
@@ -394,22 +401,21 @@
 
             if (lower.includes('nequi') || lower.includes('cuenta') || lower.includes('pago') || lower.includes('efectivo') || lower.includes('transferencia')) {
                 responderGuacamayaIA('pagos');
-            } else if (lower.includes('vender') || lower.includes('local') || lower.includes('afiliar') || lower.includes('publicidad') || lower.includes('banner') || lower.includes('anunciar')) {
+            } else if (lower.includes('vender') || lower.includes('local') || lower.includes('afiliar') || lower.includes('publicidad') || lower.includes('banner') || lower.includes('anunciar') || lower.includes('ropa')) {
                 responderGuacamayaIA('vender');
-            } else if (lower.includes('encargo') || lower.includes('apartar') || lower.includes('postre') || lower.includes('bajo pedido')) {
+            } else if (lower.includes('sanvi') || lower.includes('campesino') || lower.includes('chagra') || lower.includes('fariña') || lower.includes('casabe')) {
+                responderGuacamayaIA('sanvi');
+            } else if (lower.includes('encargo') || lower.includes('apartar') || lower.includes('postre') || lower.includes('torta') || lower.includes('bajo pedido')) {
                 responderGuacamayaIA('encargo');
             } else if (lower.includes('lluvia') || lower.includes('clima') || lower.includes('4000') || lower.includes('5000') || lower.includes('tarifa')) {
                 responderGuacamayaIA('clima');
             } else if (lower.includes('instalar') || lower.includes('icono') || lower.includes('hongo')) {
                 responderGuacamayaIA('instalar');
-            } else if (lower.includes('sanvi') || lower.includes('campesino') || lower.includes('chagra')) {
-                agregarMensajeChatGuacamaya(q, '🌾 <b>Sanvi</b> es nuestro mercado campesino dentro de Kumu para conectar sin intermediarios a las familias de Mitú con productos frescos de la chagra (fariña, casabe, frutas y cosecha local).');
             } else {
                 agregarMensajeChatGuacamaya(q, 'Para atender esta solicitud específica de inmediato, toca el botón naranja de abajo <b>"📲 Hablar con Soporte Central Kumu (WhatsApp)"</b> y nuestro equipo te responderá en vivo.');
             }
         }
 
-        // 📢 MOTOR DE BANNERS PUBLICITARIOS SINCRONIZADO EN SUPABASE
         async function cargarBannersDesdeSupabase() {
             try {
                 const { data } = await supabaseClient.from('comercios').select('*').eq('nombre', NOMBRE_FILA_BANNERS).maybeSingle();
@@ -421,6 +427,20 @@
             } catch (e) {
                 bannersPublicitariosCache = [];
             }
+        }
+
+        // 📊 CARGAR CONTEO DE VENTAS POR COMERCIO PARA QUE TENGAS EL REGISTRO VISIBLE SIEMPRE
+        async function cargarConteoVentasPorComercio() {
+            try {
+                const { data } = await supabaseClient.from('pedidos').select('comercio_id, estado');
+                const mapa = {};
+                (data || []).forEach(p => {
+                    if (p.comercio_id && !(p.estado || '').includes('Cancelado')) {
+                        mapa[p.comercio_id] = (mapa[p.comercio_id] || 0) + 1;
+                    }
+                });
+                conteoPedidosPorComercio = mapa;
+            } catch (e) {}
         }
 
         function obtenerListaBannersActivos() {
@@ -526,7 +546,6 @@
             }
         }
 
-        // 📢 CARRUSEL DINÁMICO DE 3-4 ANUNCIOS ROTATIVOS (SIN TEXTO EXTERNO REPETIDO DEBAJO)
         function renderizarBannersPublicitarios() {
             const cont = document.getElementById('cajaBannerPublicitario');
             if (!cont) return;
@@ -569,7 +588,6 @@
             } catch (e) {}
         }
 
-        // 👁️ VISOR DE CONTRASEÑA ADMIN ANTES DE CONFIRMAR (PUNTO 7)
         function toggleVerClaveAdmin() {
             const inp = document.getElementById('inputNuevaClaveAdmin');
             const btn = document.getElementById('btnOjitoClaveAdmin');
@@ -648,16 +666,32 @@
             localStorage.removeItem('kumu_bloqueo_pin_hasta');
         }
 
-        function normalizarCategoriaPlato(cat) {
+        // 🏷️ NORMALIZADOR DE ARQUETIPOS Y SUBCATEGORÍAS UNIFICADAS (ROPA & CALZADO, TORTAS & POSTRES, GENERAL)
+        function normalizarCategoriaPlato(cat, catComercio = '') {
             const c = (cat || '').trim();
-            if (!c || c === 'Varios') return 'Carnes';
+            if (!c) {
+                if (catComercio === 'Emprendedores & Tiendas') return 'General';
+                if (catComercio === 'Sanvi') return 'Artesanías & Chagra';
+                return 'Carnes';
+            }
+            if (c === 'Varios') {
+                return (catComercio === 'Emprendedores & Tiendas' || catComercio === 'Sanvi') ? 'General' : 'Carnes';
+            }
+            const lower = c.toLowerCase();
+            if (lower === 'ropa' || lower === 'calzado' || lower === 'ropa y calzado' || lower === 'ropa & calzado') return 'Ropa & Calzado';
+            if (lower === 'tortas' || lower === 'postres' || lower === 'reposteria' || lower === 'tortas y postres' || lower === 'tortas & postres') return 'Tortas & Postres';
+            if (lower === 'chagra' || lower === 'artesanias' || lower === 'artesanías' || lower === 'sanvi') return 'Artesanías & Chagra';
             return c;
         }
 
         function obtenerTextoConEmojiCategoria(cat) {
-            const limpio = normalizarCategoriaPlato(cat);
+            const limpio = (cat || '').trim();
             const mapa = {
                 'Todos': '✨ Todos',
+                'General': '🛍️ General',
+                'Tortas & Postres': '🍰 Tortas & Postres',
+                'Ropa & Calzado': '👕 Ropa & Calzado',
+                'Artesanías & Chagra': '🧺 Artesanías & Chagra',
                 'Hamburguesas': '🍔 Hamburguesas',
                 'Salchipapas': '🍟 Salchipapas',
                 'Perros Calientes': '🌭 Perros Calientes',
@@ -671,13 +705,16 @@
             };
             if (mapa[limpio]) return mapa[limpio];
             const lower = limpio.toLowerCase();
+            if (lower.includes('torta') || lower.includes('postre') || lower.includes('dulce')) return '🍰 ' + limpio;
+            if (lower.includes('ropa') || lower.includes('calzado') || lower.includes('zapato')) return '👕 ' + limpio;
+            if (lower.includes('chagra') || lower.includes('artesan') || lower.includes('fariña')) return '🧺 ' + limpio;
             if (lower.includes('hamburg')) return '🍔 ' + limpio;
             if (lower.includes('salchi') || lower.includes('papa')) return '🍟 ' + limpio;
             if (lower.includes('perro') || lower.includes('hot')) return '🌭 ' + limpio;
             if (lower.includes('carne') || lower.includes('asad') || lower.includes('picada')) return '🥩 ' + limpio;
             if (lower.includes('bebida') || lower.includes('jugo') || lower.includes('gaseosa')) return '🥤 ' + limpio;
             if (lower.includes('licor') || lower.includes('cerveza')) return '🍺 ' + limpio;
-            return '🍴 ' + limpio;
+            return '🛍️ ' + limpio;
         }
 
         function calcularMinutosEspera(creadoAt) {
@@ -736,7 +773,7 @@
             subirArchivoStorageOBase64(file, async function(urlOptimizada) {
                 const res = await guardarFotoProductoSegura(productoIdSubiendoFoto, urlOptimizada);
                 if (!res.exito) alert("Error al subir la foto: " + res.error);
-                else { alert("📸 ¡Foto cargada y guardada con éxito en el plato!"); initApp(); }
+                else { alert("📸 ¡Foto cargada y guardada con éxito en el producto!"); initApp(); }
             });
         }
 
@@ -816,10 +853,15 @@
             let precioBase = Number(producto.precio) < 1000 ? Number(producto.precio) * 1000 : Number(producto.precio);
             let descRaw = producto.descripcion || '';
             const esFavorito = descRaw.includes('[FAV]');
+            let stockCupos = null;
+            const matchStock = descRaw.match(/\[STOCK:(\d+)\]/);
+            if (matchStock) stockCupos = Number(matchStock[1]);
+
             let descLimpia = descRaw
                 .replace(/\[PROMO:\d+\|\d{2}:\d{2}-\d{2}:\d{2}\]/g, '')
                 .replace(/\[IMG:[^\]]+\]/g, '')
                 .replace(/\[FAV\]/g, '')
+                .replace(/\[STOCK:\d+\]/g, '')
                 .trim();
 
             const match = descRaw.match(/\[PROMO:(\d+)\|(\d{2}:\d{2}-\d{2}:\d{2})\]/);
@@ -836,14 +878,33 @@
                 const minsFin = hF * 60 + (mF || 0);
                 const dentro = minsFin < minsInicio ? (minsActual >= minsInicio || minsActual <= minsFin) : (minsActual >= minsInicio && minsActual <= minsFin);
                 if (dentro && precioOferta < precioBase) {
-                    return { activa: true, esFavorito, precioFinal: precioOferta, precioNormal: precioBase, horario: rango, descLimpia };
+                    return { activa: true, esFavorito, stockCupos, precioFinal: precioOferta, precioNormal: precioBase, horario: rango, descLimpia };
                 }
-                return { activa: false, esFavorito, precioFinal: precioBase, precioNormal: precioBase, horario: rango, descLimpia };
+                return { activa: false, esFavorito, stockCupos, precioFinal: precioBase, precioNormal: precioBase, horario: rango, descLimpia };
             }
-            return { activa: false, esFavorito, precioFinal: precioBase, precioNormal: precioBase, horario: null, descLimpia };
+            return { activa: false, esFavorito, stockCupos, precioFinal: precioBase, precioNormal: precioBase, horario: null, descLimpia };
         }
 
-        // 🔥 ALTERNAR INSIGNIA "MÁS PEDIDO" EN PLATOS ESTRELLA (PUNTO 11.1)
+        // 📦 CONFIGURAR CUPOS / STOCK LIMITADO DE UN PRODUCTO (IDEAL PARA EMPRENDEDORES Y SANVI)
+        async function configurarCuposProducto(productoId) {
+            const p = windowProductosCache.find(item => String(item.id) === String(productoId));
+            if (!p) return;
+            const info = evaluarPromoHoraFeliz(p);
+            const resp = prompt(`📦 CUPOS / UNIDADES DISPONIBLES DE "${p.nombre}":\n\nIngresa cuántas unidades tienes disponibles hoy (o deja vacío si el stock es continuo):`, info.stockCupos !== null ? info.stockCupos : '');
+            if (resp === null) return;
+
+            let descNueva = (p.descripcion || '').replace(/\[STOCK:\d+\]/g, '').trim();
+            let disponibleNuevo = p.disponible !== false;
+            if (resp.trim() !== '' && !isNaN(Number(resp))) {
+                const cant = Math.max(0, Math.floor(Number(resp)));
+                descNueva = `${descNueva} [STOCK:${cant}]`.trim();
+                disponibleNuevo = cant > 0;
+            }
+            const { error } = await supabaseClient.from('productos').update({ descripcion: descNueva, disponible: disponibleNuevo }).eq('id', productoId);
+            if (error) alert("Error: " + error.message);
+            else initApp();
+        }
+
         async function toggleFavoritoProducto(productoId) {
             const p = windowProductosCache.find(item => String(item.id) === String(productoId));
             if (!p) return;
@@ -858,12 +919,11 @@
             else initApp();
         }
 
-        // 👑 ALTERNAR INSIGNIA "CORONA VIP" EN COMERCIOS PATROCINADOS (PUNTO 8)
         async function toggleCoronaComercio(comercioId) {
             const c = windowComerciosCache.find(item => String(item.id) === String(comercioId));
             if (!c) return;
             const meta = extraerMetadatosComercio(c);
-            const nuevaDir = construirDireccionConMetadatos(meta.dirLimpia, !meta.esVIP, meta.esEncargo, meta.fechaEncargo, meta.textoAdicionesRaw);
+            const nuevaDir = construirDireccionConMetadatos(meta.dirLimpia, !meta.esVIP, meta.esEncargo, meta.fechaEncargo, meta.textoAdicionesRaw, meta.exigeAbono50, meta.esAsistido);
             const { error } = await supabaseClient.from('comercios').update({ direccion: nuevaDir }).eq('id', comercioId);
             if (error) alert("Error: " + error.message);
             else {
@@ -872,7 +932,6 @@
             }
         }
 
-        // ➕ CONFIGURAR ADICIONES PROPIAS Y FECHA DE ENCARGO DESDE ADMIN
         async function configurarAdicionesYEncargoAdmin(comercioId) {
             const c = windowComerciosCache.find(item => String(item.id) === String(comercioId));
             if (!c) return;
@@ -883,27 +942,28 @@
 
             const modoEncargo = confirm(`⏳ ¿${c.nombre} trabaja bajo modalidad "Bajo Pedido / Por Encargo"?\n\nAceptar = Sí (Bajo Pedido / Encargo)\nCancelar = No (Entrega Inmediata)`);
             let nuevaFechaEncargo = meta.fechaEncargo;
+            let exigeAbono50 = false;
             if (modoEncargo) {
                 const f = prompt(`📅 Si ${c.nombre} tiene un día/hora fijo de entrega para esta semana, escríbelo aquí (Ej: "Sábado 3:00 PM") o deja vacío para que solo el cliente elija:`, meta.fechaEncargo || '');
                 if (f !== null) nuevaFechaEncargo = f.trim();
+                exigeAbono50 = confirm(`💳 ¿Este emprendedor exige Pago o Abono del 50% por Transferencia Nequi/Bre-B para apartar el encargo?\n\nAceptar = Sí (Exige Transferencia/Abono 50%)\nCancelar = No`);
             } else {
                 nuevaFechaEncargo = '';
             }
 
-            const nuevaDir = construirDireccionConMetadatos(meta.dirLimpia, meta.esVIP, modoEncargo, nuevaFechaEncargo, nuevasAdic.trim());
+            const nuevaDir = construirDireccionConMetadatos(meta.dirLimpia, meta.esVIP, modoEncargo, nuevaFechaEncargo, nuevasAdic.trim(), exigeAbono50, meta.esAsistido);
             const { error } = await supabaseClient.from('comercios').update({ direccion: nuevaDir }).eq('id', comercioId);
             if (error) alert("Error: " + error.message);
             else {
-                alert(`✅ Configuración de Adiciones y Modalidad actualizada para ${c.nombre}.`);
+                alert(`✅ Configuración actualizada para ${c.nombre}.`);
                 initApp();
             }
         }
 
-        // 📲 COPIAR ENLACE DIRECTO A LA TIENDA PARA ESTADOS DE WHATSAPP (PUNTO 11.4)
         function copiarEnlaceDirectoTiendaWA(comercioId, nombreLocal, e) {
             if (e) e.stopPropagation();
             const urlDirecta = `${window.location.origin}${window.location.pathname}?local=${encodeURIComponent(comercioId)}`;
-            const textoEstado = `🔥 ¡Pide fácil en *${nombreLocal}* por *Kumu 🍄* directo a tu casa en Mitú!\n👉 Toca aquí para ver nuestro menú: ${urlDirecta}`;
+            const textoEstado = `🔥 ¡Mira nuestro catálogo y pide fácil en *${nombreLocal}* por *Kumu 🍄* directo a tu casa en Mitú!\n👉 Toca aquí: ${urlDirecta}`;
             if (navigator.clipboard) {
                 navigator.clipboard.writeText(textoEstado);
                 alert(`📲 ¡Enlace directo para Estados de WhatsApp copiado!\n\n${textoEstado}`);
@@ -917,7 +977,6 @@
             if (splash) { splash.style.opacity = '0'; splash.style.visibility = 'hidden'; setTimeout(() => splash.remove(), 600); }
         }
 
-        // ÚNICO DISPARADOR DE ARRANQUE (EVITA DUPLICACIÓN DEL PIE DE PÁGINA LEGAL)
         window.addEventListener('DOMContentLoaded', () => {
             initApp();
             verificarCalificacionPendiente();
@@ -927,7 +986,7 @@
                 if (burbuja) burbuja.classList.add('hidden');
             }, 6500);
             setInterval(() => {
-                if (currentView === 'cliente' && !comercioSeleccionado && categoriaFiltro !== 'Sanvi') {
+                if (currentView === 'cliente' && !comercioSeleccionado) {
                     renderizarSeguimientoCliente(true);
                 }
             }, 8000);
@@ -959,7 +1018,6 @@
         function estaComercioAbierto(comercio) {
             if (comercio.activo === false) return false;
             const meta = extraerMetadatosComercio(comercio);
-            // Si es Bajo Pedido / Por Encargo, su vitrina permanece abierta para recibir reservas
             if (meta.esEncargo) return true;
 
             const ahora = new Date();
@@ -994,7 +1052,12 @@
 
         async function initApp() {
             try {
-                await Promise.all([verificarClimaMitu(), cargarClaveAdminDesdeSupabase(), cargarBannersDesdeSupabase()]);
+                await Promise.all([
+                    verificarClimaMitu(),
+                    cargarClaveAdminDesdeSupabase(),
+                    cargarBannersDesdeSupabase(),
+                    cargarConteoVentasPorComercio()
+                ]);
                 const app = document.getElementById('app');
                 if (!app) return;
                 app.innerHTML = '';
@@ -1010,7 +1073,6 @@
             finally { ocultarSplash(); }
         }
 
-        // 📱 RENDER BANNER PWA (SE OCULTA AUTOMÁTICAMENTE SI YA LA INSTALARON)
         function renderBannerPWA(container) {
             if (yaTienePWAInstaladaOCerrada()) return;
             const banner = document.createElement('div');
@@ -1133,7 +1195,7 @@
 
         function actualizarListaComerciosDOM() {
             const lista = document.getElementById('listaComercios');
-            if (!lista || categoriaFiltro === 'Sanvi') return;
+            if (!lista) return;
 
             let comerciosFiltrados = (windowComerciosCache || []).filter(c => !c.nombre.startsWith('__KUMU_'));
             if (categoriaFiltro !== 'Todos') {
@@ -1159,7 +1221,23 @@
             });
 
             if (comerciosFiltrados.length === 0) {
-                lista.innerHTML = `<p class="text-sm text-gray-500 italic">No se encontraron resultados para tu búsqueda.</p>`;
+                if (categoriaFiltro === 'Sanvi') {
+                    lista.innerHTML = `
+                        <div class="bg-white border border-emerald-200 rounded-xl p-4 text-center space-y-2">
+                            <p class="text-xs text-gray-600">Aún no hay cosechas activas publicadas hoy en Sanvi.</p>
+                            ${modoAdminVisible ? `<button onclick="switchView('negocios')" class="bg-[#1B4D3E] text-[#D4AF37] px-3 py-1.5 rounded-lg text-xs font-extrabold">+ Registrar Productor o Canasta en Sanvi</button>` : `<button onclick="abrirAccionBanner('WA_EMPRENDEDOR', 'Sanvi')" class="bg-[#1B4D3E] text-[#D4AF37] px-3 py-1.5 rounded-lg text-xs font-extrabold">🌾 Soy productor campesino y quiero vender aquí</button>`}
+                        </div>
+                    `;
+                } else if (categoriaFiltro === 'Emprendedores & Tiendas') {
+                    lista.innerHTML = `
+                        <div class="bg-white border border-amber-200 rounded-xl p-4 text-center space-y-2">
+                            <p class="text-xs text-gray-600">¿Vendes postres, ropa, calzado o detalles desde casa en Mitú?</p>
+                            <button onclick="abrirAccionBanner('WA_EMPRENDEDOR', 'Vitrina Emprendedores')" class="btn-vaupes px-3 py-1.5 rounded-lg text-xs font-extrabold">🚀 Registrar mi Emprendimiento GRATIS</button>
+                        </div>
+                    `;
+                } else {
+                    lista.innerHTML = `<p class="text-sm text-gray-500 italic">No se encontraron resultados en esta categoría.</p>`;
+                }
                 return;
             }
 
@@ -1170,6 +1248,7 @@
                 const meta = extraerMetadatosComercio(c);
                 const imagenLocal = c.imagen_url || c.imagen || 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=200';
                 const horarioTexto = (!meta.esEncargo && c.hora_apertura && c.hora_cierre) ? ` • 🕒 ${c.hora_apertura} - ${c.hora_cierre}` : '';
+                const totalComprasLocal = conteoPedidosPorComercio[c.id] || 0;
 
                 let badgeEstado = '';
                 if (meta.esEncargo) {
@@ -1182,7 +1261,11 @@
                     <div onclick="seleccionarComercioPorId('${c.id}')" class="bg-white ${meta.esVIP ? 'border-2 border-[#D4AF37] bg-amber-50/20 shadow-md' : 'border shadow-sm'} rounded-xl p-3 flex items-center space-x-3 cursor-pointer hover:border-[#1B4D3E] transition ${!abierto ? 'opacity-60 bg-gray-50' : ''}">
                         <img src="${imagenLocal}" class="w-16 h-16 rounded-lg object-cover border flex-shrink-0" alt="${c.nombre}" onerror="this.src='https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=200'">
                         <div class="flex-1 min-w-0">
-                            ${meta.esVIP ? `<span class="inline-block bg-gradient-to-r from-[#2D0B3A] to-[#C85A17] text-[#D4AF37] text-[9px] font-extrabold px-2 py-0.5 rounded-full mb-0.5">👑 RECOMENDADO VIP</span>` : ''}
+                            <div class="flex flex-wrap gap-1 items-center mb-0.5">
+                                ${meta.esVIP ? `<span class="inline-block bg-gradient-to-r from-[#2D0B3A] to-[#C85A17] text-[#D4AF37] text-[9px] font-extrabold px-2 py-0.5 rounded-full">👑 RECOMENDADO VIP</span>` : ''}
+                                ${meta.esAsistido ? `<span class="inline-block bg-emerald-100 text-[#1B4D3E] text-[9px] font-extrabold px-2 py-0.5 rounded-full">🌾 Cosecha Directa Sanvi</span>` : ''}
+                                ${(modoAdminVisible || totalComprasLocal > 0) ? `<span class="inline-block bg-slate-100 text-gray-700 text-[9px] font-bold px-1.5 py-0.5 rounded">📊 ${totalComprasLocal} venta(s)</span>` : ''}
+                            </div>
                             <div class="flex justify-between items-center gap-1">
                                 <h3 class="font-bold text-gray-800 truncate">${c.nombre}</h3>
                                 ${badgeEstado}
@@ -1238,9 +1321,9 @@
 
             if (!comercioSeleccionado) {
                 content.innerHTML = `
-                    <input type="text" id="inputBusqueda" oninput="buscarProductos(this.value)" value="${busquedaTexto}" placeholder="🔍 Buscar plato, medicina, postre o local en Mitú..." class="w-full p-2.5 border border-amber-200 rounded-lg text-xs bg-amber-50/40 outline-none focus:ring-2 focus:ring-[#1B4D3E]">
+                    <input type="text" id="inputBusqueda" oninput="buscarProductos(this.value)" value="${busquedaTexto}" placeholder="🔍 Buscar comida, postres, ropa, medicina o cosecha..." class="w-full p-2.5 border border-amber-200 rounded-lg text-xs bg-amber-50/40 outline-none focus:ring-2 focus:ring-[#1B4D3E]">
 
-                    <!-- 📢 CARRUSEL DINÁMICO DE BANNERS (3-4 ANUNCIOS ROTATIVOS, SIN TEXTO REPETIDO ABAJO) -->
+                    <!-- 📢 CARRUSEL DINÁMICO DE BANNERS -->
                     <div id="cajaBannerPublicitario"></div>
 
                     ${misPedidosCount > 0 ? `
@@ -1264,34 +1347,30 @@
                     <div class="flex space-x-2 overflow-x-auto kumu-scroll pb-2.5 text-xs">
                         <button onclick="filtrarCat('Todos')" class="px-3.5 py-2 rounded-full font-bold whitespace-nowrap shadow-sm ${categoriaFiltro==='Todos'?'bg-[#1B4D3E] text-[#D4AF37]':'bg-gray-200 text-gray-700'}">✨ Todos</button>
                         <button onclick="filtrarCat('Restaurantes & Comida Rápida')" class="px-3.5 py-2 rounded-full font-bold whitespace-nowrap shadow-sm ${categoriaFiltro==='Restaurantes & Comida Rápida'?'bg-[#1B4D3E] text-[#D4AF37]':'bg-gray-200 text-gray-700'}">🍔 Restaurantes & Comida Rápida</button>
+                        <button onclick="filtrarCat('Emprendedores & Tiendas')" class="px-3.5 py-2 rounded-full font-bold whitespace-nowrap shadow-sm ${categoriaFiltro==='Emprendedores & Tiendas'?'bg-[#1B4D3E] text-[#D4AF37]':'bg-purple-50 text-[#2D0B3A] border border-purple-200'}">🛍️ Emprendedores & Tiendas</button>
                         <button onclick="filtrarCat('Licores & Cigarrillos')" class="px-3.5 py-2 rounded-full font-bold whitespace-nowrap shadow-sm ${categoriaFiltro==='Licores & Cigarrillos'?'bg-[#C85A17] text-white':'bg-amber-100 text-amber-900 border border-amber-300'}">🍺 Licores & Cigarrillos 🔞</button>
                         <button onclick="filtrarCat('Droguería')" class="px-3.5 py-2 rounded-full font-bold whitespace-nowrap shadow-sm ${categoriaFiltro==='Droguería'?'bg-[#1B4D3E] text-[#D4AF37]':'bg-gray-200 text-gray-700'}">💊 Droguería</button>
-                        <button onclick="filtrarCat('Sanvi')" class="px-3.5 py-2 rounded-full font-bold whitespace-nowrap shadow-sm ${categoriaFiltro==='Sanvi'?'bg-[#2D0B3A] text-[#D4AF37] border border-[#D4AF37]':'bg-emerald-50 text-[#1B4D3E] border border-emerald-300'}">🌾 Sanvi (Próximamente)</button>
+                        <button onclick="filtrarCat('Sanvi')" class="px-3.5 py-2 rounded-full font-bold whitespace-nowrap shadow-sm ${categoriaFiltro==='Sanvi'?'bg-[#2D0B3A] text-[#D4AF37] border border-[#D4AF37]':'bg-emerald-50 text-[#1B4D3E] border border-emerald-300'}">🌾 Sanvi (Mercado Campesino)</button>
                     </div>
-                    <h2 class="font-bold text-gray-800">${categoriaFiltro === 'Sanvi' ? '🌾 Sanvi • Mercado Campesino en Mitú' : 'Locales Disponibles en Mitú'}</h2>
+
+                    <!-- 🌾 ENCABEZADO ESPECIAL CUANDO EL CLIENTE ENTRA A SANVI O EMPRENDEDORES -->
+                    ${categoriaFiltro === 'Sanvi' ? `
+                        <div class="bg-gradient-to-r from-[#1B4D3E] via-[#2D0B3A] to-[#C85A17] text-white rounded-2xl p-3.5 shadow-md border-2 border-[#D4AF37] space-y-1.5">
+                            <div class="flex items-center justify-between">
+                                <span class="bg-[#D4AF37] text-[#2D0B3A] text-[9px] font-extrabold px-2.5 py-0.5 rounded-full uppercase">🌾 Piloto Sanvi Activo</span>
+                                <span class="text-[10px] text-amber-200 font-bold">0% Intermediarios</span>
+                            </div>
+                            <h3 class="text-sm font-extrabold text-[#D4AF37]">Sanvi: Del Campo y la Chagra a tu Casa</h3>
+                            <p class="text-[11px] text-amber-100 leading-snug">Aparta aquí fariña, casabe, plátano, frutas amazónicas y cosecha fresca directamente de nuestras familias campesinas en Mitú.</p>
+                        </div>
+                    ` : ''}
+
+                    <h2 class="font-bold text-gray-800">${categoriaFiltro === 'Sanvi' ? '🌾 Chagras y Productores en Sanvi' : (categoriaFiltro === 'Emprendedores & Tiendas' ? '🛍️ Vitrina de Emprendedores en Mitú' : 'Locales y Vitrinas Disponibles en Mitú')}</h2>
                     <div id="listaComercios" class="space-y-3">Cargando locales...</div>
                 `;
                 container.appendChild(content);
 
                 renderizarBannersPublicitarios();
-
-                if (categoriaFiltro === 'Sanvi') {
-                    document.getElementById('listaComercios').innerHTML = `
-                        <div class="bg-gradient-to-br from-[#1B4D3E] via-[#2D0B3A] to-[#C85A17] text-white rounded-2xl p-5 shadow-xl border-2 border-[#D4AF37] space-y-3 text-center">
-                            <div class="w-16 h-16 mx-auto bg-white/10 rounded-full flex items-center justify-center text-4xl border border-[#D4AF37]">🌾</div>
-                            <span class="inline-block bg-[#D4AF37] text-[#2D0B3A] text-[10px] font-extrabold px-3 py-0.5 rounded-full uppercase tracking-wider">Próximamente en Kumu</span>
-                            <h3 class="text-lg font-extrabold text-[#D4AF37]">Sanvi: Del Campo y la Chagra a tu Casa</h3>
-                            <p class="text-xs text-amber-100 leading-relaxed">Muy pronto en <b>Kumu 🍄</b> conectaremos directamente a las familias de Mitú con nuestros <b>campesinos y productores locales en Sanvi</b>.</p>
-                            <div class="bg-black/25 p-3 rounded-xl border border-white/15 text-left text-[11px] space-y-1 text-emerald-100">
-                                <p>🥬 <b>Cosecha Fresca Local:</b> Yuca, plátano, frutas amazónicas y verduras del día.</p>
-                                <p>🥣 <b>Tradición del Vaupés:</b> Fariña, casabe, almidón, ají y pescado fresco.</p>
-                                <p>🤝 <b>Comercio Justo:</b> Apoyo directo a las manos campesinas de nuestra tierra, llevándolo hasta tu puerta.</p>
-                            </div>
-                            <button onclick="filtrarCat('Todos')" class="w-full bg-[#D4AF37] text-[#2D0B3A] font-extrabold py-2.5 rounded-xl text-xs shadow-md">← Volver a Restaurantes y Comercios Activos</button>
-                        </div>
-                    `;
-                    return;
-                }
 
                 try {
                     const { data: prodsAll } = await supabaseClient.from('productos').select('*');
@@ -1307,7 +1386,6 @@
                 } catch (e) { comercios = JSON.parse(localStorage.getItem('kumu_cache_comercios') || '[]'); }
                 windowComerciosCache = (comercios || []).filter(c => !c.nombre.startsWith('__KUMU_'));
 
-                // 🔗 VERIFICAR SI EL CLIENTE ENTRÓ DESDE UN LINK DIRECTO DE ESTADO DE WHATSAPP (?local=...)
                 if (!deepLinkProcesado && window.location.search.includes('local=')) {
                     deepLinkProcesado = true;
                     const paramLocal = new URLSearchParams(window.location.search).get('local');
@@ -1342,19 +1420,19 @@
                     <p class="text-[11px] text-gray-500 mb-2">📍 Vendedor responsable: ${comercioSeleccionado.nombre} (${meta.dirLimpia})</p>
                     ${meta.esEncargo ? `
                         <div class="bg-purple-50 border border-purple-300 p-2.5 rounded-xl text-xs text-purple-950 mb-2">
-                            <p class="font-extrabold">⏳ Modalidad Bajo Pedido / Por Encargo</p>
-                            <p class="text-[11px] mt-0.5">${meta.fechaEncargo ? `📅 <b>Entrega programada por el local:</b> ${meta.fechaEncargo}.` : 'Puedes apartar tus productos hoy e indicar abajo en el carrito para qué día y hora los necesitas.'}</p>
+                            <p class="font-extrabold">⏳ Modalidad Bajo Pedido / Preventa</p>
+                            <p class="text-[11px] mt-0.5">${meta.fechaEncargo ? `📅 <b>Entrega programada:</b> ${meta.fechaEncargo}.` : 'Puedes apartar tus productos hoy e indicar abajo en el carrito para qué día y hora los necesitas.'}</p>
                         </div>
                     ` : ''}
                     <div class="bg-amber-50 border border-amber-200 p-3 rounded-lg text-xs text-amber-950 mb-3 flex justify-between items-center gap-2">
                         <div>
-                            <p class="font-bold mb-0.5">📲 Cuenta Nequi / Bre-B del Comercio:</p>
+                            <p class="font-bold mb-0.5">📲 Cuenta Nequi / Bre-B ${meta.esAsistido ? '(Central Sanvi Kumu)' : 'del Comercio'}:</p>
                             <p class="text-sm font-extrabold text-amber-900">${comercioSeleccionado.telefono}</p>
                         </div>
                         <button onclick="copiarCuentaComercio('${(comercioSeleccionado.telefono || '').replace(/'/g, '')}')" class="bg-[#2D0B3A] text-[#D4AF37] px-2.5 py-1.5 rounded-lg text-[10px] font-extrabold flex-shrink-0 shadow">📋 Copiar</button>
                     </div>
                     <div id="barraCatProductos" class="flex space-x-2 overflow-x-auto kumu-scroll pb-2.5 text-xs mb-3"></div>
-                    <div id="listaProductos" class="space-y-3 mt-1">Cargando menú...</div>
+                    <div id="listaProductos" class="space-y-3 mt-1">Cargando catálogo...</div>
                     <div id="carritoResumen" class="mt-6 border-t pt-4"></div>
                 `;
                 container.appendChild(content);
@@ -1367,11 +1445,17 @@
                 } catch (e) { productos = todosProductosGlobal.filter(p => p.comercio_id === comercioSeleccionado.id); }
                 windowProductosCache = productos || [];
                 
-                let categoriasProds = ['Todos', 'Hamburguesas', 'Salchipapas', 'Perros Calientes', 'Carnes', 'Bebidas'];
+                // 🧠 PESTAÑAS INTERNAS ADAPTATIVAS SEGÚN EL ARQUETIPO DEL NEGOCIO
+                const catNegocio = comercioSeleccionado.categoria || '';
+                const esRestaurante = ['Restaurantes & Comida Rápida', 'Restaurantes', 'Comida Rápida'].includes(catNegocio);
+                let categoriasProds = esRestaurante
+                    ? ['Todos', 'Hamburguesas', 'Salchipapas', 'Perros Calientes', 'Carnes', 'Bebidas']
+                    : ['Todos'];
+
                 if (productos) {
                     productos.forEach(p => {
-                        const cat = normalizarCategoriaPlato(p.categoria);
-                        if (cat !== 'Sanvi' && !categoriasProds.includes(cat)) categoriasProds.push(cat);
+                        const cat = normalizarCategoriaPlato(p.categoria, catNegocio);
+                        if (!categoriasProds.includes(cat)) categoriasProds.push(cat);
                     });
                 }
 
@@ -1384,13 +1468,12 @@
 
                 const pList = document.getElementById('listaProductos');
                 if (!productos || productos.length === 0) {
-                    pList.innerHTML = `<p class="text-sm text-gray-500 italic">Este local aún no tiene productos registrados.</p>`;
+                    pList.innerHTML = `<p class="text-sm text-gray-500 italic">Este comercio aún no tiene productos registrados.</p>`;
                 } else {
                     let productosFiltrados = [...productos];
                     if (categoriaProductoFiltro !== 'Todos') {
-                        productosFiltrados = productosFiltrados.filter(p => normalizarCategoriaPlato(p.categoria) === categoriaProductoFiltro);
+                        productosFiltrados = productosFiltrados.filter(p => normalizarCategoriaPlato(p.categoria, catNegocio) === categoriaProductoFiltro);
                     }
-                    // 🔥 ORDENAR PONIENDO PRIMERO LOS PLATOS "MÁS PEDIDOS"
                     productosFiltrados.sort((a, b) => {
                         const favA = (a.descripcion || '').includes('[FAV]') ? 1 : 0;
                         const favB = (b.descripcion || '').includes('[FAV]') ? 1 : 0;
@@ -1404,8 +1487,9 @@
                             const promoInfo = evaluarPromoHoraFeliz(p);
                             p.precioReal = promoInfo.precioFinal;
                             const imgProd = obtenerImagenProducto(p);
-                            const estaDisponible = p.disponible !== false;
-                            const catActual = normalizarCategoriaPlato(p.categoria);
+                            const sinCupos = promoInfo.stockCupos !== null && promoInfo.stockCupos <= 0;
+                            const estaDisponible = (p.disponible !== false) && !sinCupos;
+                            const catActual = normalizarCategoriaPlato(p.categoria, catNegocio);
 
                             return `
                                 <div class="bg-white border ${promoInfo.activa ? 'border-2 border-[#C85A17] bg-amber-50/30' : (promoInfo.esFavorito ? 'border-2 border-[#D4AF37]' : '')} rounded-xl p-2.5 flex items-center justify-between space-x-3 shadow-sm ${!estaDisponible ? 'opacity-50' : ''}">
@@ -1414,6 +1498,7 @@
                                         <div class="flex flex-wrap gap-1 mb-0.5">
                                             ${promoInfo.esFavorito ? `<span class="inline-block bg-amber-100 text-[#C85A17] border border-[#C85A17] text-[9px] font-extrabold px-2 py-0.5 rounded-full">🔥 MÁS PEDIDO</span>` : ''}
                                             ${promoInfo.activa ? `<span class="inline-block bg-[#C85A17] text-white text-[9px] font-extrabold px-2 py-0.5 rounded-full">⚡ HORA FELIZ (${promoInfo.horario})</span>` : ''}
+                                            ${promoInfo.stockCupos !== null ? `<span class="inline-block bg-purple-100 text-purple-900 text-[9px] font-extrabold px-2 py-0.5 rounded-full">📦 Disponibles: ${promoInfo.stockCupos}</span>` : ''}
                                         </div>
                                         <h4 class="font-bold text-sm text-gray-800">${p.nombre} ${!estaDisponible ? '<span class="text-red-600 font-bold text-[10px]">(Agotado)</span>' : ''}</h4>
                                         <p class="text-[11px] text-gray-600 whitespace-pre-line leading-relaxed">${promoInfo.descLimpia}</p>
@@ -1424,6 +1509,10 @@
                                         ${(modoAdminVisible || comercioLogueado) ? `
                                             <div class="flex flex-wrap items-center gap-1 mt-1.5">
                                                 <select onchange="cambiarCategoriaProducto('${p.id}', this.value)" class="p-1 border rounded text-[10px] bg-amber-50 font-semibold text-amber-900">
+                                                    <option value="General" ${catActual==='General'?'selected':''}>🛍️ General</option>
+                                                    <option value="Tortas & Postres" ${catActual==='Tortas & Postres'?'selected':''}>🍰 Tortas & Postres</option>
+                                                    <option value="Ropa & Calzado" ${catActual==='Ropa & Calzado'?'selected':''}>👕 Ropa & Calzado</option>
+                                                    <option value="Artesanías & Chagra" ${catActual==='Artesanías & Chagra'?'selected':''}>🧺 Artesanías & Chagra</option>
                                                     <option value="Hamburguesas" ${catActual==='Hamburguesas'?'selected':''}>🍔 Hamburguesas</option>
                                                     <option value="Salchipapas" ${catActual==='Salchipapas'?'selected':''}>🍟 Salchipapas</option>
                                                     <option value="Perros Calientes" ${catActual==='Perros Calientes'?'selected':''}>🌭 Perros Calientes</option>
@@ -1431,6 +1520,7 @@
                                                     <option value="Bebidas" ${catActual==='Bebidas'?'selected':''}>🥤 Bebidas</option>
                                                 </select>
                                                 <button onclick="event.stopPropagation(); toggleFavoritoProducto('${p.id}')" class="px-1.5 py-0.5 rounded text-[10px] font-bold ${promoInfo.esFavorito ? 'bg-[#C85A17] text-white' : 'bg-gray-200 text-gray-700'}" title="Marcar como Más Pedido">🔥</button>
+                                                <button onclick="event.stopPropagation(); configurarCuposProducto('${p.id}')" class="bg-purple-700 text-white font-bold py-0.5 px-1.5 rounded text-[10px]" title="Definir unidades disponibles">📦 Cupos</button>
                                                 <button onclick="event.stopPropagation(); abrirSelectorFotoPlato('${p.id}')" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-0.5 px-2 rounded text-[10px]">📂 Foto</button>
                                                 ${modoAdminVisible ? `<button onclick="event.stopPropagation(); editarPrecioFotoProducto('${p.id}')" class="bg-blue-600 text-white font-bold py-0.5 px-2 rounded text-[10px]">✏️ Precio</button>` : ''}
                                                 <button onclick="event.stopPropagation(); programarHoraFelizPlato('${p.id}')" class="bg-[#2D0B3A] text-[#D4AF37] font-bold py-0.5 px-2 rounded text-[10px]">⏰ Promo</button>
@@ -1448,7 +1538,6 @@
             }
         }
 
-        // 📋 COPIAR NÚMERO DE CUENTA NEQUI / BRE-B EN 1 TOQUE (PUNTO 10)
         function copiarCuentaComercio(textoCuenta) {
             const numeros = (textoCuenta || '').match(/\d{7,15}/g);
             const aCopiar = (numeros && numeros.length > 0) ? numeros[0] : textoCuenta;
@@ -1517,7 +1606,7 @@
             const infoActual = evaluarPromoHoraFeliz(p);
             const precioOferta = prompt(`⏰ HORA FELIZ PARA: ${p.nombre}\nPrecio normal: $${infoActual.precioNormal.toLocaleString()}\nIngresa el Precio de Promo (o 0 para desactivar):`, infoActual.activa ? infoActual.precioFinal : '');
             if (precioOferta === null) return;
-            let descBase = infoActual.descLimpia + (infoActual.esFavorito ? ' [FAV]' : '');
+            let descBase = infoActual.descLimpia + (infoActual.esFavorito ? ' [FAV]' : '') + (infoActual.stockCupos !== null ? ` [STOCK:${infoActual.stockCupos}]` : '');
             if (Number(precioOferta) <= 0) {
                 await supabaseClient.from('productos').update({ descripcion: descBase.trim() }).eq('id', productoId);
                 alert("✅ Promoción desactivada."); initApp(); return;
@@ -1652,7 +1741,11 @@
         }
         
         function agregarAlCarrito(producto) {
-            if (producto.disponible === false) { alert("Producto agotado."); return; }
+            const promoInfo = evaluarPromoHoraFeliz(producto);
+            if (producto.disponible === false || (promoInfo.stockCupos !== null && promoInfo.stockCupos <= 0)) {
+                alert("Producto agotado.");
+                return;
+            }
             if (carrito.length > 0 && comercioSeleccionado && carrito[0].comercio_id && carrito[0].comercio_id !== comercioSeleccionado.id) {
                 if (!confirm("🛒 Tienes productos de otro comercio. ¿Deseas vaciar el carrito?")) return;
                 carrito = [];
@@ -1686,13 +1779,20 @@
                 notaAutomatica = partesNotaJugo.join(' - ');
             }
 
-            const promoInfo = evaluarPromoHoraFeliz(producto);
             const precioFix = promoInfo.precioFinal;
             const esLicor = comercioSeleccionado && comercioSeleccionado.categoria === 'Licores & Cigarrillos';
 
             const existe = carrito.find(item => item.id === producto.id && (item.notas || '') === notaAutomatica);
-            if (existe) { existe.cantidad += 1; existe.precioCalculado = precioFix; }
-            else { carrito.push({ ...producto, precioCalculado: precioFix, cantidad: 1, notas: notaAutomatica, esLicor: Boolean(esLicor) }); }
+            if (existe) {
+                if (promoInfo.stockCupos !== null && existe.cantidad + 1 > promoInfo.stockCupos) {
+                    alert(`📦 Solo quedan ${promoInfo.stockCupos} unidad(es) disponibles de este producto.`);
+                    return;
+                }
+                existe.cantidad += 1;
+                existe.precioCalculado = precioFix;
+            } else {
+                carrito.push({ ...producto, precioCalculado: precioFix, cantidad: 1, notas: notaAutomatica, esLicor: Boolean(esLicor) });
+            }
             guardarCarritoInmortal();
             renderizarCarrito();
         }
@@ -1771,15 +1871,17 @@
             const subtotalProductos = carrito.reduce((acc, item) => acc + (item.precioCalculado * item.cantidad), 0);
             const comisionKumu = Math.round(subtotalProductos * PORCENTAJE_COMISION);
             const totalFinal = subtotalProductos + tarifaDomicilio + comisionKumu;
+            const abonoMitad = Math.round(totalFinal / 2);
             const tieneLicor = (comercioSeleccionado && comercioSeleccionado.categoria === 'Licores & Cigarrillos') || carrito.some(i => i.esLicor);
             const cumpleMinto = subtotalProductos >= MONTO_MINIMO_PEDIDO;
-            const superaTopeEfectivo = totalFinal > TOPE_MAXIMO_EFECTIVO;
-            const datosFrecuentes = obtenerClienteFrecuente();
 
             const metaLocal = extraerMetadatosComercio(comercioSeleccionado);
+            const soloTransferencia = (totalFinal > TOPE_MAXIMO_EFECTIVO) || metaLocal.exigeAbono50;
+            const datosFrecuentes = obtenerClienteFrecuente();
+
             const catComercioActual = (comercioSeleccionado && comercioSeleccionado.categoria) || '';
-            const esRestauranteComida = ['Restaurantes & Comida Rápida', 'Restaurantes', 'Comida Rápida'].includes(catComercioActual);
-            const adicionesDelLocal = esRestauranteComida ? metaLocal.listaAdiciones : [];
+            const noAdiciones = ['Licores & Cigarrillos', 'Droguería', 'Sanvi'].includes(catComercioActual);
+            const adicionesDelLocal = !noAdiciones ? metaLocal.listaAdiciones : [];
 
             resumen.innerHTML = `
                 <h3 class="font-bold text-gray-800 mb-2">Tu Pedido en Kumu (${carrito.reduce((a,b)=>a+b.cantidad,0)})</h3>
@@ -1798,12 +1900,11 @@
                                 </div>
                                 <button onclick="eliminarDelCarrito(${idx})" class="text-red-600 text-xs font-bold">🗑️ Quitar</button>
                             </div>
-                            <input type="text" value="${i.notas || ''}" onchange="carrito[${idx}].notas = this.value; guardarCarritoInmortal();" placeholder="Nota especial (Ej. sin cebolla)..." class="w-full mt-1 p-1 border rounded text-[11px] bg-white">
+                            <input type="text" value="${i.notas || ''}" onchange="carrito[${idx}].notas = this.value; guardarCarritoInmortal();" placeholder="Nota especial (Ej. talla, color, sin cebolla)..." class="w-full mt-1 p-1 border rounded text-[11px] bg-white">
                         </div>
                     `).join('')}
                 </div>
 
-                <!-- ➕ ADICIONES PROPIAS Y PERSONALIZADAS DE ESTE LOCAL (PUNTO 4) -->
                 ${adicionesDelLocal.length > 0 ? `
                     <div class="bg-amber-50/90 border border-[#C85A17]/40 p-2.5 rounded-xl mb-3 space-y-1.5">
                         <p class="text-[11px] font-extrabold text-[#2D0B3A]">➕ Adiciones de ${comercioSeleccionado.nombre} (1 toque):</p>
@@ -1818,37 +1919,35 @@
                 ` : ''}
 
                 <div class="space-y-1 text-xs text-gray-600 border-t pt-2 bg-emerald-50/50 p-2.5 rounded-lg border">
-                    <div class="flex justify-between"><span>Subtotal (Comercio Aliado):</span><span class="font-semibold">$${subtotalProductos.toLocaleString()} COP</span></div>
+                    <div class="flex justify-between"><span>Subtotal (${comercioSeleccionado.nombre}):</span><span class="font-semibold">$${subtotalProductos.toLocaleString()} COP</span></div>
                     <div class="flex justify-between text-emerald-800"><span>Domicilio Repartidor ${estaLloviendo ? '🌧️' : '☀️'}:</span><span class="font-bold">$${tarifaDomicilio.toLocaleString()} COP</span></div>
                     <div class="flex justify-between text-amber-900"><span>Uso Portal Kumu (10%):</span><span class="font-semibold">$${comisionKumu.toLocaleString()} COP</span></div>
                 </div>
                 <div class="flex justify-between font-bold text-base my-3 text-emerald-800"><span>Total a Pagar:</span><span class="text-lg">$${totalFinal.toLocaleString()} COP</span></div>
                 ${!cumpleMinto ? `<div class="bg-amber-100 border border-amber-300 text-amber-900 text-xs p-2 rounded-lg font-semibold mb-2">⚠️ Mínimo de compra: $${MONTO_MINIMO_PEDIDO.toLocaleString()} COP.</div>` : ''}
-                ${superaTopeEfectivo ? `<div class="bg-purple-100 border border-purple-400 text-[#2D0B3A] text-[11px] p-2 rounded-lg font-bold mb-2">🛡️ Por seguridad, los pedidos superiores a $100.000 COP se procesan exclusivamente mediante Transferencia previa.</div>` : ''}
+                ${totalFinal > TOPE_MAXIMO_EFECTIVO ? `<div class="bg-purple-100 border border-purple-400 text-[#2D0B3A] text-[11px] p-2 rounded-lg font-bold mb-2">🛡️ Por seguridad, los pedidos superiores a $100.000 COP se procesan exclusivamente mediante Transferencia previa.</div>` : ''}
 
                 <div class="space-y-2 bg-gray-50 p-3 rounded-lg border">
-                    <!-- ⏳ SELECTOR DUAL PARA PEDIDOS "BAJO PEDIDO / POR ENCARGO" (PUNTO 9) -->
                     ${metaLocal.esEncargo ? `
                         <div class="bg-purple-50 border border-purple-300 p-2.5 rounded-xl space-y-1.5">
-                            <p class="text-[11px] font-extrabold text-purple-950">📅 Reserva Bajo Pedido / Por Encargo</p>
-                            ${metaLocal.fechaEncargo ? `<p class="text-[10px] text-purple-900 font-semibold">📌 Fecha programada por el local: <b>${metaLocal.fechaEncargo}</b></p>` : ''}
+                            <p class="text-[11px] font-extrabold text-purple-950">📅 Reserva Bajo Pedido / Preventa</p>
+                            ${metaLocal.fechaEncargo ? `<p class="text-[10px] text-purple-900 font-semibold">📌 Fecha programada por el comercio: <b>${metaLocal.fechaEncargo}</b></p>` : ''}
                             <label class="block text-[10px] font-bold text-purple-900">¿Para qué día y hora deseas recibir o apartar tu pedido?</label>
                             <input type="text" id="fechaEntregaEncargoCliente" value="${metaLocal.fechaEncargo || ''}" placeholder="Ej. Sábado 3:00 PM o Mañana 12:30 PM" class="w-full p-2 border border-purple-300 rounded text-xs bg-white font-semibold">
-                            <p class="text-[10px] text-purple-800">💡 Los encargos se apartan realizando transferencia o abono previo al comercio.</p>
+                            <p class="text-[10px] text-purple-800 font-medium">💡 Puedes transferir el 100% ($${totalFinal.toLocaleString()}) o apartar con el <b>50% de abono ($${abonoMitad.toLocaleString()} COP)</b>.</p>
                         </div>
                     ` : ''}
 
                     <label class="block text-[11px] font-bold text-gray-700">Forma de Pago:</label>
                     <select id="metodoPago" onchange="toggleMetodoPago(this.value)" class="w-full p-2 border rounded text-xs bg-white font-semibold">
-                        <option value="Transferencia" selected>Transferencia (Nequi / Bre-B)</option>
-                        ${!superaTopeEfectivo ? `<option value="Efectivo">Efectivo (Pago al Repartidor - Máx. $100k)</option>` : ''}
+                        <option value="Transferencia" selected>Transferencia Nequi / Bre-B ${metaLocal.esEncargo ? `(100% o Abono 50%: $${abonoMitad.toLocaleString()})` : ''}</option>
+                        ${!soloTransferencia ? `<option value="Efectivo">Efectivo (Pago al Repartidor - Máx. $100k)</option>` : ''}
                     </select>
 
-                    <!-- 💳 VISUALIZACIÓN DIRECTA DE LA CUENTA DEL LOCAL EN EL CARRITO + COPIADO EN 1 CLIC (PUNTO 10) -->
                     <div id="divTransferenciaInfo" class="bg-amber-50 border-2 border-[#D4AF37] p-2.5 rounded-xl space-y-1.5">
                         <div class="flex justify-between items-center gap-2">
                             <div>
-                                <p class="text-[10px] font-extrabold text-[#2D0B3A] uppercase">📲 Transfiere $${totalFinal.toLocaleString()} COP a esta cuenta:</p>
+                                <p class="text-[10px] font-extrabold text-[#2D0B3A] uppercase">📲 Transfiere a esta cuenta:</p>
                                 <p class="text-xs font-extrabold text-amber-950 mt-0.5">${comercioSeleccionado.telefono}</p>
                             </div>
                             <button type="button" onclick="copiarCuentaComercio('${(comercioSeleccionado.telefono || '').replace(/'/g, '')}')" class="bg-[#2D0B3A] text-[#D4AF37] px-2.5 py-1.5 rounded-lg text-[10px] font-extrabold shadow flex-shrink-0">
@@ -1856,7 +1955,7 @@
                             </button>
                         </div>
                         <p class="text-[10px] text-amber-900 font-semibold border-t border-amber-200 pt-1">
-                            📸 Al confirmar se abrirá el WhatsApp de <b>${comercioSeleccionado.nombre}</b> para que envíes el pantallazo del pago.
+                            📸 Al confirmar se abrirá WhatsApp para que envíes el pantallazo del pago.
                         </p>
                     </div>
 
@@ -1873,7 +1972,6 @@
                         📍 Adjuntar mi ubicación GPS actual (Opcional)
                     </button>
 
-                    <!-- ⚖️ ACEPTACIÓN LEGAL POR ACTO POSITIVO SIN BLOQUEAR AL CLIENTE (PUNTO 5) -->
                     <p class="text-[10px] text-gray-500 text-center leading-tight pt-1">
                         Al presionar el botón inferior aceptas los <button type="button" onclick="document.getElementById('modalTerminosLegales').classList.remove('hidden')" class="underline font-bold text-[#1B4D3E]">Términos de Uso (Ley 1480) y Habeas Data (Ley 1581)</button>.
                     </p>
@@ -1929,6 +2027,16 @@
 
             if (error) alert('Error: ' + error.message);
             else { 
+                // Descontar automáticamente cupos de stock si el producto tenía límite [STOCK:N]
+                for (const item of carrito) {
+                    const infoStock = evaluarPromoHoraFeliz(item);
+                    if (infoStock.stockCupos !== null) {
+                        const rest = Math.max(0, infoStock.stockCupos - item.cantidad);
+                        const nuevaDesc = (item.descripcion || '').replace(/\[STOCK:\d+\]/g, `[STOCK:${rest}]`);
+                        await supabaseClient.from('productos').update({ descripcion: nuevaDesc, disponible: rest > 0 }).eq('id', item.id);
+                    }
+                }
+
                 const contActual = Number(localStorage.getItem('kumu_mis_pedidos_contador') || 0) + 1;
                 localStorage.setItem('kumu_mis_pedidos_contador', String(contActual));
 
@@ -1974,8 +2082,8 @@
 
         function copiarTextoKitOperativo(tipo) {
             let texto = tipo === 'repartidor'
-                ? `🛵 *MANUAL DE REPARTIDORES INDEPENDIENTES KUMU*\n\n1️⃣ Entra a https://domicilios-mitu.vercel.app, toca 3 veces el logo e ingresa el PIN: *2026*.\n2️⃣ Toca "Tomar Pedido" con tu Nombre, Cédula y Teléfono.\n3️⃣ Toca "WhatsApp" y "GPS".\n4️⃣ Licores: Exige Cédula física e ingresa el PIN de 4 dígitos.\n5️⃣ Ganancia: 100% del domicilio como contratista independiente.`
-                : `🤝 *ACUERDO DE PORTAL DE CONTACTO - KUMU*\n\n• Registro: $0.\n• Recaudo: 100% de tus platos.\n• Comisión Kumu: 10% (liquidada todos los lunes).\n• Regla de Seguridad: Verificar siempre en tu app Nequi/Banco que el dinero haya entrado antes de despachar.`;
+                ? `🛵 *MANUAL DE REPARTIDORES INDEPENDIENTES KUMU*\n\n1️⃣ Entra a https://domicilios-mitu.vercel.app, toca 3 veces el logo e ingresa el PIN: *2026*.\n2️⃣ Toca "Tomar Pedido" con tu Nombre, Cédula y Teléfono (eso bloquea el pedido para evitar cruces con otro compañero).\n3️⃣ Toca "WhatsApp" y "GPS".\n4️⃣ Licores: Exige Cédula física e ingresa el PIN de 4 dígitos.\n5️⃣ Ganancia: 100% del domicilio como contratista independiente.`
+                : `🤝 *ACUERDO DE PORTAL DE CONTACTO - KUMU*\n\n• Registro: $0.\n• Recaudo: 100% de tus productos.\n• Comisión Kumu: 10% (liquidada todos los lunes).\n• Regla de Seguridad: Verificar siempre en tu app Nequi/Banco que el dinero haya entrado antes de despachar.`;
             navigator.clipboard?.writeText(texto);
             alert("✅ Copiado al portapapeles.");
         }
@@ -2019,7 +2127,6 @@
                             <button onclick="ejecutarAuditoriaSaludKumu()" class="bg-[#C85A17] text-white px-2.5 py-1 rounded-lg text-[10px] font-extrabold shadow">🔍 Auditar</button>
                         </div>
                         <div id="boxResultadoAuditoria"></div>
-                        <!-- 🔐 CAMBIAR CLAVE MAESTRA CON BOTÓN DEL OJITO (PUNTO 7) -->
                         <div class="bg-black/30 p-2.5 rounded-xl border border-white/20 space-y-1.5 mt-2">
                             <label class="block text-[10px] font-extrabold text-[#D4AF37] uppercase">🔐 Cambiar Clave Maestra Admin (Sincronizada en Supabase):</label>
                             <div class="flex gap-1.5 items-center">
@@ -2065,44 +2172,55 @@
                         </div>
                     </div>
                     <div class="bg-gray-50 border p-3 rounded-xl space-y-2">
-                        <h3 class="font-bold text-xs uppercase text-gray-600">Registrar Nuevo Local o Emprendimiento</h3>
-                        <input type="text" id="negNombre" placeholder="Nombre (Ej. Texas Burgers o Postres Doña María)" class="w-full p-2 border rounded text-xs">
-                        <select id="negCat" class="w-full p-2 border rounded text-xs">
+                        <h3 class="font-bold text-xs uppercase text-gray-600">Registrar Local, Emprendedor o Chagra Sanvi</h3>
+                        <input type="text" id="negNombre" placeholder="Nombre (Ej. Texas Burgers, Tortas María o Chagra Sanvi)" class="w-full p-2 border rounded text-xs">
+                        <select id="negCat" class="w-full p-2 border rounded text-xs font-semibold">
                             <option value="Restaurantes & Comida Rápida">🍔 Restaurantes & Comida Rápida</option>
+                            <option value="Emprendedores & Tiendas">🛍️ Emprendedores & Tiendas (Sin Local / Casa)</option>
+                            <option value="Sanvi">🌾 Sanvi (Mercado Campesino / Chagra)</option>
                             <option value="Licores & Cigarrillos">🍺 Licores & Cigarrillos 🔞</option>
                             <option value="Droguería">💊 Droguería</option>
                         </select>
-                        <select id="negModalidad" onchange="document.getElementById('divFechaEncargoNuevo').classList.toggle('hidden', this.value!=='ENCARGO')" class="w-full p-2 border rounded text-xs bg-amber-50 font-semibold">
-                            <option value="INMEDIATA">⚡ Entrega Inmediata (25-35 min)</option>
-                            <option value="ENCARGO">⏳ Bajo Pedido / Por Encargo (Emprendedor desde casa)</option>
+                        <select id="negModalidad" onchange="document.getElementById('divFechaEncargoNuevo').classList.toggle('hidden', !this.value.includes('ENCARGO'))" class="w-full p-2 border rounded text-xs bg-amber-50 font-semibold">
+                            <option value="INMEDIATA">⚡ Entrega Inmediata (Stock listo en 25-35 min)</option>
+                            <option value="ENCARGO">⏳ Bajo Pedido / Por Encargo (Elige día/hora)</option>
+                            <option value="ENCARGO_ABONO">💳 Bajo Pedido con Pago/Abono 50% Obligatorio</option>
+                            <option value="ENCARGO_ASISTIDO">🌾 Sanvi Asistido (Central Kumu recauda y liquida al campesino)</option>
                         </select>
                         <div id="divFechaEncargoNuevo" class="hidden bg-purple-50 p-2 rounded border border-purple-200 space-y-1">
-                            <label class="block text-[10px] font-bold text-purple-900">📅 Día/Hora fija de entrega del local (Opcional):</label>
-                            <input type="text" id="negFechaEncargo" placeholder="Ej. Entregas Sábados 3:00 PM (o deja vacío)" class="w-full p-1.5 border rounded text-xs bg-white">
+                            <label class="block text-[10px] font-bold text-purple-900">📅 Día/Hora fija de entrega del local o cosecha (Opcional):</label>
+                            <input type="text" id="negFechaEncargo" placeholder="Ej. Entregas Sábados 8:00 AM o 3:00 PM" class="w-full p-1.5 border rounded text-xs bg-white">
                         </div>
-                        <input type="text" id="negDir" placeholder="Dirección o Barrio en Mitú" class="w-full p-2 border rounded text-xs">
+                        <input type="text" id="negDir" placeholder="Dirección, Barrio o Comunidad en Mitú" class="w-full p-2 border rounded text-xs">
                         <input type="text" id="negTel" placeholder="WhatsApp y Cuenta Nequi / Bre-B (Ej. 3101234567)" class="w-full p-2 border rounded text-xs">
                         <input type="text" id="negAdiciones" placeholder="➕ Adiciones propias (Ej: Queso:4000, Tocineta:5000) o vacío" class="w-full p-2 border rounded text-xs bg-white">
-                        <input type="text" id="negPin" placeholder="PIN Privado del Local (Ej: 5555)" class="w-full p-2 border rounded text-xs bg-amber-50 font-bold">
+                        <input type="text" id="negPin" placeholder="PIN Privado del Negocio (Ej: 5555)" class="w-full p-2 border rounded text-xs bg-amber-50 font-bold">
                         <div class="grid grid-cols-2 gap-2">
                             <div><label class="block text-[10px] font-bold text-gray-600">Apertura:</label><input type="time" id="negApertura" value="08:00" class="w-full p-1.5 border rounded text-xs"></div>
                             <div><label class="block text-[10px] font-bold text-gray-600">Cierre:</label><input type="time" id="negCierre" value="23:59" class="w-full p-1.5 border rounded text-xs"></div>
                         </div>
                         <div class="bg-white p-2 border rounded text-xs space-y-1">
-                            <label class="font-bold text-gray-600 block">🖼️ Foto del Local:</label>
+                            <label class="font-bold text-gray-600 block">🖼️ Foto de Portada:</label>
                             <input type="file" accept="image/*" onchange="cargarImagenGaleria(event, 'comercio')" class="w-full text-xs">
                             <input type="text" id="negFotoUrl" placeholder="o Pega URL de foto" class="w-full p-1 border rounded text-[11px] mt-1">
                         </div>
-                        <button onclick="crearComercio()" class="w-full btn-vaupes p-2 rounded text-xs font-extrabold">Guardar Local</button>
+                        <button onclick="crearComercio()" class="w-full btn-vaupes p-2 rounded text-xs font-extrabold">Guardar en Kumu</button>
                     </div>
                     <div class="border-t pt-4 space-y-2">
-                        <h3 class="font-bold text-xs uppercase text-gray-600">Agregar Producto al Menú</h3>
-                        <select id="selectLocalProd" class="w-full p-2 border rounded text-xs"><option value="">Selecciona un Local...</option></select>
-                        <input type="text" id="prodNombre" placeholder="Nombre del producto" class="w-full p-2 border rounded text-xs">
-                        <input type="text" id="prodDesc" placeholder="Descripción de ingredientes" class="w-full p-2 border rounded text-xs">
-                        <input type="number" id="prodPrecio" placeholder="Precio ($COP - Ej: 15000)" class="w-full p-2 border rounded text-xs">
-                        <label class="block text-[10px] font-bold text-gray-600 mt-1">Pestaña:</label>
+                        <h3 class="font-bold text-xs uppercase text-gray-600">Agregar Producto al Catálogo</h3>
+                        <select id="selectLocalProd" class="w-full p-2 border rounded text-xs"><option value="">Selecciona un Negocio...</option></select>
+                        <input type="text" id="prodNombre" placeholder="Nombre del producto (Ej. Torta Tres Leches, Camiseta, Fariña 1kg)" class="w-full p-2 border rounded text-xs">
+                        <input type="text" id="prodDesc" placeholder="Descripción, tallas o ingredientes" class="w-full p-2 border rounded text-xs">
+                        <div class="grid grid-cols-2 gap-2">
+                            <input type="number" id="prodPrecio" placeholder="Precio ($COP)" class="w-full p-2 border rounded text-xs">
+                            <input type="number" id="prodStock" placeholder="Cupos disp. (Opcional)" class="w-full p-2 border rounded text-xs bg-purple-50/40">
+                        </div>
+                        <label class="block text-[10px] font-bold text-gray-600 mt-1">Pestaña / Categoría del Producto:</label>
                         <select id="prodCat" class="w-full p-2 border rounded text-xs bg-amber-50 font-semibold">
+                            <option value="General">🛍️ General (Vitrina / Varios)</option>
+                            <option value="Tortas & Postres">🍰 Tortas & Postres</option>
+                            <option value="Ropa & Calzado">👕 Ropa & Calzado</option>
+                            <option value="Artesanías & Chagra">🧺 Artesanías & Chagra (Sanvi)</option>
                             <option value="Hamburguesas">🍔 Hamburguesas</option>
                             <option value="Salchipapas">🍟 Salchipapas</option>
                             <option value="Perros Calientes">🌭 Perros Calientes</option>
@@ -2128,26 +2246,33 @@
             } else if (comercioLogueado) {
                 const diasActuales = (comercioLogueado.dias_semana || [0,1,2,3,4,5,6]).map(Number);
                 const meta = extraerMetadatosComercio(comercioLogueado);
+                const misVentasCount = conteoPedidosPorComercio[comercioLogueado.id] || 0;
                 content.innerHTML = `
                     <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-xl flex justify-between items-center">
-                        <div><h2 class="font-bold text-base text-emerald-950">🏪 ${comercioLogueado.nombre}</h2><p class="text-xs text-emerald-800">Panel de Aliado Kumu</p></div>
+                        <div>
+                            <h2 class="font-bold text-base text-emerald-950">🏪 ${comercioLogueado.nombre}</h2>
+                            <p class="text-xs text-emerald-800 font-semibold">📊 Ventas acumuladas en Kumu: <b>${misVentasCount} pedido(s)</b></p>
+                        </div>
                         <button onclick="copiarEnlaceDirectoTiendaWA('${comercioLogueado.id}', '${comercioLogueado.nombre.replace(/'/g, '')}', event)" class="bg-[#1B4D3E] text-[#D4AF37] px-2.5 py-1 rounded-lg text-[10px] font-extrabold shadow">📲 Link Estado WA</button>
                     </div>
                     <div class="bg-amber-50 border-2 border-[#C85A17] rounded-xl p-3 shadow-sm space-y-2">
                         <div class="flex justify-between items-center border-b border-amber-200 pb-1">
-                            <h3 class="font-extrabold text-xs uppercase text-[#C85A17]">🛎️ Pedidos Activos</h3>
-                            <button onclick="renderPedidosAliado()" class="text-[10px] bg-white border px-2 py-0.5 rounded font-bold">🔄 Refrescar</button>
+                            <h3 class="font-extrabold text-xs uppercase text-[#C85A17]">🛎️ Pedidos y Encargos Activos</h3>
+                            <div class="flex gap-1">
+                                <button onclick="despacharLotePedidosGrupoWA()" class="text-[10px] bg-[#2D0B3A] text-[#D4AF37] px-2 py-0.5 rounded font-bold" title="Enviar todos los pedidos listos en un solo mensaje al grupo de repartidores">📦 Despachar Lote WA</button>
+                                <button onclick="renderPedidosAliado()" class="text-[10px] bg-white border px-2 py-0.5 rounded font-bold">🔄</button>
+                            </div>
                         </div>
                         <div id="listaPedidosAliadoLocal" class="space-y-2">Cargando pedidos...</div>
                     </div>
                     <div class="bg-white border rounded-xl p-3 shadow-sm space-y-2">
                         <h3 class="font-bold text-xs uppercase text-gray-600 border-b pb-1">✏️ Editar Datos, Adiciones y Modalidad</h3>
-                        <input type="text" id="editNombreLocal" value="${comercioLogueado.nombre || ''}" placeholder="Nombre del Local" class="w-full p-1.5 border rounded text-xs">
+                        <input type="text" id="editNombreLocal" value="${comercioLogueado.nombre || ''}" placeholder="Nombre del Negocio" class="w-full p-1.5 border rounded text-xs">
                         <input type="text" id="editTelLocal" value="${comercioLogueado.telefono || ''}" placeholder="WhatsApp y Cuenta Nequi / Bre-B" class="w-full p-1.5 border rounded text-xs">
                         <input type="text" id="editDirLocal" value="${meta.dirLimpia}" placeholder="Dirección o Barrio" class="w-full p-1.5 border rounded text-xs">
                         <div>
                             <label class="block text-[10px] font-bold text-gray-600">➕ Adiciones Propias (Nombre:Precio separados por coma):</label>
-                            <input type="text" id="editAdicionesLocal" value="${meta.textoAdicionesRaw}" placeholder="Ej: Queso Extra:4000, Tocineta:5000" class="w-full p-1.5 border rounded text-xs bg-amber-50/40">
+                            <input type="text" id="editAdicionesLocal" value="${meta.textoAdicionesRaw}" placeholder="Ej: Queso Extra:4000, Empaque Regalo:3000" class="w-full p-1.5 border rounded text-xs bg-amber-50/40">
                         </div>
                         <div>
                             <label class="block text-[10px] font-bold text-purple-900">📅 Día/Hora de Entrega (Si trabajas Bajo Pedido / Encargo):</label>
@@ -2179,7 +2304,7 @@
                     </div>
                     <div class="bg-white border rounded-xl p-3 shadow-sm space-y-3">
                         <div class="flex justify-between items-center border-b pb-1">
-                            <h3 class="font-bold text-xs uppercase text-gray-600">📦 Tus Productos y Stock</h3>
+                            <h3 class="font-bold text-xs uppercase text-gray-600">📦 Tus Productos, Cupos y Stock</h3>
                         </div>
                         <div id="listaProductosAliado" class="space-y-2">Cargando tus productos...</div>
                     </div>
@@ -2205,7 +2330,25 @@
         }
 
         function publicarCarreraGrupoRepartidores(nombreLocal, direccionEntrega, totalPedido) {
-            const msg = `🛵 *¡CARRERA DISPONIBLE EN KUMU!* 🍄\n\n🏪 *Recoger en:* ${nombreLocal}\n📍 *Entregar en:* ${direccionEntrega.split('|')[0]}\n💰 *Total Pedido:* $${Number(totalPedido).toLocaleString()} COP\n\n👉 *El primero en entrar a la app (PIN 2026) y tocar "Tomar Pedido" se adjudica la carrera:* https://domicilios-mitu.vercel.app`;
+            const msg = `🛵 *¡CARRERA DISPONIBLE EN KUMU!* 🍄\n\n🏪 *Recoger en:* ${nombreLocal}\n📍 *Entregar en:* ${direccionEntrega.split('|')[0]}\n💰 *Total Pedido:* $${Number(totalPedido).toLocaleString()} COP\n\n👉 *Para evitar cruces: el primero en entrar a la app (PIN 2026) y tocar "Tomar Pedido" se adjudica la carrera:* https://domicilios-mitu.vercel.app`;
+            window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        // 📦 DESPACHAR LOTE DE PEDIDOS AL GRUPO DE REPARTIDORES SIN CRUCE DE DOMICILIARIOS
+        async function despacharLotePedidosGrupoWA() {
+            if (!comercioLogueado) return;
+            const { data: pedidos } = await supabaseClient.from('pedidos').select('*').eq('comercio_id', comercioLogueado.id).order('creado_at', { ascending: false }).limit(20);
+            const pendientesMoto = (pedidos || []).filter(p => !p.estado.includes('Entregado') && !p.estado.includes('Cancelado') && !p.domiciliario_info);
+            if (pendientesMoto.length === 0) {
+                alert("No tienes pedidos pendientes sin repartidor en este momento.");
+                return;
+            }
+            const meta = extraerMetadatosComercio(comercioLogueado);
+            let msg = `📦 *¡LOTE DE ${pendientesMoto.length} ENTREGA(S) LISTO EN ${comercioLogueado.nombre.toUpperCase()}!* 🍄\n📍 *Punto de recogida:* ${meta.dirLimpia}\n\n`;
+            pendientesMoto.forEach((p, idx) => {
+                msg += `${idx + 1}️⃣ *${p.cliente_nombre}:* ${p.direccion_entrega.split('|')[0]} ($${Number(p.total).toLocaleString()} COP)\n`;
+            });
+            msg += `\n🛡️ *REGLA ANTI-CRUCE:* Cada repartidor debe entrar a la app (PIN 2026) y presionar *"✋ Tomar Pedido"* únicamente en los paquetes que va a cargar en su moto: https://domicilios-mitu.vercel.app`;
             window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
@@ -2220,16 +2363,18 @@
                 const mins = calcularMinutosEspera(p.creado_at);
                 const estancado = mins >= 10 && p.estado !== 'En Camino';
                 const esTransferencia = (p.direccion_entrega || '').includes('Transferencia');
+                const domiAsignado = (p.domiciliario_info || '').replace(/\[GPS:[-\d.,]+\]/g, '').trim();
                 return `
                     <div class="bg-white border ${estancado ? 'border-2 border-red-500' : ''} rounded-lg p-2.5 text-xs space-y-1.5 shadow-sm">
                         ${estancado ? `<div class="bg-red-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded animate-pulse">🚨 GUARDIÁN KUMU: Lleva ${mins} min esperando</div>` : `<div class="text-[10px] text-gray-500 font-semibold">⏱️ Hace ${mins} min</div>`}
                         <div class="flex justify-between items-center"><span class="font-bold text-gray-900">👤 ${p.cliente_nombre}</span><span class="text-[10px] bg-amber-100 text-amber-900 px-2 py-0.5 rounded font-bold">${p.estado}</span></div>
                         <p class="text-[11px] text-gray-700">${p.direccion_entrega}</p>
                         <p class="font-bold text-emerald-800">Total: $${Number(p.total).toLocaleString()} COP</p>
+                        ${domiAsignado ? `<p class="text-[10px] bg-emerald-50 border border-emerald-200 p-1 rounded font-bold text-[#1B4D3E]">🛵 Tomado por: ${domiAsignado}</p>` : ''}
                         ${esTransferencia ? `<div class="bg-amber-50 border border-amber-300 p-1.5 rounded text-[10px] text-amber-950 font-semibold">🛡️ Anti-Fraude: Verifica que el dinero haya entrado en tu app Nequi/Banco antes de despachar.</div>` : ''}
                         <div class="flex flex-wrap gap-1.5 pt-1">
-                            ${p.estado !== 'En Preparación' && p.estado !== 'En Camino' ? `<button onclick="aceptarPedidoRestaurante('${p.id}', '${p.cliente_nombre.replace(/'/g, '')}', '${p.cliente_telefono || ''}')" class="flex-1 bg-[#1B4D3E] text-[#D4AF37] py-1.5 px-2 rounded font-bold text-[11px]">👨‍🍳 1. Aceptar Pedido</button>` : `<span class="text-[10px] text-emerald-700 font-bold self-center">✅ En Cocina</span>`}
-                            <button onclick="publicarCarreraGrupoRepartidores('${comercioLogueado.nombre.replace(/'/g, '')}', '${p.direccion_entrega.replace(/'/g, '')}', ${p.total})" class="flex-1 bg-[#C85A17] text-white py-1.5 px-2 rounded font-bold text-[11px]">🛵 2. Pedir Moto WA</button>
+                            ${p.estado !== 'En Preparación' && p.estado !== 'En Camino' ? `<button onclick="aceptarPedidoRestaurante('${p.id}', '${p.cliente_nombre.replace(/'/g, '')}', '${p.cliente_telefono || ''}')" class="flex-1 bg-[#1B4D3E] text-[#D4AF37] py-1.5 px-2 rounded font-bold text-[11px]">👨‍🍳 1. Aceptar Pedido</button>` : `<span class="text-[10px] text-emerald-700 font-bold self-center">✅ Aceptado</span>`}
+                            ${!domiAsignado ? `<button onclick="publicarCarreraGrupoRepartidores('${comercioLogueado.nombre.replace(/'/g, '')}', '${p.direccion_entrega.replace(/'/g, '')}', ${p.total})" class="flex-1 bg-[#C85A17] text-white py-1.5 px-2 rounded font-bold text-[11px]">🛵 2. Pedir Moto WA</button>` : ''}
                         </div>
                     </div>
                 `;
@@ -2241,7 +2386,7 @@
             if (error) { alert("Error: " + error.message); return; }
             const telLimpio = (telCliente || '').replace(/\D/g, '');
             if (telLimpio) {
-                window.open(`https://wa.me/57${telLimpio}?text=${encodeURIComponent(`¡Hola *${nombreCliente}*! 👨‍🍳 En *${comercioLogueado?.nombre || 'el comercio'}* ya aceptamos tu pedido por *Kumu 🍄* y lo estamos preparando.`)}`, '_blank');
+                window.open(`https://wa.me/57${telLimpio}?text=${encodeURIComponent(`¡Hola *${nombreCliente}*! 👨‍🍳 En *${comercioLogueado?.nombre || 'el comercio'}* ya aceptamos tu pedido por *Kumu 🍄* y lo estamos alistando.`)}`, '_blank');
             }
             initApp();
         }
@@ -2255,13 +2400,13 @@
             const fechaEncargoTxt = document.getElementById('editFechaEncargoLocal')?.value.trim() || '';
             const meta = extraerMetadatosComercio(comercioLogueado);
             const esEncargo = meta.esEncargo || fechaEncargoTxt !== '';
-            const direccion = construirDireccionConMetadatos(dirBase, meta.esVIP, esEncargo, fechaEncargoTxt, adicionesTxt);
+            const direccion = construirDireccionConMetadatos(dirBase, meta.esVIP, esEncargo, fechaEncargoTxt, adicionesTxt, meta.exigeAbono50, meta.esAsistido);
             const imagen_url = fotoBase64EditarLocal || document.getElementById('editFotoUrlLocal').value.trim() || comercioLogueado.imagen_url;
             if (!nombre || !telefono || !dirBase) { alert("Completa todos los campos."); return; }
 
             const { error } = await supabaseClient.from('comercios').update({ nombre, telefono, direccion, imagen_url }).eq('id', comercioLogueado.id);
             if (error) alert("Error: " + error.message);
-            else { Object.assign(comercioLogueado, { nombre, telefono, direccion, imagen_url }); fotoBase64EditarLocal = ''; alert("✅ Datos y adiciones actualizados."); initApp(); }
+            else { Object.assign(comercioLogueado, { nombre, telefono, direccion, imagen_url }); fotoBase64EditarLocal = ''; alert("✅ Datos actualizados."); initApp(); }
         }
 
         async function renderProductosAliado() {
@@ -2279,14 +2424,15 @@
                         <img src="${obtenerImagenProducto(p)}" class="w-12 h-12 rounded object-cover border flex-shrink-0">
                         <div class="flex-1">
                             <p class="font-bold text-gray-800">${infoPromo.esFavorito ? '🔥 ' : ''}${p.nombre}</p>
-                            <p class="text-[10px] text-emerald-700 font-semibold">$${infoPromo.precioFinal.toLocaleString()} COP</p>
+                            <p class="text-[10px] text-emerald-700 font-semibold">$${infoPromo.precioFinal.toLocaleString()} COP ${infoPromo.stockCupos !== null ? `• 📦 Cupos: ${infoPromo.stockCupos}` : ''}</p>
                             <div class="flex flex-wrap gap-1 mt-1">
-                                <button onclick="event.stopPropagation(); toggleFavoritoProducto('${p.id}')" class="px-1.5 py-0.5 rounded text-[10px] font-bold ${infoPromo.esFavorito ? 'bg-[#C85A17] text-white' : 'bg-gray-200 text-gray-700'}">🔥 Favorito</button>
-                                <button onclick="event.stopPropagation(); abrirSelectorFotoPlato('${p.id}')" class="bg-emerald-700 text-white font-bold py-0.5 px-1.5 rounded text-[10px]">📂 Subir Foto</button>
+                                <button onclick="event.stopPropagation(); toggleFavoritoProducto('${p.id}')" class="px-1.5 py-0.5 rounded text-[10px] font-bold ${infoPromo.esFavorito ? 'bg-[#C85A17] text-white' : 'bg-gray-200 text-gray-700'}">🔥</button>
+                                <button onclick="event.stopPropagation(); configurarCuposProducto('${p.id}')" class="bg-purple-700 text-white font-bold py-0.5 px-1.5 rounded text-[10px]">📦 Cupos</button>
+                                <button onclick="event.stopPropagation(); abrirSelectorFotoPlato('${p.id}')" class="bg-emerald-700 text-white font-bold py-0.5 px-1.5 rounded text-[10px]">📂 Foto</button>
                                 <button onclick="event.stopPropagation(); eliminarProducto('${p.id}')" class="bg-red-600 text-white font-bold py-0.5 px-1.5 rounded text-[10px]">🗑️</button>
                             </div>
                         </div>
-                        <button onclick="alternarDisponibilidadProducto('${p.id}', ${!disponible})" class="px-2.5 py-1 rounded text-[10px] font-bold ${disponible ? 'bg-[#1B4D3E] text-white' : 'bg-red-600 text-white'}">${disponible ? '🟢 Disponible' : '🔴 Agotado'}</button>
+                        <button onclick="alternarDisponibilidadProducto('${p.id}', ${!disponible})" class="px-2.5 py-1 rounded text-[10px] font-bold ${disponible ? 'bg-[#1B4D3E] text-white' : 'bg-red-600 text-white'}">${disponible ? '🟢 Activo' : '🔴 Agotado'}</button>
                     </div>
                 `;
             }).join('');
@@ -2304,7 +2450,10 @@
             const fechaEncargo = document.getElementById('negFechaEncargo')?.value.trim() || '';
             const adicionesPropias = document.getElementById('negAdiciones')?.value.trim() || '';
             const dirInput = document.getElementById('negDir').value.trim();
-            const direccion = construirDireccionConMetadatos(dirInput, false, modalidad === 'ENCARGO', fechaEncargo, adicionesPropias);
+            const esEncargo = modalidad.includes('ENCARGO') || categoria === 'Sanvi';
+            const exigeAbono50 = modalidad === 'ENCARGO_ABONO';
+            const esAsistido = modalidad === 'ENCARGO_ASISTIDO';
+            const direccion = construirDireccionConMetadatos(dirInput, false, esEncargo, fechaEncargo, adicionesPropias, exigeAbono50, esAsistido);
             const telefono = document.getElementById('negTel').value.trim();
             const pin_local = document.getElementById('negPin').value.trim() || '0000';
             const hora_apertura = document.getElementById('negApertura')?.value || '08:00';
@@ -2314,7 +2463,7 @@
             let d = { nombre, categoria, direccion, telefono, pin_local, hora_apertura, hora_cierre };
             if (imagen_url) d.imagen_url = imagen_url;
             const { error } = await supabaseClient.from('comercios').insert([d]);
-            if (error) alert('Error: ' + error.message); else { alert('¡Comercio registrado con éxito!'); fotoBase64Comercio = ''; initApp(); }
+            if (error) alert('Error: ' + error.message); else { alert('¡Negocio registrado con éxito en Kumu!'); fotoBase64Comercio = ''; initApp(); }
         }
 
         async function crearProducto() {
@@ -2322,12 +2471,16 @@
             const nombre = document.getElementById('prodNombre').value.trim();
             let descripcion = document.getElementById('prodDesc').value.trim();
             let precio = Number(document.getElementById('prodPrecio').value);
-            const categoria = document.getElementById('prodCat')?.value || 'Carnes';
+            const stockVal = document.getElementById('prodStock')?.value.trim() || '';
+            const categoria = document.getElementById('prodCat')?.value || 'General';
             const imagen_url = fotoBase64Producto || document.getElementById('prodFotoUrl').value.trim() || 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=300';
             if (precio < 1000) precio *= 1000;
-            if (!comercio_id || !nombre || !precio) { alert('Selecciona local, nombre y precio.'); return; }
+            if (!comercio_id || !nombre || !precio) { alert('Selecciona negocio, nombre y precio.'); return; }
+            if (stockVal !== '' && !isNaN(Number(stockVal))) {
+                descripcion = `${descripcion} [STOCK:${Math.max(0, Math.floor(Number(stockVal)))}]`.trim();
+            }
             const { error } = await supabaseClient.from('productos').insert([{ comercio_id, nombre, descripcion, precio, categoria, imagen: imagen_url }]);
-            if (error) alert('Error: ' + error.message); else { alert('¡Producto agregado!'); fotoBase64Producto = ''; initApp(); }
+            if (error) alert('Error: ' + error.message); else { alert('¡Producto agregado al catálogo!'); fotoBase64Producto = ''; initApp(); }
         }
 
         async function renderDomiciliarioView(container) {
@@ -2336,7 +2489,7 @@
             content.innerHTML = `
                 <div class="flex justify-between items-center"><h2 class="font-bold text-lg text-gray-800">🛵 Panel Repartidor Independiente</h2><button onclick="initApp()" class="bg-[#1B4D3E] text-[#D4AF37] px-2.5 py-1 rounded text-[11px] font-bold shadow">🔄 Refrescar</button></div>
                 <div class="bg-purple-50 border border-purple-200 p-2.5 rounded-xl text-[10px] text-[#2D0B3A] leading-relaxed">
-                    <b>⚖️ Modalidad de Uso Autónomo:</b> Al tomar un pedido en este portal de contacto, actúas como <b>repartidor independiente</b> sin subordinación ni horario obligatorio, percibiendo el 100% del valor del domicilio ($4.000 seco / $5.000 lluvia).
+                    <b>⚖️ Regla Anti-Cruce y Uso Autónomo:</b> Toca <b>"✋ Tomar Pedido"</b> para bloquear la carrera a tu cédula antes de ir al local (así ningún otro compañero se cruza). Percibes el 100% del domicilio ($4.000 seco / $5.000 lluvia).
                 </div>
                 <div id="listaPedidos" class="space-y-3 mt-2">Cargando pedidos...</div>
             `;
@@ -2369,7 +2522,7 @@
                         <p class="text-xs text-gray-700"><b>Cliente:</b> ${p.cliente_nombre}</p>
                         <p class="text-xs text-gray-700"><b>Detalles:</b> ${p.direccion_entrega}</p>
                         <p class="text-xs font-bold text-emerald-800">Total: $${Number(p.total).toLocaleString()} COP</p>
-                        ${infoLimpia ? `<p class="text-[11px] bg-emerald-50 text-emerald-950 p-1.5 rounded font-semibold">🛵 Repartidor: ${infoLimpia}</p>` : ''}
+                        ${infoLimpia ? `<p class="text-[11px] bg-emerald-50 text-emerald-950 p-1.5 rounded font-semibold">🛵 Adjudicado a: ${infoLimpia}</p>` : ''}
                         ${!yaFin ? `
                             <div class="grid grid-cols-2 gap-1.5 pt-1">
                                 ${telCliente ? `<a href="https://wa.me/57${telCliente}?text=Hola%20${encodeURIComponent(p.cliente_nombre)},%20voy%20en%20camino%20con%20tu%20pedido%20Kumu." target="_blank" class="block text-center bg-[#1B4D3E] text-white font-bold py-1.5 px-2 rounded text-[11px]">💬 WhatsApp</a>` : ''}
@@ -2402,9 +2555,9 @@
         }
 
         async function cancelarPedidoConMotivo(id) {
-            const sel = prompt("Motivo:\n1. Sin ingredientes\n2. Cliente canceló\n3. Cliente no contesta\n4. Sin domiciliario");
+            const sel = prompt("Motivo:\n1. Sin ingredientes / stock\n2. Cliente canceló\n3. Cliente no contesta\n4. Sin domiciliario");
             if (!sel) return;
-            const map = { '1': 'Cancelado: Sin ingredientes', '2': 'Cancelado: Cliente canceló', '3': 'Cancelado: Cliente no contesta', '4': 'Cancelado: Sin domiciliario' };
+            const map = { '1': 'Cancelado: Sin stock', '2': 'Cancelado: Cliente canceló', '3': 'Cancelado: Cliente no contesta', '4': 'Cancelado: Sin domiciliario' };
             await supabaseClient.from('pedidos').update({ estado: map[sel.trim()] || 'Cancelado' }).eq('id', id);
             initApp();
         }
@@ -2476,7 +2629,7 @@
 
             const divTabs = document.getElementById('pestañasLocalesAnalitica');
             let htmlTabs = !comercioLogueado ? `<button onclick="mostrarAnaliticaLocal('GLOBAL')" class="px-3 py-1.5 rounded-lg font-extrabold whitespace-nowrap ${localSeleccionadoAnalitica==='GLOBAL'?'bg-[#2D0B3A] text-[#D4AF37] border':'bg-gray-200'}">🌐 Consolidado Kumu</button>` : '';
-            htmlTabs += comercios.map(c => `<button onclick="mostrarAnaliticaLocal('${c.id}')" class="px-3 py-1.5 rounded-lg font-bold whitespace-nowrap ${localSeleccionadoAnalitica===c.id?'bg-[#1B4D3E] text-[#D4AF37]':'bg-gray-200'}">🏪 ${c.nombre}</button>`).join('');
+            htmlTabs += comercios.map(c => `<button onclick="mostrarAnaliticaLocal('${c.id}')" class="px-3 py-1.5 rounded-lg font-bold whitespace-nowrap ${localSeleccionadoAnalitica===c.id?'bg-[#1B4D3E] text-[#D4AF37]':'bg-gray-200'}">🏪 ${c.nombre} (${conteoPedidosPorComercio[c.id] || 0})</button>`).join('');
             divTabs.innerHTML = htmlTabs;
             mostrarAnaliticaLocal(localSeleccionadoAnalitica || 'GLOBAL');
         }
@@ -2485,7 +2638,7 @@
 
         function enviarCobroComisionWhatsApp(nombreLocal, telLocal, cantPedidos, totalPlatos, totalComision) {
             const telLimpio = (telLocal || '').toString().split('|')[0].replace(/\D/g, '');
-            const msg = `📊 *ESTADO DE CUENTA OFICIAL - KUMU MITÚ 🍄*\n\n*Comercio Aliado:* ${nombreLocal}\n*Periodo Liquidado:* ${filtroFechaAnalitica.toUpperCase()}\n*Pedidos Completados:* ${cantPedidos}\n\n🟢 *Total Ventas en Platos (100% tuyo):* $${Number(totalPlatos).toLocaleString()} COP\n🍄 *Comisión Servicio Portal Kumu (10%):* $${Number(totalComision).toLocaleString()} COP\n\n📲 Puedes transferir el valor de la comisión ($${Number(totalComision).toLocaleString()} COP) a nuestra cuenta oficial Nequi/Bre-B: *3215698079*.\n¡Gracias por crecer junto a Kumu! 🚀`;
+            const msg = `📊 *ESTADO DE CUENTA OFICIAL - KUMU MITÚ 🍄*\n\n*Aliado:* ${nombreLocal}\n*Periodo Liquidado:* ${filtroFechaAnalitica.toUpperCase()}\n*Pedidos Completados:* ${cantPedidos}\n\n🟢 *Total Ventas en Productos (100% tuyo):* $${Number(totalPlatos).toLocaleString()} COP\n🍄 *Comisión Servicio Portal Kumu (10%):* $${Number(totalComision).toLocaleString()} COP\n\n📲 Puedes transferir el valor de la comisión ($${Number(totalComision).toLocaleString()} COP) a nuestra cuenta oficial Nequi/Bre-B: *3215698079*.\n¡Gracias por crecer junto a Kumu! 🚀`;
             if (telLimpio) {
                 window.open(`https://wa.me/57${telLimpio}?text=${encodeURIComponent(msg)}`, '_blank');
             } else {
@@ -2563,9 +2716,9 @@
 
             containerDetalle.innerHTML = `
                 <div class="bg-white border rounded-xl p-4 shadow-sm space-y-4">
-                    <div class="flex justify-between items-center border-b pb-2"><h3 class="font-extrabold text-sm text-[#2D0B3A]">🏪 ${nombreVista}</h3><span class="text-[10px] bg-amber-100 text-amber-900 px-2 py-0.5 rounded font-bold uppercase">${filtroFechaAnalitica} (${filtrados.length} ped.)</span></div>
+                    <div class="flex justify-between items-center border-b pb-2"><h3 class="font-extrabold text-sm text-[#2D0B3A]">🏪 ${nombreVista}</h3><span class="text-[10px] bg-amber-100 text-amber-900 px-2 py-0.5 rounded font-bold uppercase">${filtroFechaAnalitica} (${filtrados.length} compras)</span></div>
                     <div class="grid grid-cols-2 gap-2 text-xs">
-                        <div class="bg-emerald-50 p-2.5 rounded-lg border"><p class="text-gray-500 text-[10px]">🟢 Platos (Locales)</p><p class="font-extrabold text-emerald-800 text-sm">$${tPlatos.toLocaleString()} COP</p></div>
+                        <div class="bg-emerald-50 p-2.5 rounded-lg border"><p class="text-gray-500 text-[10px]">🟢 Productos (Aliados)</p><p class="font-extrabold text-emerald-800 text-sm">$${tPlatos.toLocaleString()} COP</p></div>
                         <div class="bg-blue-50 p-2.5 rounded-lg border"><p class="text-gray-500 text-[10px]">🛵 Domiciliarios</p><p class="font-extrabold text-blue-800 text-sm">$${tDomi.toLocaleString()} COP</p></div>
                         <div class="bg-purple-50 p-2.5 rounded-lg border"><p class="text-gray-500 text-[10px]">🍄 Comisión Kumu (10%)</p><p class="font-extrabold text-[#2D0B3A] text-sm">$${tKumu.toLocaleString()} COP</p></div>
                         <div class="bg-amber-50 p-2.5 rounded-lg border"><p class="text-gray-500 text-[10px]">📈 Total Movido</p><p class="font-extrabold text-[#C85A17] text-sm">$${tGen.toLocaleString()} COP</p></div>
@@ -2574,7 +2727,7 @@
                         <h4 class="font-extrabold text-xs text-[#2D0B3A] uppercase">📅 Tabla Dinámica Día a Día</h4>
                         <div class="overflow-x-auto kumu-scroll border rounded-xl">
                             <table class="w-full text-left text-[11px]">
-                                <thead class="bg-[#2D0B3A] text-[#D4AF37] uppercase text-[10px]"><tr><th class="p-2">Fecha</th><th class="p-2 text-center">Ped</th><th class="p-2">Platos</th><th class="p-2">Domis</th><th class="p-2">Kumu</th></tr></thead>
+                                <thead class="bg-[#2D0B3A] text-[#D4AF37] uppercase text-[10px]"><tr><th class="p-2">Fecha</th><th class="p-2 text-center">Ped</th><th class="p-2">Ventas</th><th class="p-2">Domis</th><th class="p-2">Kumu</th></tr></thead>
                                 <tbody class="divide-y">
                                     ${fDias.length === 0 ? `<tr><td colspan="5" class="p-3 text-center text-gray-400 italic">Sin movimientos</td></tr>` : fDias.map(([f, d]) => `<tr><td class="p-2 font-bold">${f}</td><td class="p-2 text-center font-bold">${d.ped}</td><td class="p-2 text-emerald-800">$${d.plat.toLocaleString()}</td><td class="p-2 text-blue-800">$${d.dom.toLocaleString()}</td><td class="p-2 font-extrabold text-[#C85A17]">$${d.kum.toLocaleString()}</td></tr>`).join('')}
                                 </tbody>
@@ -2625,7 +2778,7 @@
 
             new Chart(document.getElementById('graficoLocalEspecifico').getContext('2d'), {
                 type: 'bar',
-                data: { labels: ['Locales', 'Domicilios', 'Kumu', 'Gastos'], datasets: [{ label: 'COP', data: [tPlatos, tDomi, tKumu, tGastos], backgroundColor: ['#1B4D3E', '#2563eb', '#C85A17', '#dc2626'] }] },
+                data: { labels: ['Aliados', 'Domicilios', 'Kumu', 'Gastos'], datasets: [{ label: 'COP', data: [tPlatos, tDomi, tKumu, tGastos], backgroundColor: ['#1B4D3E', '#2563eb', '#C85A17', '#dc2626'] }] },
                 options: { responsive: true, plugins: { legend: { display: false } } }
             });
         }
@@ -2645,7 +2798,7 @@
                 ctx.fillStyle = color; ctx.font = 'bold 21px Inter, sans-serif'; ctx.textAlign = 'left'; ctx.fillText(label, 48, y);
                 ctx.textAlign = 'right'; ctx.fillText(`$${Number(val).toLocaleString('es-CO')} COP`, 552, y);
             };
-            fila('🟢 Venta Comida / Platos:', platos, 320, '#6EE7B7');
+            fila('🟢 Venta Productos / Platos:', platos, 320, '#6EE7B7');
             fila('🛵 Carreras Repartidores:', domi, 365, '#93C5FD');
             fila('🍄 Comisión Kumu (10%):', kumu, 410, '#FDE047');
             fila('💵 Recaudado en Efectivo:', efectivo, 485, '#FFFFFF');
@@ -2661,7 +2814,7 @@
         async function exportarExcelCSV(comercioId, nombreLocal) {
             const { data: pedidos } = await supabaseClient.from('pedidos').select('*, comercios(nombre)').order('creado_at', { ascending: false });
             if (!pedidos || pedidos.length === 0) { alert("No hay pedidos."); return; }
-            const filas = [['Fecha', 'Hora', 'Comercio', 'Cliente', 'Telefono_Cliente', 'Metodo_Pago', 'Repartidor_Y_Cedula', 'Subtotal_Platos_COP', 'Domicilio_COP', 'Comision_Kumu_10_COP', 'Total_COP', 'Estado']];
+            const filas = [['Fecha', 'Hora', 'Comercio', 'Cliente', 'Telefono_Cliente', 'Metodo_Pago', 'Repartidor_Y_Cedula', 'Subtotal_Productos_COP', 'Domicilio_COP', 'Comision_Kumu_10_COP', 'Total_COP', 'Estado']];
             pedidos.forEach(p => {
                 const fechaObj = new Date(p.creado_at);
                 let total = Number(p.total) || 0; if (total < 1000) total *= 1000;
