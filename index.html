@@ -4215,5 +4215,226 @@
             <button onclick="enviarCalificacion(5)" style="background:none; border:none; cursor:pointer;">😍</button>
         </div>
     </div>
+    <!-- === INICIO PARCHE KUMU (PEGAR EN FILA 4218, DEBAJO DE FILA 4217 </div> Y ENCIMA DE </body>) === -->
+<script>
+(function() {
+    window.fotoFachadaTemp = '';
+    window.califTempLocal = 5;
+    window.califTempDomi = 5;
+
+    // 1. MEJORAR TARJETA DE CALIFICACIÓN (FILAS 4208-4217) PARA CALIFICAR LOCAL Y REPARTIDOR POR SEPARADO
+    function actualizarModalCalificacionDoble() {
+        var modalCal = document.getElementById('modal-calificacion');
+        if (!modalCal || modalCal.getAttribute('data-doble-ok') === '1') return;
+        modalCal.setAttribute('data-doble-ok', '1');
+        var spanNom = document.getElementById('nombre-comercio-calificar');
+        var nomTxt = spanNom ? spanNom.outerHTML : 'el Local';
+
+        modalCal.innerHTML =
+            '<p style="margin-bottom:6px; font-weight:800; font-size:12px; color:#2D0B3A;">🏪 1. ¿Qué tal estuvo tu producto en ' + nomTxt + '?</p>' +
+            '<div id="cal-fila-local" style="display:flex; justify-content:space-around; font-size:22px; margin-bottom:10px; background:#F8F6F2; padding:6px; border-radius:12px;">' +
+                '<button type="button" onclick="window.selecEstrellaKumu(\'local\',1,this)" style="background:none;border:none;cursor:pointer;">😡</button>' +
+                '<button type="button" onclick="window.selecEstrellaKumu(\'local\',2,this)" style="background:none;border:none;cursor:pointer;">😕</button>' +
+                '<button type="button" onclick="window.selecEstrellaKumu(\'local\',3,this)" style="background:none;border:none;cursor:pointer;">😐</button>' +
+                '<button type="button" onclick="window.selecEstrellaKumu(\'local\',4,this)" style="background:none;border:none;cursor:pointer;">😊</button>' +
+                '<button type="button" onclick="window.selecEstrellaKumu(\'local\',5,this)" style="background:none;border:none;cursor:pointer;transform:scale(1.2);">😍</button>' +
+            '</div>' +
+            '<p style="margin-bottom:6px; font-weight:800; font-size:12px; color:#1B4D3E;">🛵 2. ¿Qué tal la atención de tu Repartidor?</p>' +
+            '<div id="cal-fila-domi" style="display:flex; justify-content:space-around; font-size:22px; margin-bottom:10px; background:#F8F6F2; padding:6px; border-radius:12px;">' +
+                '<button type="button" onclick="window.selecEstrellaKumu(\'domi\',1,this)" style="background:none;border:none;cursor:pointer;">😡</button>' +
+                '<button type="button" onclick="window.selecEstrellaKumu(\'domi\',2,this)" style="background:none;border:none;cursor:pointer;">😕</button>' +
+                '<button type="button" onclick="window.selecEstrellaKumu(\'domi\',3,this)" style="background:none;border:none;cursor:pointer;">😐</button>' +
+                '<button type="button" onclick="window.selecEstrellaKumu(\'domi\',4,this)" style="background:none;border:none;cursor:pointer;">😊</button>' +
+                '<button type="button" onclick="window.selecEstrellaKumu(\'domi\',5,this)" style="background:none;border:none;cursor:pointer;transform:scale(1.2);">😍</button>' +
+            '</div>' +
+            '<button type="button" onclick="window.enviarCalificacionDobleKumu()" style="width:100%; padding:10px; border-radius:12px; background:#C85A17; color:#fff; font-weight:900; font-size:12px; border:none; cursor:pointer;">✅ Enviar Calificaciones</button>';
+    }
+
+    window.selecEstrellaKumu = function(tipo, pts, btn) {
+        if (tipo === 'local') window.califTempLocal = pts;
+        else window.califTempDomi = pts;
+        var hermanos = btn.parentNode.querySelectorAll('button');
+        hermanos.forEach(function(b) { b.style.transform = 'scale(0.9)'; b.style.opacity = '0.45'; });
+        btn.style.transform = 'scale(1.25)';
+        btn.style.opacity = '1';
+    };
+
+    window.enviarCalificacionDobleKumu = async function() {
+        var histDomi = JSON.parse(localStorage.getItem('kumu_calif_repartidores') || '[]');
+        histDomi.push({ puntos: window.califTempDomi || 5, fecha: new Date().toISOString() });
+        localStorage.setItem('kumu_calif_repartidores', JSON.stringify(histDomi));
+        if (typeof enviarCalificacion === 'function') {
+            await enviarCalificacion(window.califTempLocal || 5);
+        } else {
+            var m = document.getElementById('modal-calificacion');
+            if (m) m.style.display = 'none';
+        }
+    };
+
+    // 2. FOTO DE FACHADA ULTRA-LIGERA (<20 KB) Y AUTO-BORRADO AL ENTREGAR
+    window.adjuntarFotoFachadaKumu = function() {
+        var inp = document.createElement('input');
+        inp.type = 'file';
+        inp.accept = 'image/*';
+        inp.onchange = function() {
+            var file = inp.files[0];
+            if (!file) return;
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var img = new Image();
+                img.onload = function() {
+                    var max = 320, w = img.width, h = img.height;
+                    if (w > h && w > max) { h = Math.round(h * (max / w)); w = max; }
+                    else if (h >= w && h > max) { w = Math.round(w * (max / h)); w = max; }
+                    var cv = document.createElement('canvas');
+                    cv.width = w; cv.height = h;
+                    cv.getContext('2d').drawImage(img, 0, 0, w, h);
+                    window.fotoFachadaTemp = cv.toDataURL('image/webp', 0.60);
+                    var b = document.getElementById('btn-kumu-fachada');
+                    if (b) b.innerHTML = '✅ Foto de Fachada Adjunta (Se borrará al entregar)';
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        };
+        inp.click();
+    };
+
+    window.verFotoFachadaKumu = function(pedId) {
+        var lista = window.pedidosCache || window.pedidosGlobal || [];
+        var p = lista.find(function(x) { return String(x.id) === String(pedId); });
+        var raw = ((p && p.domiciliario_info) || '') + ' ' + ((p && p.direccion_entrega) || '');
+        var m = raw.match(/\[FACHADA:(data:image\/[^\]]+)\]/);
+        if (!m) return kumuAlert('Este pedido no tiene foto de fachada adjunta.', 'Foto de Referencia', '🏠');
+        var modal = document.createElement('div');
+        modal.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.75);display:flex;align-items:center;justify-content:center;padding:16px;';
+        modal.innerHTML = '<div style="background:#FFFDF9;max-width:360px;width:100%;border-radius:24px;padding:16px;border:2px solid #D4AF37;text-align:center;">' +
+            '<h4 style="font-weight:900;color:#2D0B3A;font-size:14px;margin-bottom:8px;">🏠 Fachada / Punto de Referencia</h4>' +
+            '<img src="' + m[1] + '" style="width:100%;border-radius:16px;border:1px solid #ddd;margin-bottom:12px;">' +
+            '<button onclick="this.closest(\'div[style*=fixed]\').remove()" style="width:100%;padding:10px;border-radius:12px;background:#2D0B3A;color:#D4AF37;font-weight:900;border:none;">Cerrar</button></div>';
+        document.body.appendChild(modal);
+    };
+
+    // 3. CHAT INTERNO ANÓNIMO EN VIVO (REEMPLAZA EL WHATSAPP DEL CLIENTE EN REPARTIDOR)
+    function leerMsgsChat(p) {
+        var raw = ((p && p.domiciliario_info) || '');
+        var out = [], reg = /\[CHAT:([^|]+)\|([^|]+)\|([^\]]+)\]/g, m;
+        while ((m = reg.exec(raw)) !== null) out.push({ rol: m[1], hora: m[2], txt: m[3] });
+        return out;
+    }
+
+    window.abrirChatInternoKumu = async function(pedId, miRol) {
+        var res = await supabaseClient.from('pedidos').select('*').eq('id', pedId).single();
+        var p = res.data;
+        if (!p) return;
+        var msgs = leerMsgsChat(p);
+        var ant = document.getElementById('modal-chat-kumu');
+        if (ant) ant.remove();
+
+        var rap = miRol === 'Repartidor'
+            ? ['Estoy afuera en portería 🛵', 'Salgo para tu barrio 🚀', 'Ten listo tu PIN de 4 dígitos 🔐']
+            : ['Ya salgo a la puerta 🏃', 'Recibo en portería 👍', 'Casa de rejas blancas 🏠'];
+
+        var div = document.createElement('div');
+        div.id = 'modal-chat-kumu';
+        div.style.cssText = 'position:fixed;inset:0;z-index:9998;background:rgba(0,0,0,0.65);display:flex;align-items:center;justify-content:center;padding:12px;';
+        div.innerHTML = '<div style="background:#FFFDF9;width:100%;max-width:380px;border-radius:24px;border:2px solid #D4AF37;overflow:hidden;display:flex;flex-direction:column;max-height:82vh;">' +
+            '<div style="background:linear-gradient(90deg,#2D0B3A,#1B4D3E);color:#fff;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;">' +
+                '<div><div style="font-weight:900;font-size:13px;color:#D4AF37;">💬 Chat Privado Kumu #' + String(p.id).slice(0,4).toUpperCase() + '</div>' +
+                '<div style="font-size:10px;color:#A7F3D0;">🔒 Números telefónicos ocultos por privacidad</div></div>' +
+                '<button onclick="document.getElementById(\'modal-chat-kumu\').remove()" style="background:none;border:none;color:#fff;font-size:18px;font-weight:900;cursor:pointer;">✕</button>' +
+            '</div>' +
+            '<div style="padding:12px;overflow-y:auto;flex:1;background:#F3F4F6;max-height:240px;display:flex;flex-direction:column;gap:8px;">' +
+                (msgs.length === 0 ? '<div style="text-align:center;color:#9CA3AF;font-size:11px;padding:18px 0;">Escribe aquí para coordinar la entrega sin exponer tu número de celular.</div>' :
+                msgs.map(function(m) {
+                    var mio = m.rol === miRol;
+                    return '<div style="display:flex;flex-direction:column;align-items:' + (mio ? 'flex-end' : 'flex-start') + ';">' +
+                        '<span style="font-size:9px;color:#6B7280;font-weight:700;">' + m.rol + ' • ' + m.hora + '</span>' +
+                        '<div style="padding:7px 12px;border-radius:14px;font-size:12px;font-weight:600;max-width:85%;background:' + (mio ? '#2D0B3A' : '#fff') + ';color:' + (mio ? '#D4AF37' : '#1F2937') + ';border:1px solid #E5E7EB;">' + m.txt + '</div></div>';
+                }).join('')) +
+            '</div>' +
+            '<div style="padding:6px 10px;background:#FEF3C7;display:flex;gap:6px;overflow-x:auto;">' +
+                rap.map(function(r) { return '<button onclick="window.enviarMsgChatKumu(\'' + p.id + '\',\'' + miRol + '\',\'' + r + '\')" style="white-space:nowrap;padding:4px 8px;border-radius:8px;background:#fff;border:1px solid #D4AF37;font-size:10px;font-weight:700;cursor:pointer;">' + r + '</button>'; }).join('') +
+            '</div>' +
+            '<div style="padding:10px;background:#fff;display:flex;gap:6px;border-top:1px solid #E5E7EB;">' +
+                '<input id="inp-msg-kumu" type="text" onkeydown="if(event.key===\'Enter\') window.enviarMsgChatKumu(\'' + p.id + '\',\'' + miRol + '\')" placeholder="Escribe un mensaje..." style="flex:1;padding:8px 12px;border-radius:12px;border:1px solid #D1D5DB;font-size:12px;">' +
+                '<button onclick="window.enviarMsgChatKumu(\'' + p.id + '\',\'' + miRol + '\')" style="padding:8px 14px;border-radius:12px;background:#C85A17;color:#fff;font-weight:900;font-size:12px;border:none;cursor:pointer;">Enviar</button>' +
+            '</div></div>';
+        document.body.appendChild(div);
+    };
+
+    window.enviarMsgChatKumu = async function(pedId, miRol, txtFijo) {
+        var inp = document.getElementById('inp-msg-kumu');
+        var txt = (txtFijo || (inp ? inp.value : '') || '').replace(/[\[\]|]/g, '').trim();
+        if (!txt) return;
+        var res = await supabaseClient.from('pedidos').select('domiciliario_info').eq('id', pedId).single();
+        var actual = (res.data && res.data.domiciliario_info) || '';
+        var hora = new Date().toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' });
+        await supabaseClient.from('pedidos').update({ domiciliario_info: (actual + ' [CHAT:' + miRol + '|' + hora + '|' + txt + ']').trim() }).eq('id', pedId);
+        if (typeof initApp === 'function') initApp(true);
+        window.abrirChatInternoKumu(pedId, miRol);
+    };
+
+    // 4. BOTÓN «⏱️ LISTO EN 5 MIN» (DE RESTAURANTE A REPARTIDORES) Y RESET A $0
+    window.avisarListo5MinKumu = async function(pedId) {
+        var res = await supabaseClient.from('pedidos').select('domiciliario_info').eq('id', pedId).single();
+        var act = ((res.data && res.data.domiciliario_info) || '').replace(/🔥\[LISTO EN 5 MIN[^\]]*\]/g, '').trim();
+        await supabaseClient.from('pedidos').update({ domiciliario_info: (act + ' 🔥[LISTO EN 5 MIN - ACÉRCATE AL LOCAL]').trim() }).eq('id', pedId);
+        if (typeof initApp === 'function') initApp(true);
+        await kumuAlert('¡Alerta enviada! Los repartidores ya ven en pantalla que el pedido sale de cocina en 5 minutos.', 'Listo en 5 min', '⏱️');
+    };
+
+    window.borrarHistoricoCeroKumu = async function() {
+        if (!(await kumuConfirm('¿Borrar TODOS los pedidos y calificaciones de prueba para iniciar cuentas en $0 COP? (Tus locales y productos NO se borrarán)', 'Reiniciar a $0 COP', '🧹'))) return;
+        await supabaseClient.from('pedidos').delete().neq('estado', '__NUNCA__');
+        await supabaseClient.from('calificaciones').delete().gte('puntuacion', 0);
+        localStorage.removeItem('kumu_pedido_activo_id');
+        if (typeof initApp === 'function') initApp(true);
+        await kumuAlert('¡Pedidos, viajes y calificaciones reiniciados en $0 COP!', 'Sistema Limpio', '✅');
+    };
+
+    // 5. VIGILANTE AUTOMÁTICO DE INTERFAZ (PESTAÑAS BEIJÚ/PRIME!, CHAT PRIVADO Y BOTÓN 5 MIN)
+    var obs = new MutationObserver(function() {
+        actualizarModalCalificacionDoble();
+
+        // A. Inyectar botón de Foto de Fachada en el carrito si existe campo de dirección
+        var camposDir = document.querySelectorAll('input[placeholder*="Dirección"], input[placeholder*="dirección"], #chk-direccion, #cliente-direccion');
+        camposDir.forEach(function(inp) {
+            if (inp.parentNode && !document.getElementById('btn-kumu-fachada')) {
+                var b = document.createElement('button');
+                b.id = 'btn-kumu-fachada';
+                b.type = 'button';
+                b.onclick = window.adjuntarFotoFachadaKumu;
+                b.style.cssText = 'width:100%;margin-top:6px;padding:8px;border-radius:10px;background:#F3E8FF;border:1px dashed #2D0B3A;color:#2D0B3A;font-weight:800;font-size:11px;cursor:pointer;';
+                b.innerHTML = window.fotoFachadaTemp ? '✅ Foto de Fachada Adjunta (Se borrará al entregar)' : '📸 Adjuntar Foto de Fachada / Portón (Opcional)';
+                inp.insertAdjacentElement('afterend', b);
+            }
+        });
+
+        // B. En vista Repartidor: ocultar WhatsApp directo del cliente y reemplazar por Chat Interno Anónimo
+        var vistaRep = document.getElementById('view-repartidor') || document.getElementById('repartidor-view') || document.getElementById('domiciliario-container');
+        if (vistaRep) {
+            vistaRep.querySelectorAll('a[href*="wa.me"]').forEach(function(linkWA) {
+                var contenedor = linkWA.closest('div[style*="border"], div.rounded-2xl, div.p-3, div.p-4') || linkWA.parentNode;
+                var matchId = contenedor ? contenedor.innerHTML.match(/#([a-fA-F0-9]{4,8})/) : null;
+                var listaP = window.pedidosCache || window.pedidosGlobal || [];
+                var ped = matchId ? listaP.find(function(x) { return String(x.id).toLowerCase().startsWith(matchId[1].toLowerCase()); }) : null;
+                if (ped) {
+                    var btnC = document.createElement('button');
+                    btnC.type = 'button';
+                    btnC.style.cssText = 'padding:6px 10px;border-radius:10px;background:#2D0B3A;color:#D4AF37;font-weight:900;font-size:11px;border:1px solid #D4AF37;cursor:pointer;margin:2px;';
+                    btnC.innerHTML = '💬 Chat con Cliente (' + leerMsgsChat(ped).length + ')';
+                    btnC.onclick = function() { window.abrirChatInternoKumu(ped.id, 'Repartidor'); };
+                    linkWA.replaceWith(btnC);
+                }
+            });
+        }
+    });
+
+    obs.observe(document.body, { childList: true, subtree: true });
+    window.addEventListener('DOMContentLoaded', actualizarModalCalificacionDoble);
+})();
+</script>
+<!-- === FIN PARCHE KUMU === -->
 </body>
 </html>
