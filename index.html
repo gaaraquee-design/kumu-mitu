@@ -848,47 +848,31 @@
         ];
 
         const BANNERS_ESTRATEGICOS_DEFAULT = [
-    {
-        id: 'default_vitrina_sin_local',
-        etiqueta: '🚀 VITRINA GRATIS EN EL VAUPÉS',
-        titulo: '¿Vendes desde casa? ¡Entra GRATIS a Kumu!',
-        subtitulo: 'Sin local físico • Conoce nuestra vitrina comercial de Mitú',
-        destino: 'https://URL-REAL-DE-LA-TIENDA-1',
-        imagen: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=700&auto=format&fit=crop&q=80'
-    },
-    {
-        id: 'default_publicidad_kumu',
-        etiqueta: '📢 PUBLICIDAD Y EVENTOS MITÚ',
-        titulo: '¡Conoce esta tienda y sus productos!',
-        subtitulo: 'Compra directamente en su tienda virtual',
-        destino: 'https://URL-REAL-DE-LA-TIENDA-2',
-        imagen: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=700&auto=format&fit=crop&q=80'
-    },
-    {
-        id: 'default_repartidores_vaupes',
-        etiqueta: '🛵🚲 ESCUADRÓN KUMU MITÚ',
-        titulo: 'Explora esta tienda virtual',
-        subtitulo: 'Mira su catálogo y compra directamente en línea',
-        destino: 'https://URL-REAL-DE-LA-TIENDA-3',
-        imagen: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=700&auto=format&fit=crop&q=80'
-    },
-    {
-        id: 'default_comida_local',
-        etiqueta: '🍽️ SABORES DE MITÚ',
-        titulo: 'Encuentra tus favoritos',
-        subtitulo: 'Mira el menú y compra en la tienda virtual',
-        destino: 'https://URL-REAL-DE-LA-TIENDA-4',
-        imagen: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=700&q=80'
-    },
-    {
-        id: 'default_emprende_kumu',
-        etiqueta: '🌿 EMPRENDE CON KUMU',
-        titulo: 'Descubre productos del Vaupés',
-        subtitulo: 'Visita la tienda virtual para ver el catálogo',
-        destino: 'https://URL-REAL-DE-LA-TIENDA-5',
-        imagen: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=700&q=80'
-    }
-];
+            {
+                id: 'default_vitrina_sin_local',
+                etiqueta: '🚀 VITRINA GRATIS EN EL VAUPÉS',
+                titulo: '¿Vendes desde casa? ¡Entra GRATIS a Kumu!',
+                subtitulo: 'Sin local físico • Únete a la vitrina comercial más grande de Mitú',
+                destino: 'WA_EMPRENDEDOR',
+                imagen: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=700&auto=format&fit=crop&q=80'
+            },
+            {
+                id: 'default_publicidad_kumu',
+                etiqueta: '📢 PUBLICIDAD Y EVENTOS MITÚ',
+                titulo: '¡Anuncia tu Marca, Promo o Evento Aquí!',
+                subtitulo: 'Conecta con cientos de celulares en el corazón del Vaupés • Pauta hoy',
+                destino: 'WA_PAUTA',
+                imagen: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=700&auto=format&fit=crop&q=80'
+            },
+            {
+                id: 'default_repartidores_vaupes',
+                etiqueta: '🛵🚲 ESCUADRÓN KUMU MITÚ',
+                titulo: '¿Tienes moto o bici? ¡Sé Repartidor en Kumu!',
+                subtitulo: 'Gana el 100% de cada domicilio ($4k sol / $5k lluvia) sin horarios fijos',
+                destino: 'WA_REPARTIDOR',
+                imagen: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=700&auto=format&fit=crop&q=80'
+            }
+        ];
 
         function yaTienePWAInstaladaOCerrada() {
             try {
@@ -4231,83 +4215,116 @@
             <button onclick="enviarCalificacion(5)" style="background:none; border:none; cursor:pointer;">😍</button>
         </div>
     </div>
-    <!-- === INICIO PARCHE KUMU (PEGAR EN FILA 4218, DEBAJO DE FILA 4217 </div> Y ENCIMA DE </body>) === -->
+    <!-- === INICIO BLOQUE DEFINITIVO KUMU (CALIBRADO CON TU INDEX.HTML REAL) === -->
 <script>
-(function() {
     window.fotoFachadaTemp = '';
     window.califTempLocal = 5;
     window.califTempDomi = 5;
+    window.vehiculoManualCliente = '';
 
-    // 1. MEJORAR TARJETA DE CALIFICACIÓN (FILAS 4208-4217) PARA CALIFICAR LOCAL Y REPARTIDOR POR SEPARADO
-    function actualizarModalCalificacionDoble() {
-        var modalCal = document.getElementById('modal-calificacion');
-        if (!modalCal || modalCal.getAttribute('data-doble-ok') === '1') return;
-        modalCal.setAttribute('data-doble-ok', '1');
-        var spanNom = document.getElementById('nombre-comercio-calificar');
-        var nomTxt = spanNom ? spanNom.outerHTML : 'el Local';
+    // 1. BARRA PRINCIPAL CON LAS 8 CATEGORÍAS OFICIALES Y PESTAÑAS EXCLUSIVAS (BEIJÚ, PRIME! Y VETERINARIA)
+    const CATEGORIAS_BEIJU_OFICIAL = ['Todos', 'Vegetarianos', 'Especiales', 'Carne', 'Pollo', 'Cerdo', 'Dulces', 'Mixtos'];
+    const CATEGORIAS_PRIME_OFICIAL = ['Todos', 'Cerdo', 'Condimentos y Salsas', 'Embutidos', 'Frutos Secos', 'Lácteos', 'Pescados y Mariscos', 'Pollo', 'Res'];
+    const CATEGORIAS_VET_OFICIAL = ['Todos', 'Antiparasitarios por Peso', 'Concentrados y Bultos', 'Farmacia Veterinaria', 'Higiene y Belleza', 'Juguetes y Accesorios'];
 
-        modalCal.innerHTML =
-            '<p style="margin-bottom:6px; font-weight:800; font-size:12px; color:#2D0B3A;">🏪 1. ¿Qué tal estuvo tu producto en ' + nomTxt + '?</p>' +
-            '<div id="cal-fila-local" style="display:flex; justify-content:space-around; font-size:22px; margin-bottom:10px; background:#F8F6F2; padding:6px; border-radius:12px;">' +
-                '<button type="button" onclick="window.selecEstrellaKumu(\'local\',1,this)" style="background:none;border:none;cursor:pointer;">😡</button>' +
-                '<button type="button" onclick="window.selecEstrellaKumu(\'local\',2,this)" style="background:none;border:none;cursor:pointer;">😕</button>' +
-                '<button type="button" onclick="window.selecEstrellaKumu(\'local\',3,this)" style="background:none;border:none;cursor:pointer;">😐</button>' +
-                '<button type="button" onclick="window.selecEstrellaKumu(\'local\',4,this)" style="background:none;border:none;cursor:pointer;">😊</button>' +
-                '<button type="button" onclick="window.selecEstrellaKumu(\'local\',5,this)" style="background:none;border:none;cursor:pointer;transform:scale(1.2);">😍</button>' +
-            '</div>' +
-            '<p style="margin-bottom:6px; font-weight:800; font-size:12px; color:#1B4D3E;">🛵 2. ¿Qué tal la atención de tu Repartidor?</p>' +
-            '<div id="cal-fila-domi" style="display:flex; justify-content:space-around; font-size:22px; margin-bottom:10px; background:#F8F6F2; padding:6px; border-radius:12px;">' +
-                '<button type="button" onclick="window.selecEstrellaKumu(\'domi\',1,this)" style="background:none;border:none;cursor:pointer;">😡</button>' +
-                '<button type="button" onclick="window.selecEstrellaKumu(\'domi\',2,this)" style="background:none;border:none;cursor:pointer;">😕</button>' +
-                '<button type="button" onclick="window.selecEstrellaKumu(\'domi\',3,this)" style="background:none;border:none;cursor:pointer;">😐</button>' +
-                '<button type="button" onclick="window.selecEstrellaKumu(\'domi\',4,this)" style="background:none;border:none;cursor:pointer;">😊</button>' +
-                '<button type="button" onclick="window.selecEstrellaKumu(\'domi\',5,this)" style="background:none;border:none;cursor:pointer;transform:scale(1.2);">😍</button>' +
-            '</div>' +
-            '<button type="button" onclick="window.enviarCalificacionDobleKumu()" style="width:100%; padding:10px; border-radius:12px; background:#C85A17; color:#fff; font-weight:900; font-size:12px; border:none; cursor:pointer;">✅ Enviar Calificaciones</button>';
-    }
+    const _origRenderClienteView = renderClienteView;
+    renderClienteView = async function(container, forzarRed = false) {
+        await _origRenderClienteView(container, forzarRed);
 
-    window.selecEstrellaKumu = function(tipo, pts, btn) {
-        if (tipo === 'local') window.califTempLocal = pts;
-        else window.califTempDomi = pts;
-        var hermanos = btn.parentNode.querySelectorAll('button');
-        hermanos.forEach(function(b) { b.style.transform = 'scale(0.9)'; b.style.opacity = '0.45'; });
-        btn.style.transform = 'scale(1.25)';
-        btn.style.opacity = '1';
-    };
+        // A. Si estamos en Inicio, asegurar las 8 categorías principales aprobadas
+        if (!comercioSeleccionado) {
+            const barraCats = container.querySelector('.flex.space-x-2.overflow-x-auto.kumu-scroll.pb-2\\.5.text-xs');
+            if (barraCats) {
+                const catsPrincipales = [
+                    { id: 'Todos', txt: '✨ Todos' },
+                    { id: 'Restaurantes & Comida Rápida', txt: '🍔 Restaurantes & Comida Rápida' },
+                    { id: 'Supermercados & Víveres', txt: '🛒 Supermercados & Víveres' },
+                    { id: 'Veterinaria', txt: '🐾 Veterinaria' },
+                    { id: 'Droguería', txt: '💊 Droguería' },
+                    { id: 'Emprendedores & Tiendas', txt: '🛍️ Emprendedores & Tiendas' },
+                    { id: 'Licores & Cigarrillos', txt: '🍺 Licores (+18) 🔞' },
+                    { id: 'Sanvi', txt: '🌾 Sanvi Campesino' }
+                ];
+                barraCats.innerHTML = catsPrincipales.map(c => `
+                    <button onclick="filtrarCat('${c.id}')" class="px-3.5 py-2 rounded-full font-bold whitespace-nowrap shadow-sm ${categoriaFiltro === c.id ? 'bg-[#2D0B3A] text-[#D4AF37] border border-[#D4AF37]' : 'bg-white text-gray-700 border border-slate-200'}">${c.txt}</button>
+                `).join('');
+            }
+            // Quitar capa opaca en banners para que las fotos se vean 100% nítidas
+            const imgBanner = container.querySelector('#cajaBannerPublicitario img');
+            if (imgBanner) imgBanner.classList.remove('opacity-50');
+            return;
+        }
 
-    window.enviarCalificacionDobleKumu = async function() {
-        var histDomi = JSON.parse(localStorage.getItem('kumu_calif_repartidores') || '[]');
-        histDomi.push({ puntos: window.califTempDomi || 5, fecha: new Date().toISOString() });
-        localStorage.setItem('kumu_calif_repartidores', JSON.stringify(histDomi));
-        if (typeof enviarCalificacion === 'function') {
-            await enviarCalificacion(window.califTempLocal || 5);
-        } else {
-            var m = document.getElementById('modal-calificacion');
-            if (m) m.style.display = 'none';
+        // B. Si estamos dentro de Beijú, PRIME! o Veterinaria, aplicar sus pestañas exclusivas
+        const nomLocal = (comercioSeleccionado.nombre || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        const catLocal = (comercioSeleccionado.categoria || '').toLowerCase();
+        let pestanasExclusivas = null;
+
+        if (nomLocal.includes('beiju')) pestanasExclusivas = CATEGORIAS_BEIJU_OFICIAL;
+        else if (nomLocal.includes('prime') || catLocal.includes('supermercado')) pestanasExclusivas = CATEGORIAS_PRIME_OFICIAL;
+        else if (catLocal.includes('veterinaria') || nomLocal.includes('veterinaria')) pestanasExclusivas = CATEGORIAS_VET_OFICIAL;
+
+        if (pestanasExclusivas) {
+            window._categoriasProdsActuales = pestanasExclusivas;
+            const barraCat = document.getElementById('barraCatProductos');
+            if (barraCat) {
+                barraCat.innerHTML = pestanasExclusivas.map((cat, idx) => `
+                    <button onclick="filtrarCatProductoPorIndice(${idx})" class="px-3.5 py-1.5 rounded-full font-bold whitespace-nowrap shadow-sm ${categoriaProductoFiltro === cat ? 'bg-[#2D0B3A] text-[#D4AF37]' : 'bg-gray-200 text-gray-700'}">${escaparHTML(cat)}</button>
+                `).join('');
+            }
         }
     };
 
-    // 2. FOTO DE FACHADA ULTRA-LIGERA (<20 KB) Y AUTO-BORRADO AL ENTREGAR
-    window.adjuntarFotoFachadaKumu = function() {
-        var inp = document.createElement('input');
+    // 2. SELECTOR OBLIGATORIO DE PESO [PESO] EN VETERINARIA Y GUÍA DE USO
+    const _origAgregarAlCarrito = agregarAlCarrito;
+    agregarAlCarrito = async function(producto) {
+        const comb = ((producto.nombre || '') + ' ' + (producto.descripcion || '')).toLowerCase();
+        const requierePeso = comb.includes('[peso]') || comb.includes('nexgard') || comb.includes('simparica') || comb.includes('bravecto') || comb.includes('antiparasitario');
+        if (requierePeso) {
+            const pesoElegido = await kumuPrompt(
+                `⚖️ ${producto.nombre}:\nIndica el peso de tu mascota en kg (Ej: 2 a 4 kg / 4.1 a 10 kg / 10.1 a 25 kg / 25.1 a 50 kg):`,
+                '4.1 a 10 kg',
+                '🐾 Selector Obligatorio de Peso',
+                '⚖️'
+            );
+            if (!pesoElegido || !pesoElegido.trim()) return;
+            producto = { ...producto, nombre: `${producto.nombre} [Peso: ${limpiarInputUsuario(pesoElegido)}]` };
+        }
+        await _origAgregarAlCarrito(producto);
+    };
+
+    // 3. COPIAR CUENTA NEQUI SIN ESPACIOS + LLAVE BRE-B POR SEPARADO
+    copiarCuentaComercioSeleccionado = async function() {
+        const raw = (comercioSeleccionado && comercioSeleccionado.telefono) || '';
+        const sinEspacios = raw.replace(/(\d)\s+(\d)/g, '$1$2').replace(/(\d)\s+(\d)/g, '$1$2');
+        const mCel = sinEspacios.match(/3\d{9}/) || sinEspacios.match(/\d{7,15}/);
+        const mLlave = sinEspacios.match(/@[a-zA-Z0-9._-]+/);
+        const numCopiar = mCel ? mCel[0] : (mLlave ? mLlave[0] : sinEspacios.trim());
+        if (navigator.clipboard) await navigator.clipboard.writeText(numCopiar);
+        await kumuAlert(`Número copiado sin espacios:\n\n${numCopiar}\n\nDatos del local: ${raw}`, '📋 Cuenta Copiada', '💳');
+    };
+
+    // 4. ESCALA MULTIVEHÍCULO (BICI/MOTO/MOTOCARRO) + FOTO DE FACHADA SOLO EN CARRITO (#direccionCliente)
+    window.adjuntarFotoFachadaCliente = function() {
+        const inp = document.createElement('input');
         inp.type = 'file';
         inp.accept = 'image/*';
         inp.onchange = function() {
-            var file = inp.files[0];
+            const file = inp.files[0];
             if (!file) return;
-            var reader = new FileReader();
+            const reader = new FileReader();
             reader.onload = function(e) {
-                var img = new Image();
+                const img = new Image();
                 img.onload = function() {
-                    var max = 320, w = img.width, h = img.height;
+                    let max = 320, w = img.width, h = img.height;
                     if (w > h && w > max) { h = Math.round(h * (max / w)); w = max; }
                     else if (h >= w && h > max) { w = Math.round(w * (max / h)); w = max; }
-                    var cv = document.createElement('canvas');
+                    const cv = document.createElement('canvas');
                     cv.width = w; cv.height = h;
                     cv.getContext('2d').drawImage(img, 0, 0, w, h);
                     window.fotoFachadaTemp = cv.toDataURL('image/webp', 0.60);
-                    var b = document.getElementById('btn-kumu-fachada');
-                    if (b) b.innerHTML = '✅ Foto de Fachada Adjunta (Se borrará al entregar)';
+                    const b = document.getElementById('btnFotoFachadaExclusivoCliente');
+                    if (b) b.innerHTML = '✅ Foto de Fachada Lista (<25 KB • Se borrará al entregar)';
                 };
                 img.src = e.target.result;
             };
@@ -4316,141 +4333,445 @@
         inp.click();
     };
 
-    window.verFotoFachadaKumu = function(pedId) {
-        var lista = window.pedidosCache || window.pedidosGlobal || [];
-        var p = lista.find(function(x) { return String(x.id) === String(pedId); });
-        var raw = ((p && p.domiciliario_info) || '') + ' ' + ((p && p.direccion_entrega) || '');
-        var m = raw.match(/\[FACHADA:(data:image\/[^\]]+)\]/);
-        if (!m) return kumuAlert('Este pedido no tiene foto de fachada adjunta.', 'Foto de Referencia', '🏠');
-        var modal = document.createElement('div');
-        modal.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.75);display:flex;align-items:center;justify-content:center;padding:16px;';
-        modal.innerHTML = '<div style="background:#FFFDF9;max-width:360px;width:100%;border-radius:24px;padding:16px;border:2px solid #D4AF37;text-align:center;">' +
-            '<h4 style="font-weight:900;color:#2D0B3A;font-size:14px;margin-bottom:8px;">🏠 Fachada / Punto de Referencia</h4>' +
-            '<img src="' + m[1] + '" style="width:100%;border-radius:16px;border:1px solid #ddd;margin-bottom:12px;">' +
-            '<button onclick="this.closest(\'div[style*=fixed]\').remove()" style="width:100%;padding:10px;border-radius:12px;background:#2D0B3A;color:#D4AF37;font-weight:900;border:none;">Cerrar</button></div>';
-        document.body.appendChild(modal);
+    function calcularVehiculoYDomicilioActual() {
+        const uds = carrito.reduce((a, b) => a + (Number(b.cantidad) || 0), 0);
+        const hayBulto = carrito.some(i => /bulto|paca|canasta|25\s*kg|20\s*kg|\[motocarro\]/i.test((i.nombre || '') + ' ' + (i.descripcion || '')));
+        if (uds > 10 || hayBulto || window.vehiculoManualCliente === 'MOTOCARRO') {
+            return { tarifa: 8000, etiqueta: '🛺 Motocarro (>10 uds o Bultos)' };
+        }
+        if (uds >= 9) {
+            return { tarifa: 5000, etiqueta: '🛵 Exclusivo Moto Carga Media (9-10 uds)' };
+        }
+        if (uds >= 6) {
+            return { tarifa: estaLloviendo ? 5000 : 4000, etiqueta: '🛵 Exclusivo Moto (6-8 uds)' };
+        }
+        return { tarifa: estaLloviendo ? 5000 : 4000, etiqueta: '🚲 Bici o 🛵 Moto (1-5 uds)' };
+    }
+
+    const _origRenderizarCarrito = renderizarCarrito;
+    renderizarCarrito = function() {
+        const logistica = calcularVehiculoYDomicilioActual();
+        tarifaDomicilio = logistica.tarifa;
+        _origRenderizarCarrito();
+
+        // Inyectar botón de Foto de Fachada ÚNICAMENTE debajo de #direccionCliente (jamás en Admin/Aliados)
+        const inpDirCliente = document.getElementById('direccionCliente');
+        if (inpDirCliente && !document.getElementById('btnFotoFachadaExclusivoCliente')) {
+            const btnF = document.createElement('button');
+            btnF.type = 'button';
+            btnF.id = 'btnFotoFachadaExclusivoCliente';
+            btnF.onclick = window.adjuntarFotoFachadaCliente;
+            btnF.className = 'w-full bg-purple-50 hover:bg-purple-100 text-[#2D0B3A] border border-dashed border-[#2D0B3A] py-1.5 px-2 rounded-xl text-[11px] font-extrabold shadow-sm';
+            btnF.innerHTML = window.fotoFachadaTemp
+                ? '✅ Foto de Fachada Lista (<25 KB • Se borrará al entregar)'
+                : '📸 Adjuntar Foto de Fachada / Casa (Opcional)';
+            inpDirCliente.insertAdjacentElement('afterend', btnF);
+        }
     };
 
-    // 3. CHAT INTERNO ANÓNIMO EN VIVO (REEMPLAZA EL WHATSAPP DEL CLIENTE EN REPARTIDOR)
-    function leerMsgsChat(p) {
-        var raw = ((p && p.domiciliario_info) || '');
-        var out = [], reg = /\[CHAT:([^|]+)\|([^|]+)\|([^\]]+)\]/g, m;
-        while ((m = reg.exec(raw)) !== null) out.push({ rol: m[1], hora: m[2], txt: m[3] });
+    // 5. CANDADO ANTITRAMPA EN enviarPedido (PROHÍBE PAGAR SOLO EL PRODUCTO + GENERA PIN DE 4 DÍGITOS SIEMPRE)
+    enviarPedido = async function(total, subtotal, domicilio, comision, tieneLicor, totalEmpaque = 0) {
+        const nombre = limpiarInputUsuario(document.getElementById('nombreCliente')?.value);
+        const telRaw = (document.getElementById('telefonoCliente')?.value || '').replace(/\D/g, '');
+        const direccion = limpiarInputUsuario(document.getElementById('direccionCliente')?.value);
+        const metodoPago = document.getElementById('metodoPago')?.value || 'Transferencia';
+        let pagaConNum = Number(document.getElementById('pagaConBillete')?.value || 0);
+        const cedulaRaw = (document.getElementById('cedulaCliente')?.value || '').replace(/\D/g, '');
+        const metaLocal = extraerMetadatosComercio(comercioSeleccionado);
+        const fechaEncargoCliente = limpiarInputUsuario(document.getElementById('fechaEntregaEncargoCliente')?.value);
+
+        if (!nombre || !direccion) {
+            await kumuAlert('Por favor ingresa tu Nombre Completo y la Dirección en Mitú.', 'Datos Incompletos', '⚠️');
+            return;
+        }
+        if (telRaw.length !== 10) {
+            await kumuAlert('Ingresa un número de celular WhatsApp válido de 10 dígitos.', 'WhatsApp Inválido', '📱');
+            return;
+        }
+        if (tieneLicor && (cedulaRaw.length < 6 || cedulaRaw.length > 11)) {
+            await kumuAlert('Para pedidos en la sección +18 debes ingresar tu Cédula.', 'Cédula Requerida', '🔞');
+            return;
+        }
+
+        // CANDADO ANTITRAMPA: Si es Transferencia, el cliente NO puede pagar solo el producto
+        if (metodoPago === 'Transferencia') {
+            const montoStr = await kumuPrompt(
+                `⚠️ VERIFICACIÓN OBLIGATORIA DE PAGO:\n` +
+                `Tu transferencia Nequi / Bre-B debe incluir Producto ($${subtotal.toLocaleString()}) + Domicilio ($${domicilio.toLocaleString()})${totalEmpaque > 0 ? ' + Empaque ($' + totalEmpaque.toLocaleString() + ')' : ''} + Uso Kumu ($${comision.toLocaleString()}).\n\n` +
+                `💰 TOTAL OBLIGATORIO A TRANSFERIR: $${total.toLocaleString()} COP\n\n` +
+                `Escribe el valor exacto en pesos que transferiste en tu comprobante:`,
+                String(total),
+                '🔐 Prohibido Pago Incompleto',
+                '💳',
+                'number'
+            );
+            if (montoStr === null) return;
+            let montoDigitado = Number(String(montoStr).replace(/\D/g, '')) || 0;
+            if (montoDigitado > 0 && montoDigitado < 1000) montoDigitado *= 1000;
+            if (montoDigitado < total) {
+                await kumuAlert(
+                    `🛑 PEDIDO BLOQUEADO POR PAGO INCOMPLETO\n\n` +
+                    `No está permitido enviar al local únicamente el valor del producto.\n` +
+                    `• Total obligatorio con envío: $${total.toLocaleString()} COP\n` +
+                    `• Valor que indicaste: $${montoDigitado.toLocaleString()} COP\n` +
+                    `• Te faltan: $${(total - montoDigitado).toLocaleString()} COP\n\n` +
+                    `Transfiere el valor completo para poder despachar tu pedido.`,
+                    '🛑 Pago Parcial No Permitido',
+                    '🚨'
+                );
+                return;
+            }
+        } else {
+            if (pagaConNum > 0 && pagaConNum < 1000) pagaConNum *= 1000;
+            if (pagaConNum < total) {
+                await kumuAlert(`El billete ($${pagaConNum.toLocaleString()}) no puede ser menor al Total ($${total.toLocaleString()} COP).`, 'Billete Insuficiente', '💵');
+                return;
+            }
+        }
+
+        if (comercioSeleccionado) {
+            localStorage.setItem('ultimoComercioId', comercioSeleccionado.id);
+            localStorage.setItem('ultimoComercioNombre', comercioSeleccionado.nombre);
+        }
+
+        const logistica = calcularVehiculoYDomicilioActual();
+        const totalUnidades = carrito.reduce((a, b) => a + b.cantidad, 0);
+        guardarClienteFrecuente(nombre, telRaw, direccion);
+
+        // PIN universal de 4 dígitos para entregar en Portería / Guardia Principal
+        const pinSeguro = Math.floor(1000 + Math.random() * 9000);
+        const detallePedido = carrito.map(i => `${i.cantidad}x ${limpiarInputUsuario(i.nombre)} ${i.notas ? '(' + limpiarInputUsuario(i.notas) + ')' : ''}`).join(', ');
+        const infoPagoTexto = metodoPago === 'Efectivo' ? `Efectivo (Paga con: $${pagaConNum.toLocaleString()})` : `Transferencia Verificada ($${total.toLocaleString()} COP)`;
+        const stampLegal = new Date().toLocaleString('es-CO');
+        const tagPin = ` ${tieneLicor ? '🔞 [LICOR - CC: ' + cedulaRaw + ']' : ''} [PIN: ${pinSeguro}]`;
+        const tagEncargo = metaLocal.esEncargo && fechaEncargoCliente ? ` [ENCARGO PARA: ${fechaEncargoCliente}]` : '';
+        const tagCarga = ` [${logistica.etiqueta}: ${totalUnidades} uds]`;
+        const tagMapaCliente = gpsClienteActual ? ` | MapaCliente: ${gpsClienteActual}` : '';
+        const tagLegal = ` [Aceptó T&C Ley 1480 y Habeas Data Ley 1581: ${stampLegal}]`;
+        const desgloseDireccion = `${direccion}${tagEncargo}${tagCarga}${tagMapaCliente} [Pago: ${infoPagoTexto}]${tagPin}${tagLegal} | Detalle: ${detallePedido} | Sub: ${subtotal} | Emp: ${totalEmpaque} | Domi: ${domicilio}`;
+        const estadoInicial = metodoPago === 'Efectivo' ? 'Pendiente Efectivo' : 'Por Verificar Pago';
+        const infoExtra = window.fotoFachadaTemp ? `[FACHADA:${window.fotoFachadaTemp}]` : '';
+
+        const { data: pedCreado, error } = await supabaseClient.from('pedidos').insert([{
+            cliente_nombre: nombre,
+            cliente_telefono: telRaw,
+            direccion_entrega: desgloseDireccion,
+            comercio_id: comercioSeleccionado.id,
+            total: total,
+            estado: estadoInicial,
+            domiciliario_info: infoExtra
+        }]).select().maybeSingle();
+
+        if (error) {
+            await kumuAlert('Error al registrar el pedido: ' + error.message, 'Error', '❌');
+            return;
+        }
+
+        window.fotoFachadaTemp = '';
+        const contActual = Number(localStorage.getItem('kumu_mis_pedidos_contador') || 0) + 1;
+        localStorage.setItem('kumu_mis_pedidos_contador', String(contActual));
+        if (pedCreado && pedCreado.id) {
+            localStorage.setItem('kumu_pedido_activo_id', pedCreado.id);
+            localStorage.setItem('kumu_pin_activo_' + pedCreado.id, String(pinSeguro));
+            ultimoEstadoConocidoCliente = estadoInicial;
+        }
+
+        let mensajeWA = `Hola *${comercioSeleccionado.nombre}*, acabo de hacer un pedido en *Kumu 🍄*:\n\n*Pedido:* ${detallePedido}`;
+        if (totalEmpaque > 0) mensajeWA += `\n🥡 *Empaques:* $${totalEmpaque.toLocaleString()} COP`;
+        mensajeWA += `\n🛵 *Vehículo:* ${logistica.etiqueta} ($${domicilio.toLocaleString()} COP)`;
+        mensajeWA += `\n💳 *Pago:* ${infoPagoTexto}`;
+        mensajeWA += `\n💰 *TOTAL OBLIGATORIO CON ENVÍO:* *$${total.toLocaleString()} COP*`;
+        mensajeWA += `\n👤 *Cliente:* ${nombre}\n📍 *Entrega (Portería/Puerta):* ${direccion}`;
+        mensajeWA += `\n🔐 *PIN de seguridad en puerta:* ${pinSeguro}`;
+
+        await kumuAlert(`¡Pedido registrado!\n\n🔐 Tu PIN de seguridad para recibir en puerta/portería es: ${pinSeguro}\n\nAhora envía el comprobante completo por $${total.toLocaleString()} COP en el WhatsApp del local.`, '✅ Pedido Confirmado', '🍄');
+
+        const numMatch = (comercioSeleccionado.telefono || '').match(/\d{10}/);
+        const telLimpio = numMatch ? numMatch[0] : (comercioSeleccionado.telefono || '').replace(/\D/g, '').slice(0, 10);
+        window.open(`https://wa.me/57${telLimpio}?text=${encodeURIComponent(mensajeWA)}`, '_blank');
+        carrito = []; gpsClienteActual = ''; guardarCarritoInmortal(); comercioSeleccionado = null; initApp(true);
+    };
+
+    // 6. VERIFICACIÓN DEL LOCAL AL ACEPTAR + BOTÓN «⏱️ LISTO EN 5 MIN» + AUTODOMICILIO (4 MIN)
+    aceptarPedidoRestaurante = async function(pedidoId) {
+        const p = (window._pedidosAliadoCache || []).find(x => String(x.id) === String(pedidoId));
+        if (p && (p.direccion_entrega || '').includes('Transferencia')) {
+            const okPago = await kumuConfirm(
+                `🛑 VERIFICACIÓN ANTI-FRAUDE:\n\nEl comprobante Nequi/Bre-B de ${p.cliente_nombre} debe ser por el TOTAL COMPLETO:\n👉 $${Number(p.total).toLocaleString()} COP (Incluye Producto + Domicilio).\n\n¿Confirmas que recibiste los $${Number(p.total).toLocaleString()} COP completos?\n(Si mandó solo lo del producto, toca "Cancelar" para retener el pedido y avisar a Kumu).`,
+                '💰 Verificar Pago Completo',
+                '🛡️'
+            );
+            if (!okPago) {
+                const rep = await kumuConfirm('¿Reportar pago incompleto a Administración Kumu (3215698079) y bloquear la salida del motorista?', '🚨 Reportar Pago Incompleto', '🚨');
+                if (rep) {
+                    await supabaseClient.from('pedidos').update({ estado: 'Por Verificar Pago [PAGO_INCOMPLETO]' }).eq('id', pedidoId);
+                    window.open(`https://wa.me/573215698079?text=${encodeURIComponent(`🚨 *ALERTA PAGO INCOMPLETO EN KUMU*\nLocal: ${comercioLogueado?.nombre}\nCliente: ${p.cliente_nombre} (${p.cliente_telefono})\nDebía transferir: $${Number(p.total).toLocaleString()} COP y envió menos. Pedido retenido.`)}`, '_blank');
+                    initApp(true);
+                }
+                return;
+            }
+        }
+        await supabaseClient.from('pedidos').update({ estado: 'En Preparación' }).eq('id', pedidoId);
+        initApp(true);
+    };
+
+    window.avisarListoEn5MinLocal = async function(pedidoId) {
+        const { data: ped } = await supabaseClient.from('pedidos').select('domiciliario_info').eq('id', pedidoId).maybeSingle();
+        const limpio = ((ped && ped.domiciliario_info) || '').replace(/🔥\[Sale en 5 min[^\]]*\]/g, '').trim();
+        await supabaseClient.from('pedidos').update({
+            estado: 'En Preparación',
+            domiciliario_info: `${limpio} 🔥[Sale en 5 min — Acércate al local]`.trim()
+        }).eq('id', pedidoId);
+        await kumuAlert('¡Alerta enviada! Los repartidores ya ven en su pantalla «🔥 Sale en 5 min — Acércate al local».', '⏱️ Aviso a Repartidores', '🔥');
+        initApp(true);
+    };
+
+    const _origRenderPedidosAliado = renderPedidosAliado;
+    renderPedidosAliado = async function() {
+        await _origRenderPedidosAliado();
+        const cont = document.getElementById('listaPedidosAliadoLocal');
+        if (!cont) return;
+        cont.querySelectorAll('button[onclick^="publicarCarreraGrupoRepartidores"]').forEach(btn => {
+            const m = btn.getAttribute('onclick').match(/'([^']+)'/);
+            if (m && !btn.parentNode.querySelector('.btn-5min-kumu')) {
+                const b5 = document.createElement('button');
+                b5.type = 'button';
+                b5.className = 'btn-5min-kumu flex-1 bg-amber-500 text-[#2D0B3A] py-1.5 px-2 rounded-lg font-extrabold text-[11px] shadow';
+                b5.innerHTML = '⏱️ Listo en 5 min';
+                b5.onclick = () => window.avisarListoEn5MinLocal(m[1]);
+                btn.insertAdjacentElement('afterend', b5);
+            }
+        });
+    };
+
+    // 7. CHAT INTERNO ANÓNIMO (REEMPLAZA EL WHATSAPP DEL CLIENTE EN REPARTIDOR) + PIN EN PUERTA + FOTO FACHADA
+    function extraerChatPedido(infoStr) {
+        const out = [], reg = /\[CHAT:([^|]+)\|([^|]+)\|([^\]]+)\]/g;
+        let m;
+        while ((m = reg.exec(infoStr || '')) !== null) out.push({ rol: m[1], hora: m[2], txt: m[3] });
         return out;
     }
 
-    window.abrirChatInternoKumu = async function(pedId, miRol) {
-        var res = await supabaseClient.from('pedidos').select('*').eq('id', pedId).single();
-        var p = res.data;
+    window.abrirChatAnonimoKumu = async function(pedidoId, miRol) {
+        const { data: p } = await supabaseClient.from('pedidos').select('*').eq('id', pedidoId).maybeSingle();
         if (!p) return;
-        var msgs = leerMsgsChat(p);
-        var ant = document.getElementById('modal-chat-kumu');
+        const msgs = extraerChatPedido(p.domiciliario_info);
+        const ant = document.getElementById('modalChatAnonimoKumu');
         if (ant) ant.remove();
 
-        var rap = miRol === 'Repartidor'
-            ? ['Estoy afuera en portería 🛵', 'Salgo para tu barrio 🚀', 'Ten listo tu PIN de 4 dígitos 🔐']
-            : ['Ya salgo a la puerta 🏃', 'Recibo en portería 👍', 'Casa de rejas blancas 🏠'];
+        const rapidas = miRol === 'Repartidor'
+            ? ['Estoy afuera en portería 🛵', 'Salgo hacia tu barrio 🚀', 'Ten listo tu PIN de 4 dígitos 🔐']
+            : ['Ya salgo a portería 🏃', 'Casa de rejas blancas 🏠', 'Gracias, te espero 👍'];
 
-        var div = document.createElement('div');
-        div.id = 'modal-chat-kumu';
-        div.style.cssText = 'position:fixed;inset:0;z-index:9998;background:rgba(0,0,0,0.65);display:flex;align-items:center;justify-content:center;padding:12px;';
-        div.innerHTML = '<div style="background:#FFFDF9;width:100%;max-width:380px;border-radius:24px;border:2px solid #D4AF37;overflow:hidden;display:flex;flex-direction:column;max-height:82vh;">' +
-            '<div style="background:linear-gradient(90deg,#2D0B3A,#1B4D3E);color:#fff;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;">' +
-                '<div><div style="font-weight:900;font-size:13px;color:#D4AF37;">💬 Chat Privado Kumu #' + String(p.id).slice(0,4).toUpperCase() + '</div>' +
-                '<div style="font-size:10px;color:#A7F3D0;">🔒 Números telefónicos ocultos por privacidad</div></div>' +
-                '<button onclick="document.getElementById(\'modal-chat-kumu\').remove()" style="background:none;border:none;color:#fff;font-size:18px;font-weight:900;cursor:pointer;">✕</button>' +
-            '</div>' +
-            '<div style="padding:12px;overflow-y:auto;flex:1;background:#F3F4F6;max-height:240px;display:flex;flex-direction:column;gap:8px;">' +
-                (msgs.length === 0 ? '<div style="text-align:center;color:#9CA3AF;font-size:11px;padding:18px 0;">Escribe aquí para coordinar la entrega sin exponer tu número de celular.</div>' :
-                msgs.map(function(m) {
-                    var mio = m.rol === miRol;
-                    return '<div style="display:flex;flex-direction:column;align-items:' + (mio ? 'flex-end' : 'flex-start') + ';">' +
-                        '<span style="font-size:9px;color:#6B7280;font-weight:700;">' + m.rol + ' • ' + m.hora + '</span>' +
-                        '<div style="padding:7px 12px;border-radius:14px;font-size:12px;font-weight:600;max-width:85%;background:' + (mio ? '#2D0B3A' : '#fff') + ';color:' + (mio ? '#D4AF37' : '#1F2937') + ';border:1px solid #E5E7EB;">' + m.txt + '</div></div>';
-                }).join('')) +
-            '</div>' +
-            '<div style="padding:6px 10px;background:#FEF3C7;display:flex;gap:6px;overflow-x:auto;">' +
-                rap.map(function(r) { return '<button onclick="window.enviarMsgChatKumu(\'' + p.id + '\',\'' + miRol + '\',\'' + r + '\')" style="white-space:nowrap;padding:4px 8px;border-radius:8px;background:#fff;border:1px solid #D4AF37;font-size:10px;font-weight:700;cursor:pointer;">' + r + '</button>'; }).join('') +
-            '</div>' +
-            '<div style="padding:10px;background:#fff;display:flex;gap:6px;border-top:1px solid #E5E7EB;">' +
-                '<input id="inp-msg-kumu" type="text" onkeydown="if(event.key===\'Enter\') window.enviarMsgChatKumu(\'' + p.id + '\',\'' + miRol + '\')" placeholder="Escribe un mensaje..." style="flex:1;padding:8px 12px;border-radius:12px;border:1px solid #D1D5DB;font-size:12px;">' +
-                '<button onclick="window.enviarMsgChatKumu(\'' + p.id + '\',\'' + miRol + '\')" style="padding:8px 14px;border-radius:12px;background:#C85A17;color:#fff;font-weight:900;font-size:12px;border:none;cursor:pointer;">Enviar</button>' +
-            '</div></div>';
-        document.body.appendChild(div);
+        const modal = document.createElement('div');
+        modal.id = 'modalChatAnonimoKumu';
+        modal.className = 'fixed inset-0 bg-black/75 z-[10002] flex items-center justify-center p-4';
+        modal.innerHTML = `
+            <div class="bg-[#FDFBF7] w-full max-w-sm rounded-2xl overflow-hidden shadow-2xl border-2 border-[#D4AF37] flex flex-col max-h-[82vh]">
+                <div class="kumu-header px-4 py-3 text-white flex justify-between items-center">
+                    <div>
+                        <h3 class="text-xs font-extrabold text-[#D4AF37]">💬 CHAT INTERNO SEGURO KUMU</h3>
+                        <p class="text-[10px] text-emerald-200">🔒 Números de celular ocultos por privacidad</p>
+                    </div>
+                    <button onclick="document.getElementById('modalChatAnonimoKumu').remove()" class="text-white font-bold text-sm">✕</button>
+                </div>
+                <div class="p-3 overflow-y-auto space-y-2 flex-1 bg-slate-100 max-h-60">
+                    ${msgs.length === 0 ? '<p class="text-center text-gray-400 text-xs py-4">Escribe aquí para coordinar la entrega sin compartir números de teléfono.</p>' : msgs.map(m => `
+                        <div class="flex flex-col ${m.rol === miRol ? 'items-end' : 'items-start'}">
+                            <span class="text-[9px] text-gray-500 font-bold">${escaparHTML(m.rol)} • ${escaparHTML(m.hora)}</span>
+                            <div class="px-3 py-1.5 rounded-xl text-xs font-semibold max-w-[85%] ${m.rol === miRol ? 'bg-[#2D0B3A] text-[#D4AF37]' : 'bg-white text-gray-800 border'}">${escaparHTML(m.txt)}</div>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="p-2 bg-amber-50 border-t flex gap-1.5 overflow-x-auto kumu-scroll">
+                    ${rapidas.map(r => `<button onclick="window.enviarMensajeChatAnonimo('${p.id}','${miRol}','${r}')" class="px-2 py-1 bg-white border border-[#D4AF37] rounded-lg text-[10px] font-bold whitespace-nowrap">${r}</button>`).join('')}
+                </div>
+                <div class="p-2.5 bg-white border-t flex gap-1.5">
+                    <input id="inpTextoChatAnonimo" type="text" onkeydown="if(event.key==='Enter') window.enviarMensajeChatAnonimo('${p.id}','${miRol}')" placeholder="Escribe un mensaje..." class="flex-1 p-2 border rounded-xl text-xs font-semibold">
+                    <button onclick="window.enviarMensajeChatAnonimo('${p.id}','${miRol}')" class="btn-vaupes px-3 py-2 rounded-xl text-xs font-extrabold">Enviar</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
     };
 
-    window.enviarMsgChatKumu = async function(pedId, miRol, txtFijo) {
-        var inp = document.getElementById('inp-msg-kumu');
-        var txt = (txtFijo || (inp ? inp.value : '') || '').replace(/[\[\]|]/g, '').trim();
+    window.enviarMensajeChatAnonimo = async function(pedidoId, miRol, txtRapido) {
+        const inp = document.getElementById('inpTextoChatAnonimo');
+        const txt = limpiarInputUsuario(txtRapido || (inp ? inp.value : ''));
         if (!txt) return;
-        var res = await supabaseClient.from('pedidos').select('domiciliario_info').eq('id', pedId).single();
-        var actual = (res.data && res.data.domiciliario_info) || '';
-        var hora = new Date().toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' });
-        await supabaseClient.from('pedidos').update({ domiciliario_info: (actual + ' [CHAT:' + miRol + '|' + hora + '|' + txt + ']').trim() }).eq('id', pedId);
-        if (typeof initApp === 'function') initApp(true);
-        window.abrirChatInternoKumu(pedId, miRol);
+        const { data: p } = await supabaseClient.from('pedidos').select('domiciliario_info').eq('id', pedidoId).maybeSingle();
+        const hora = new Date().toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' });
+        const nuevo = `${(p && p.domiciliario_info) || ''} [CHAT:${miRol}|${hora}|${txt}]`.trim();
+        await supabaseClient.from('pedidos').update({ domiciliario_info: nuevo }).eq('id', pedidoId);
+        window.abrirChatAnonimoKumu(pedidoId, miRol);
     };
 
-    // 4. BOTÓN «⏱️ LISTO EN 5 MIN» (DE RESTAURANTE A REPARTIDORES) Y RESET A $0
-    window.avisarListo5MinKumu = async function(pedId) {
-        var res = await supabaseClient.from('pedidos').select('domiciliario_info').eq('id', pedId).single();
-        var act = ((res.data && res.data.domiciliario_info) || '').replace(/🔥\[LISTO EN 5 MIN[^\]]*\]/g, '').trim();
-        await supabaseClient.from('pedidos').update({ domiciliario_info: (act + ' 🔥[LISTO EN 5 MIN - ACÉRCATE AL LOCAL]').trim() }).eq('id', pedId);
-        if (typeof initApp === 'function') initApp(true);
-        await kumuAlert('¡Alerta enviada! Los repartidores ya ven en pantalla que el pedido sale de cocina en 5 minutos.', 'Listo en 5 min', '⏱️');
+    window.verFotoFachadaRepartidor = async function(pedidoId) {
+        const { data: p } = await supabaseClient.from('pedidos').select('domiciliario_info').eq('id', pedidoId).maybeSingle();
+        const m = ((p && p.domiciliario_info) || '').match(/\[FACHADA:(data:image\/[^\]]+)\]/);
+        if (!m) return kumuAlert('El cliente no adjuntó foto de fachada en este pedido.', '🏠 Sin Foto de Fachada', '🏠');
+        const modal = document.createElement('div');
+        modal.className = 'fixed inset-0 bg-black/80 z-[10003] flex items-center justify-center p-4';
+        modal.innerHTML = `
+            <div class="bg-[#FDFBF7] max-w-xs w-full rounded-2xl p-4 border-2 border-[#D4AF37] text-center space-y-2.5">
+                <h4 class="font-extrabold text-xs text-[#2D0B3A] uppercase">🏠 Foto de Fachada / Referencia</h4>
+                <img src="${m[1]}" class="w-full rounded-xl border border-amber-300">
+                <p class="text-[10px] text-gray-500">Se elimina automáticamente de la base de datos al entregar.</p>
+                <button onclick="this.closest('.fixed').remove()" class="w-full bg-[#2D0B3A] text-[#D4AF37] py-2 rounded-xl font-extrabold text-xs">Cerrar</button>
+            </div>
+        `;
+        document.body.appendChild(modal);
     };
 
-    window.borrarHistoricoCeroKumu = async function() {
-        if (!(await kumuConfirm('¿Borrar TODOS los pedidos y calificaciones de prueba para iniciar cuentas en $0 COP? (Tus locales y productos NO se borrarán)', 'Reiniciar a $0 COP', '🧹'))) return;
+    // Sobrescribir actualizarEstado para exigir el PIN de 4 dígitos al entregar y autodestruir chat + foto de fachada
+    const _origActualizarEstado = actualizarEstado;
+    actualizarEstado = async function(id, estado) {
+        if (estado === 'Entregado') {
+            const { data: p } = await supabaseClient.from('pedidos').select('direccion_entrega, domiciliario_info').eq('id', id).maybeSingle();
+            const mPin = ((p && p.direccion_entrega) || '').match(/\[PIN:\s*(\d{4})\]/);
+            if (mPin && !modoAdminVisible) {
+                const pinDig = await kumuPrompt('🏢🪖 Entrega exclusiva en Portería / Puerta.\nSolicita al cliente el PIN de 4 dígitos para cerrar la entrega:', '', '🔐 Validar PIN de Entrega', '🔑', 'number');
+                if (!pinDig || pinDig.trim() !== mPin[1]) {
+                    await kumuAlert('El PIN ingresado no coincide con el del cliente. Verifica en puerta.', '❌ PIN Incorrecto', '🚫');
+                    return;
+                }
+            }
+            // Autodestruir foto de fachada y mensajes de chat para no llenar Supabase
+            const infoLimpia = ((p && p.domiciliario_info) || '')
+                .replace(/\[FACHADA:[^\]]+\]/g, '')
+                .replace(/\[CHAT:[^\]]+\]/g, '')
+                .replace(/🔥\[Sale en 5 min[^\]]*\]/g, '')
+                .trim();
+            await supabaseClient.from('pedidos').update({ estado: 'Entregado', domiciliario_info: infoLimpia }).eq('id', id);
+            await kumuAlert('¡Pedido entregado! El chat y la foto de referencia se borraron automáticamente por privacidad.', '✅ Entrega Exitosa', '🎉');
+            initApp(true);
+            return;
+        }
+        await _origActualizarEstado(id, estado);
+    };
+
+    // En la vista del Repartidor: ocultar pedidos "Por Verificar Pago" de Transferencia y cambiar botón WhatsApp por Chat Interno
+    const _origRenderDomiciliarioView = renderDomiciliarioView;
+    renderDomiciliarioView = async function(container) {
+        await _origRenderDomiciliarioView(container);
+        const lista = document.getElementById('listaPedidos');
+        if (!lista) return;
+
+        // Reemplazar botones de WhatsApp del cliente por el botón de Chat Interno Anónimo
+        lista.querySelectorAll('a[href*="wa.me/57"]').forEach(a => {
+            const card = a.closest('.bg-white.border.rounded-2xl');
+            if (!card) return;
+            const btnGps = card.querySelector('button[onclick^="transmitirGPSPedido"]');
+            const mId = btnGps ? btnGps.getAttribute('onclick').match(/'([^']+)'/) : null;
+            if (mId) {
+                const pedId = mId[1];
+                const btnChat = document.createElement('button');
+                btnChat.type = 'button';
+                btnChat.className = 'block w-full text-center bg-[#2D0B3A] text-[#D4AF37] border border-[#D4AF37] font-extrabold py-1.5 px-1 rounded-lg text-[10px]';
+                btnChat.innerHTML = '💬 Chat Cliente';
+                btnChat.onclick = () => window.abrirChatAnonimoKumu(pedId, 'Repartidor');
+                a.replaceWith(btnChat);
+
+                // Botón para ver Foto de Fachada bajo demanda
+                const btnFach = document.createElement('button');
+                btnFach.type = 'button';
+                btnFach.className = 'w-full mt-1 bg-purple-100 text-[#2D0B3A] border border-purple-300 font-extrabold py-1 px-2 rounded-lg text-[10px]';
+                btnFach.innerHTML = '🏠 Ver Foto de Fachada (Si adjuntó)';
+                btnFach.onclick = () => window.verFotoFachadaRepartidor(pedId);
+                card.querySelector('.grid.grid-cols-3')?.insertAdjacentElement('afterend', btnFach);
+            }
+        });
+    };
+
+    // En la barra de seguimiento del Cliente: agregar botón de Chat Interno con el Repartidor y mostrar su PIN
+    const _origRenderSeguimiento = renderizarSeguimientoCliente;
+    renderizarSeguimientoCliente = async function(esAutoRefresh = false) {
+        await _origRenderSeguimiento(esAutoRefresh);
+        const cont = document.getElementById('cajaSeguimientoMapaCliente');
+        const ultimoId = localStorage.getItem('kumu_pedido_activo_id');
+        if (!cont || !ultimoId || !cont.innerHTML.trim()) return;
+
+        // Quitar enlace de WhatsApp que expone el número y poner el Chat Interno Anónimo + PIN visible
+        const linkWaDomi = cont.querySelector('a[href*="wa.me/57"]');
+        if (linkWaDomi) linkWaDomi.remove();
+
+        if (!document.getElementById('btnChatClienteConDomi')) {
+            const pinGuardado = localStorage.getItem('kumu_pin_activo_' + ultimoId) || '----';
+            const barraExtra = document.createElement('div');
+            barraExtra.id = 'btnChatClienteConDomi';
+            barraExtra.className = 'flex gap-2 pt-2 border-t border-emerald-200 mt-2';
+            barraExtra.innerHTML = `
+                <span class="bg-[#D4AF37] text-[#2D0B3A] font-extrabold text-[11px] px-2.5 py-1.5 rounded-lg">🔐 PIN Puerta: ${escaparHTML(pinGuardado)}</span>
+                <button onclick="window.abrirChatAnonimoKumu('${ultimoId}','Cliente')" class="flex-1 bg-[#2D0B3A] text-[#D4AF37] py-1.5 px-3 rounded-lg text-xs font-extrabold shadow">💬 Chat con mi Repartidor</button>
+            `;
+            cont.firstElementChild?.appendChild(barraExtra);
+        }
+    };
+
+    // 8. CALIFICACIÓN DOBLE SEPARADA (1. COMERCIO ALIADO / 2. REPARTIDOR) Y BOTÓN REINICIAR A $0 COP
+    function activarTarjetaCalificacionDoble() {
+        const modalCal = document.getElementById('modal-calificacion');
+        if (!modalCal || modalCal.getAttribute('data-doble-lista') === '1') return;
+        modalCal.setAttribute('data-doble-lista', '1');
+        const spanNom = document.getElementById('nombre-comercio-calificar');
+        const htmlSpan = spanNom ? spanNom.outerHTML : '<span id="nombre-comercio-calificar">el Local</span>';
+
+        modalCal.innerHTML = `
+            <p style="margin-bottom:6px; font-weight:800; font-size:12px; color:#2D0B3A;">🏪 1. ¿Qué tal tu producto y empaque en ${htmlSpan}?</p>
+            <div style="display:flex; justify-content:space-around; font-size:22px; margin-bottom:10px; background:#F8F6F2; padding:6px; border-radius:12px;">
+                <button type="button" onclick="window.califTempLocal=1" style="background:none;border:none;cursor:pointer;">😡</button>
+                <button type="button" onclick="window.califTempLocal=2" style="background:none;border:none;cursor:pointer;">😕</button>
+                <button type="button" onclick="window.califTempLocal=3" style="background:none;border:none;cursor:pointer;">😐</button>
+                <button type="button" onclick="window.califTempLocal=4" style="background:none;border:none;cursor:pointer;">🙂</button>
+                <button type="button" onclick="window.califTempLocal=5" style="background:none;border:none;cursor:pointer;">😍</button>
+            </div>
+            <p style="margin-bottom:6px; font-weight:800; font-size:12px; color:#1B4D3E;">🛵 2. ¿Qué tal la atención de tu Repartidor?</p>
+            <div style="display:flex; justify-content:space-around; font-size:22px; margin-bottom:10px; background:#F8F6F2; padding:6px; border-radius:12px;">
+                <button type="button" onclick="window.califTempDomi=1" style="background:none;border:none;cursor:pointer;">😡</button>
+                <button type="button" onclick="window.califTempDomi=2" style="background:none;border:none;cursor:pointer;">😕</button>
+                <button type="button" onclick="window.califTempDomi=3" style="background:none;border:none;cursor:pointer;">😐</button>
+                <button type="button" onclick="window.califTempDomi=4" style="background:none;border:none;cursor:pointer;">🙂</button>
+                <button type="button" onclick="window.califTempDomi=5" style="background:none;border:none;cursor:pointer;">😍</button>
+            </div>
+            <button type="button" onclick="window.guardarCalificacionSeparada()" style="width:100%; padding:10px; border-radius:12px; background:#C85A17; color:#fff; font-weight:900; font-size:12px; border:none; cursor:pointer;">✅ Enviar Calificaciones</button>
+        `;
+    }
+
+    window.guardarCalificacionSeparada = async function() {
+        const hist = JSON.parse(localStorage.getItem('kumu_calif_repartidores') || '[]');
+        hist.push({ puntos: window.califTempDomi || 5, fecha: new Date().toISOString() });
+        localStorage.setItem('kumu_calif_repartidores', JSON.stringify(hist));
+        await enviarCalificacion(window.califTempLocal || 5);
+    };
+
+    window.reiniciarHistoricoCeroAdmin = async function() {
+        if (!(await kumuConfirm('¿Borrar TODOS los pedidos y calificaciones de prueba para dejar las cuentas en $0 COP?\n(Tus comercios y productos NO se tocarán).', '🧹 Pruebas a $0 COP', '🧹'))) return;
         await supabaseClient.from('pedidos').delete().neq('estado', '__NUNCA__');
         await supabaseClient.from('calificaciones').delete().gte('puntuacion', 0);
         localStorage.removeItem('kumu_pedido_activo_id');
-        if (typeof initApp === 'function') initApp(true);
-        await kumuAlert('¡Pedidos, viajes y calificaciones reiniciados en $0 COP!', 'Sistema Limpio', '✅');
+        localStorage.removeItem('kumu_gastos_diarios');
+        await kumuAlert('¡Histórico de pedidos y calificaciones reiniciado en $0 COP!', '✅ Cuentas en $0', '🧹');
+        initApp(true);
     };
 
-    // 5. VIGILANTE AUTOMÁTICO DE INTERFAZ (PESTAÑAS BEIJÚ/PRIME!, CHAT PRIVADO Y BOTÓN 5 MIN)
-    var obs = new MutationObserver(function() {
-        actualizarModalCalificacionDoble();
-
-        // A. Inyectar botón de Foto de Fachada en el carrito si existe campo de dirección
-        var camposDir = document.querySelectorAll('input[placeholder*="Dirección"], input[placeholder*="dirección"], #chk-direccion, #cliente-direccion');
-        camposDir.forEach(function(inp) {
-            if (inp.parentNode && !document.getElementById('btn-kumu-fachada')) {
-                var b = document.createElement('button');
-                b.id = 'btn-kumu-fachada';
-                b.type = 'button';
-                b.onclick = window.adjuntarFotoFachadaKumu;
-                b.style.cssText = 'width:100%;margin-top:6px;padding:8px;border-radius:10px;background:#F3E8FF;border:1px dashed #2D0B3A;color:#2D0B3A;font-weight:800;font-size:11px;cursor:pointer;';
-                b.innerHTML = window.fotoFachadaTemp ? '✅ Foto de Fachada Adjunta (Se borrará al entregar)' : '📸 Adjuntar Foto de Fachada / Portón (Opcional)';
-                inp.insertAdjacentElement('afterend', b);
+    const _origRenderNegociosView = renderNegociosView;
+    renderNegociosView = async function(container) {
+        await _origRenderNegociosView(container);
+        if (modoAdminVisible) {
+            const btnBackup = container.querySelector('button[onclick="descargarBackupSupabase()"]');
+            if (btnBackup && !document.getElementById('btnResetCeroKumu')) {
+                const btnZero = document.createElement('button');
+                btnZero.id = 'btnResetCeroKumu';
+                btnZero.className = 'bg-red-700 text-white px-2.5 py-1 rounded-lg text-[10px] font-extrabold shadow ml-1';
+                btnZero.innerHTML = '🧹 Pruebas a $0';
+                btnZero.onclick = window.reiniciarHistoricoCeroAdmin;
+                btnBackup.insertAdjacentElement('afterend', btnZero);
             }
-        });
-
-        // B. En vista Repartidor: ocultar WhatsApp directo del cliente y reemplazar por Chat Interno Anónimo
-        var vistaRep = document.getElementById('view-repartidor') || document.getElementById('repartidor-view') || document.getElementById('domiciliario-container');
-        if (vistaRep) {
-            vistaRep.querySelectorAll('a[href*="wa.me"]').forEach(function(linkWA) {
-                var contenedor = linkWA.closest('div[style*="border"], div.rounded-2xl, div.p-3, div.p-4') || linkWA.parentNode;
-                var matchId = contenedor ? contenedor.innerHTML.match(/#([a-fA-F0-9]{4,8})/) : null;
-                var listaP = window.pedidosCache || window.pedidosGlobal || [];
-                var ped = matchId ? listaP.find(function(x) { return String(x.id).toLowerCase().startsWith(matchId[1].toLowerCase()); }) : null;
-                if (ped) {
-                    var btnC = document.createElement('button');
-                    btnC.type = 'button';
-                    btnC.style.cssText = 'padding:6px 10px;border-radius:10px;background:#2D0B3A;color:#D4AF37;font-weight:900;font-size:11px;border:1px solid #D4AF37;cursor:pointer;margin:2px;';
-                    btnC.innerHTML = '💬 Chat con Cliente (' + leerMsgsChat(ped).length + ')';
-                    btnC.onclick = function() { window.abrirChatInternoKumu(ped.id, 'Repartidor'); };
-                    linkWA.replaceWith(btnC);
-                }
-            });
         }
-    });
+    };
 
-    obs.observe(document.body, { childList: true, subtree: true });
-    window.addEventListener('DOMContentLoaded', actualizarModalCalificacionDoble);
-})();
+    activarTarjetaCalificacionDoble();
 </script>
-<!-- === FIN PARCHE KUMU === -->
+<!-- === FIN BLOQUE DEFINITIVO KUMU === -->
 </body>
 </html>
