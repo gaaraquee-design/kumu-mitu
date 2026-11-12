@@ -4215,7 +4215,7 @@
             <button onclick="enviarCalificacion(5)" style="background:none; border:none; cursor:pointer;">😍</button>
         </div>
     </div>
-    <!-- === INICIO BLOQUE 1 DE 2 KUMU V6 (VERIFICADO SIN CONFLICTOS) === -->
+    <!-- === INICIO BLOQUE 1 DE 2 KUMU V7 (INTEGRAL VERIFICADO) === -->
 <script>
     window.fotoFachadaTemp = window.fotoFachadaTemp || '';
     window.califTempLocal = 5;
@@ -4234,42 +4234,20 @@
         'Hamburguesas', 'Salchipapas', 'Perros Calientes', 'Carnes', 'Bebidas', 'Tortas & Postres', 'Ropa & Calzado', 'Artesanías & Chagra'
     ];
 
-    // MAPA COMPLETO DE EMOJIS ALUSIVOS PARA TODAS LAS CATEGORÍAS (SIN ROMPER EL FILTRO DE SUPABASE)
     obtenerTextoConEmojiCategoria = function(cat) {
         var limpio = (cat || '').trim();
         var mapa = {
-            'Todos': '✨ Todos',
-            'General': '🛍️ General',
-            // PRIME!
-            'Cerdo': '🐖 Cerdo',
-            'Condimentos y Salsas': '🧂 Condimentos y Salsas',
-            'Embutidos': '🌭 Embutidos',
-            'Frutos Secos': '🥜 Frutos Secos',
-            'Lácteos': '🧀 Lácteos',
-            'Pescados y Mariscos': '🐟 Pescados y Mariscos',
-            'Pollo': '🍗 Pollo',
-            'Res': '🥩 Res',
-            // Beijú
-            'Vegetarianos': '🥗 Vegetarianos',
-            'Especiales': '🌟 Especiales',
-            'Carne': '🥩 Carne',
-            'Dulces': '🍯 Dulces',
-            'Mixtos': '🥙 Mixtos',
-            // Veterinaria
-            'Antiparasitarios por Peso': '💊 Antiparasitarios por Peso',
-            'Concentrados y Bultos': '🦴 Concentrados y Bultos',
-            'Farmacia Veterinaria': '🩺 Farmacia Veterinaria',
-            'Higiene y Belleza': '🧼 Higiene y Belleza',
-            'Juguetes y Accesorios': '🎾 Juguetes y Accesorios',
-            // Restaurantes y Emprendedores
-            'Tortas & Postres': '🍰 Tortas & Postres',
-            'Ropa & Calzado': '👕 Ropa & Calzado',
-            'Artesanías & Chagra': '🧺 Artesanías & Chagra',
-            'Hamburguesas': '🍔 Hamburguesas',
-            'Salchipapas': '🍟 Salchipapas',
-            'Perros Calientes': '🌭 Perros Calientes',
-            'Carnes': '🥩 Carnes',
-            'Bebidas': '🥤 Bebidas'
+            'Todos': '✨ Todos', 'General': '🛍️ General',
+            'Cerdo': '🐖 Cerdo', 'Condimentos y Salsas': '🧂 Condimentos y Salsas', 'Embutidos': '🌭 Embutidos',
+            'Frutos Secos': '🥜 Frutos Secos', 'Lácteos': '🧀 Lácteos', 'Pescados y Mariscos': '🐟 Pescados y Mariscos',
+            'Pollo': '🍗 Pollo', 'Res': '🥩 Res',
+            'Vegetarianos': '🥗 Vegetarianos', 'Especiales': '🌟 Especiales', 'Carne': '🥩 Carne',
+            'Dulces': '🍯 Dulces', 'Mixtos': '🥙 Mixtos',
+            'Antiparasitarios por Peso': '💊 Antiparasitarios por Peso', 'Concentrados y Bultos': '🦴 Concentrados y Bultos',
+            'Farmacia Veterinaria': '🩺 Farmacia Veterinaria', 'Higiene y Belleza': '🧼 Higiene y Belleza', 'Juguetes y Accesorios': '🎾 Juguetes y Accesorios',
+            'Tortas & Postres': '🍰 Tortas & Postres', 'Ropa & Calzado': '👕 Ropa & Calzado', 'Artesanías & Chagra': '🧺 Artesanías & Chagra',
+            'Hamburguesas': '🍔 Hamburguesas', 'Salchipapas': '🍟 Salchipapas', 'Perros Calientes': '🌭 Perros Calientes',
+            'Carnes': '🥩 Carnes', 'Bebidas': '🥤 Bebidas'
         };
         return mapa[limpio] || ('🏷️ ' + limpio);
     };
@@ -4290,6 +4268,26 @@
         return window._kumuOrigNormCat(cat, catComercio || '');
     };
 
+    // 1. EXTRACTOR DE METADATOS AMPLIADO: SOPORTA NÚMERO DE WHATSAPP DE PEDIDOS SEPARADO DEL DE CONSIGNACIONES [WA:3xxxxxxxxx]
+    window.obtenerWhatsAppPedidosComercio = function(comercioObj) {
+        var rawDir = (comercioObj && comercioObj.direccion) || '';
+        var mWA = rawDir.match(/\[WA:(\d{10})\]/);
+        if (mWA && mWA[1]) return mWA[1];
+        var rawTel = (comercioObj && comercioObj.telefono) || '';
+        var mTel = rawTel.replace(/(\d)\s+(\d)/g, '$1$2').match(/3\d{9}/);
+        return mTel ? mTel[0] : (rawTel.replace(/\D/g, '').slice(0, 10) || '3215698079');
+    };
+
+    window._kumuOrigExtraerMeta = window._kumuOrigExtraerMeta || extraerMetadatosComercio;
+    extraerMetadatosComercio = function(comercio) {
+        var res = window._kumuOrigExtraerMeta(comercio);
+        var rawDir = (comercio && comercio.direccion) || '';
+        var mWA = rawDir.match(/\[WA:(\d{10})\]/);
+        res.whatsappPedidos = mWA ? mWA[1] : '';
+        res.dirLimpia = (res.dirLimpia || '').replace(/\[WA:\d+\]/g, '').trim();
+        return res;
+    };
+
     ocultarPinVisual = function(texto) {
         if (!texto) return '';
         return String(texto)
@@ -4297,6 +4295,7 @@
             .replace(/\[FACHADA:[^\]]+\]/g, '')
             .replace(/\[CHAT:[^\]]+\]/g, '')
             .replace(/\[VIP_SUBSIDIO_KUMU:\d+\]/g, '')
+            .replace(/\[WA:\d+\]/g, '')
             .replace(/\[Aceptó T&C[^\]]+\]/g, '')
             .trim();
     };
@@ -4313,7 +4312,81 @@
             .trim();
     };
 
-    // 1. CARRUSEL DE 5 BANNERS NÍTIDOS (960x320 PX)
+    // 2. CABECERA SOLO CON EL SOL (☀️) O LA NUBE (🌧️) SIN "$4k/$5k" Y PIE DE PÁGINA SOLO "🍄 Kumu Marketplace"
+    window._kumuOrigRenderHeader = window._kumuOrigRenderHeader || renderHeader;
+    renderHeader = function(container) {
+        window._kumuOrigRenderHeader(container);
+        var btnClima = container.querySelector('button[onclick*="explicarClima"]');
+        if (btnClima) {
+            btnClima.innerHTML = estaLloviendo ? '🌧️' : '☀️';
+            btnClima.title = 'Toca para ver el estado del clima en Mitú';
+        }
+    };
+
+    window._kumuOrigRenderFooter = window._kumuOrigRenderFooter || renderFooterLegal;
+    renderFooterLegal = function(container) {
+        window._kumuOrigRenderFooter(container);
+        var f = document.getElementById('footerLegalUnicoKumu');
+        if (f) {
+            var pTit = f.querySelector('p');
+            if (pTit) pTit.textContent = '🍄 Kumu Marketplace';
+        }
+    };
+
+    // 3. CONVERSIÓN AUTOMÁTICA INTELIGENTE DE CUALQUIER IMAGEN SUBIDA AL BANNER (ADAPTACIÓN PERFECTA 960x320 SIN CORTAR NADA)
+    window._kumuOrigCargarImgGaleria = window._kumuOrigCargarImgGaleria || cargarImagenGaleria;
+    cargarImagenGaleria = function(event, tipo) {
+        if (tipo === 'banner') {
+            var file = event.target.files && event.target.files[0];
+            if (!file) return;
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var img = new Image();
+                img.onload = function() {
+                    var cv = document.createElement('canvas');
+                    var W = 960, H = 320;
+                    cv.width = W; cv.height = H;
+                    var ctx = cv.getContext('2d');
+                    var imgRatio = img.width / img.height;
+                    var bannerRatio = W / H;
+
+                    // Fondo ambiental desenfocado de la misma imagen para que si es cuadrada/vertical nunca queden bordes vacíos ni se corte información
+                    ctx.save();
+                    ctx.filter = 'blur(18px) brightness(0.65)';
+                    ctx.drawImage(img, -20, -20, W + 40, H + 40);
+                    ctx.restore();
+
+                    ctx.save();
+                    ctx.filter = 'contrast(1.06) saturate(1.10)';
+                    if (Math.abs(imgRatio - bannerRatio) < 0.85) {
+                        // Si ya es horizontal cercana al formato del banner, encuadrar suavemente al centro
+                        var sw = img.width, sh = img.height, sx = 0, sy = 0;
+                        if (imgRatio > bannerRatio) { sw = img.height * bannerRatio; sx = (img.width - sw) / 2; }
+                        else { sh = img.width / bannerRatio; sy = (img.height - sh) / 2; }
+                        ctx.drawImage(img, sx, sy, sw, sh, 0, 0, W, H);
+                    } else {
+                        // Si es póster vertical o cuadrado, mostrar el 100% de la imagen nítida y centrada sobre el fondo adaptado
+                        var scale = Math.min(W / img.width, H / img.height);
+                        var dw = img.width * scale, dh = img.height * scale;
+                        var dx = (W - dw) / 2, dy = (H - dh) / 2;
+                        ctx.drawImage(img, 0, 0, img.width, img.height, dx, dy, dw, dh);
+                    }
+                    ctx.restore();
+
+                    fotoBase64Banner = cv.toDataURL('image/webp', 0.86);
+                    if (fotoBase64Banner.indexOf('data:image/webp') !== 0) {
+                        fotoBase64Banner = cv.toDataURL('image/jpeg', 0.86);
+                    }
+                    kumuAlert('¡Imagen convertida y adaptada automáticamente a las dimensiones óptimas del Banner (960×320 px)!', '📸 Imagen Adaptada al Banner', '✨');
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+            return;
+        }
+        window._kumuOrigCargarImgGaleria(event, tipo);
+    };
+
     var BANNERS_5_DEFAULT = [
         { id: 'b1', etiqueta: '🍄 PILOTO OFICIAL KUMU', titulo: '¡Todo Mitú en la puerta de tu casa!', subtitulo: 'Restaurantes, Beijú, PRIME!, Veterinaria, Droguería y Sanvi', destino: 'CATALOGO', imagen: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=960&h=320&fit=crop&q=85' },
         { id: 'b2', etiqueta: '🛒 SUPERMERCADO PRIME!', titulo: 'Cerdo, Res, Pollo, Lácteos y Salsas', subtitulo: 'Pide tu mercado fácil y recíbelo rápido con PIN de seguridad', destino: 'PRIME', imagen: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=960&h=320&fit=crop&q=85' },
@@ -4339,8 +4412,8 @@
 
         cont.innerHTML =
             '<div onclick="abrirAccionBanner(' + idxActual + ')" ontouchstart="pausaCarruselHasta=Date.now()+12000" style="height:140px;" class="relative w-full rounded-2xl overflow-hidden shadow-lg border-2 border-[#D4AF37] cursor-pointer group bg-[#2D0B3A] select-none">' +
-                '<img src="' + escaparHTML(b.imagen) + '" loading="lazy" style="width:100%; height:140px; object-fit:cover; object-position:center center; filter:contrast(1.08) saturate(1.15) brightness(1.04);" class="group-hover:scale-105 transition duration-500" onerror="this.src=\'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=960&h=320&fit=crop\'">' +
-                '<div class="absolute inset-x-0 bottom-0 h-3/5 bg-gradient-to-t from-black/85 via-black/30 to-transparent pointer-events-none"></div>' +
+                '<img src="' + escaparHTML(b.imagen) + '" loading="lazy" style="width:100%; height:140px; object-fit:cover; object-position:center center; filter:contrast(1.08) saturate(1.14) brightness(1.04);" class="group-hover:scale-105 transition duration-500" onerror="this.src=\'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=960&h=320&fit=crop\'">' +
+                '<div class="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/80 via-black/25 to-transparent pointer-events-none"></div>' +
                 '<div class="absolute inset-0 px-7 py-2.5 flex flex-col justify-between">' +
                     '<div class="flex justify-between items-center">' +
                         '<span class="bg-[#D4AF37] text-[#2D0B3A] text-[9px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider shadow">' + escaparHTML(b.etiqueta || '✨ DESTACADO EN MITÚ') + '</span>' +
@@ -4361,7 +4434,61 @@
             '</div>';
     };
 
-    // 2. VISTA CLIENTE: BOTÓN "🟢 LOCALES ABIERTOS", PESTAÑAS CON EMOJIS Y BUSCADOR INTERNO
+    // 4. CÓDIGO QR LIMPIO: QUITAR LAS LETRAS DE ABAJO ("Pide fácil..." y "domicilios-mitu...") SIN REEMPLAZARLAS POR NADA
+    copiarEnlaceDirectoTiendaWA = async function(comercioId, e) {
+        if (e) e.stopPropagation();
+        var c = (windowComerciosCache || []).find(function(item) { return String(item.id) === String(comercioId); }) || comercioLogueado || comercioSeleccionado;
+        var nombreLocal = c ? c.nombre : 'Tienda Aliada Kumu';
+        var urlDirecta = window.location.origin + window.location.pathname + '?local=' + encodeURIComponent(comercioId);
+        linkTiendaPosterActual = urlDirecta;
+        nombreTiendaPosterActual = nombreLocal;
+
+        var canvas = document.getElementById('canvasPosterTienda');
+        if (canvas) {
+            var ctx = canvas.getContext('2d');
+            dibujarPlantilla1Pergamino(ctx, 600, 840, 'KUMU • VITRINA OFICIAL', nombreLocal.toUpperCase().slice(0, 28));
+            dibujarEmblemaLogo1EnCanvas(ctx, 300, 235, 52);
+
+            ctx.fillStyle = '#FFFFFF';
+            ctx.strokeStyle = '#D4AF37';
+            ctx.lineWidth = 5;
+            ctx.beginPath();
+            ctx.roundRect(130, 315, 340, 340, 22);
+            ctx.fill();
+            ctx.stroke();
+
+            if (typeof qrcode === 'function') {
+                var qr = qrcode(0, 'M');
+                qr.addData(urlDirecta);
+                qr.make();
+                var count = qr.getModuleCount();
+                var size = 290;
+                var cell = size / count;
+                var startX = 155, startY = 340;
+                ctx.fillStyle = '#2D0B3A';
+                for (var r = 0; r < count; r++) {
+                    for (var col = 0; col < count; col++) {
+                        if (qr.isDark(r, col)) {
+                            ctx.fillRect(startX + col * cell, startY + r * cell, Math.ceil(cell), Math.ceil(cell));
+                        }
+                    }
+                }
+            }
+            // Tal como pediste en el PDF: se eliminan por completo las frases inferiores y no se reemplazan por nada
+            canvas.style.cursor = 'pointer';
+            canvas.onclick = function() {
+                document.getElementById('modalPosterQRTienda').classList.add('hidden');
+                seleccionarComercioPorId(comercioId);
+            };
+        }
+
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText('🔥 ¡Mira nuestro catálogo y pide en *' + nombreLocal + '* por *Kumu 🍄*!\n👉 Toca aquí: ' + urlDirecta);
+        }
+        document.getElementById('modalPosterQRTienda').classList.remove('hidden');
+    };
+
+    // 5. VISTA CLIENTE, PESTAÑAS CON EMOJIS, CARRITO CON "SOPORTE Y PLATAFORMA" Y TARIFA $4k/$5k
     window.filtrarProductosDentroDeTienda = function(texto) {
         window.busquedaInternaTienda = (texto || '').toLowerCase().trim();
         var pList = document.getElementById('listaProductos');
@@ -4408,7 +4535,6 @@
             barraCat.insertAdjacentElement('beforebegin', divBusq);
         }
 
-        // Pestañas exclusivas con su respectivo Emoji Alusivo
         var pestanasExclusivas = obtenerCategoriasValidasDeLocal(comercioSeleccionado);
         if (pestanasExclusivas && barraCat) {
             window._categoriasProdsActuales = pestanasExclusivas;
@@ -4427,59 +4553,6 @@
                 return '<option value="' + escaparHTML(op) + '" ' + (catActual === op ? 'selected' : '') + '>' + escaparHTML(obtenerTextoConEmojiCategoria(op)) + '</option>';
             }).join('');
         });
-    };
-
-    window._kumuOrigRenderProdsAliado = window._kumuOrigRenderProdsAliado || renderProductosAliado;
-    renderProductosAliado = async function() {
-        await window._kumuOrigRenderProdsAliado();
-        var cont = document.getElementById('listaProductosAliado');
-        if (!cont || !comercioLogueado) return;
-        var exc = obtenerCategoriasValidasDeLocal(comercioLogueado);
-        var ops = exc ? ['General'].concat(exc.filter(function(c) { return c !== 'Todos'; })) : TODAS_CATEGORIAS_PRODUCTOS;
-        cont.querySelectorAll('button[onclick^="configurarCuposProducto"]').forEach(function(btnCupo) {
-            var m = btnCupo.getAttribute('onclick').match(/'([^']+)'/);
-            if (!m || btnCupo.parentNode.querySelector('.sel-cat-aliado')) return;
-            var prodId = m[1];
-            var prodObj = (windowProductosCache || []).find(function(p) { return String(p.id) === String(prodId); });
-            var catAct = (prodObj && prodObj.categoria) ? prodObj.categoria.trim() : 'General';
-            var sel = document.createElement('select');
-            sel.className = 'sel-cat-aliado p-1 border rounded text-[10px] bg-amber-50 font-bold text-[#2D0B3A]';
-            sel.onchange = function() { cambiarCategoriaProducto(prodId, this.value); };
-            sel.innerHTML = ops.map(function(op) { return '<option value="' + escaparHTML(op) + '" ' + (catAct === op ? 'selected' : '') + '>' + escaparHTML(obtenerTextoConEmojiCategoria(op)) + '</option>'; }).join('');
-            btnCupo.insertAdjacentElement('beforebegin', sel);
-        });
-    };
-
-    // 3. SELECTOR DE PESO VETERINARIA, COPIAR CUENTA NEQUI/BRE-B Y FOTO DE FACHADA (CÁMARA Y GALERÍA)
-    window._kumuOrigAgregarCarrito = window._kumuOrigAgregarCarrito || agregarAlCarrito;
-    agregarAlCarrito = async function(producto) {
-        var comb = ((producto.nombre || '') + ' ' + (producto.descripcion || '')).toLowerCase();
-        if (comb.indexOf('[peso]') !== -1 || comb.indexOf('nexgard') !== -1 || comb.indexOf('simparica') !== -1 || comb.indexOf('bravecto') !== -1 || comb.indexOf('antiparasitario') !== -1) {
-            var peso = await kumuPrompt('⚖️ ' + producto.nombre + ':\nIndica el peso de tu mascota en kg (Ej: 2 a 4 kg / 4.1 a 10 kg / 10.1 a 25 kg):', '4.1 a 10 kg', '🐾 Peso de Mascota', '⚖️');
-            if (!peso || !peso.trim()) return;
-            producto = Object.assign({}, producto, { nombre: producto.nombre + ' [Peso: ' + limpiarInputUsuario(peso) + ']' });
-        }
-        await window._kumuOrigAgregarCarrito(producto);
-    };
-
-    copiarCuentaComercioSeleccionado = async function() {
-        var raw = (comercioSeleccionado && comercioSeleccionado.telefono) || '';
-        var sinEsp = raw.replace(/(\d)\s+(\d)/g, '$1$2').replace(/(\d)\s+(\d)/g, '$1$2');
-        var mCel = sinEsp.match(/3\d{9}/) || sinEsp.match(/\d{7,15}/);
-        var mLlave = sinEsp.match(/@[a-zA-Z0-9._-]+/) || raw.match(/llave[:\s]+([a-zA-Z0-9.@_-]+)/i);
-        var numNequi = mCel ? mCel[0] : sinEsp.trim();
-        var llaveBreB = mLlave ? (mLlave[1] || mLlave[0]) : '';
-
-        if (navigator.clipboard) await navigator.clipboard.writeText(numNequi);
-        if (llaveBreB) {
-            var copiarLlave = await kumuConfirm('📋 Número Nequi copiado sin espacios: ' + numNequi + '\n\n🔑 ¿Deseas copiar la Llave Bre-B (' + llaveBreB + ') por separado?', 'Nequi y Llave Bre-B', '💳');
-            if (copiarLlave && navigator.clipboard) {
-                await navigator.clipboard.writeText(llaveBreB);
-                await kumuAlert('🔑 Llave Bre-B copiada:\n\n' + llaveBreB, 'Llave Copiada', '✅');
-            }
-        } else {
-            await kumuAlert('📋 Número copiado sin espacios:\n\n' + numNequi + '\n\nDatos: ' + raw, 'Cuenta Copiada', '💳');
-        }
     };
 
     window.adjuntarFotoFachadaCliente = function(usarCamara) {
@@ -4511,7 +4584,6 @@
         inp.click();
     };
 
-    // 4. CARRITO SIN LA PALABRA "GARANTÍA" ("🛡️ Soporte y Plataforma:") Y TARIFA $4.000 / $5.000
     actualizarBarraCarritoFlotante = function() {
         var barra = document.getElementById('barraCarritoFlotante');
         var badge = document.getElementById('badgeCantCarritoFlotante');
@@ -4601,219 +4673,374 @@
         actualizarBarraCarritoFlotante();
     };
 </script>
-<!-- === FIN BLOQUE 1 DE 2 KUMU V6 === -->
-<!-- === INICIO BLOQUE 1 DE 2 KUMU V6 (VERIFICADO SIN CONFLICTOS) === -->
+<!-- === FIN BLOQUE 1 DE 2 KUMU V7 === -->
+<!-- === INICIO BLOQUE 2 DE 2 KUMU V7 (MACAO, DOBLE NÚMERO TEXAS Y CARGA MASIVA PRIME!) === -->
 <script>
-    window.fotoFachadaTemp = window.fotoFachadaTemp || '';
-    window.califTempLocal = 5;
-    window.califTempDomi = 5;
-    window.busquedaInternaTienda = '';
-    window.esDomicilioGratisVIP = false;
-
-    var CATEGORIAS_BEIJU_OFICIAL = ['Todos', 'Vegetarianos', 'Especiales', 'Carne', 'Pollo', 'Cerdo', 'Dulces', 'Mixtos'];
-    var CATEGORIAS_PRIME_OFICIAL = ['Todos', 'Cerdo', 'Condimentos y Salsas', 'Embutidos', 'Frutos Secos', 'Lácteos', 'Pescados y Mariscos', 'Pollo', 'Res'];
-    var CATEGORIAS_VET_OFICIAL = ['Todos', 'Antiparasitarios por Peso', 'Concentrados y Bultos', 'Farmacia Veterinaria', 'Higiene y Belleza', 'Juguetes y Accesorios'];
-
-    var TODAS_CATEGORIAS_PRODUCTOS = [
-        'General', 'Cerdo', 'Condimentos y Salsas', 'Embutidos', 'Frutos Secos', 'Lácteos', 'Pescados y Mariscos', 'Pollo', 'Res',
-        'Vegetarianos', 'Especiales', 'Carne', 'Dulces', 'Mixtos',
-        'Antiparasitarios por Peso', 'Concentrados y Bultos', 'Farmacia Veterinaria', 'Higiene y Belleza', 'Juguetes y Accesorios',
-        'Hamburguesas', 'Salchipapas', 'Perros Calientes', 'Carnes', 'Bebidas', 'Tortas & Postres', 'Ropa & Calzado', 'Artesanías & Chagra'
-    ];
-
-    // MAPA COMPLETO DE EMOJIS ALUSIVOS PARA TODAS LAS CATEGORÍAS (SIN ROMPER EL FILTRO DE SUPABASE)
-    obtenerTextoConEmojiCategoria = function(cat) {
-        var limpio = (cat || '').trim();
-        var mapa = {
-            'Todos': '✨ Todos',
-            'General': '🛍️ General',
-            // PRIME!
-            'Cerdo': '🐖 Cerdo',
-            'Condimentos y Salsas': '🧂 Condimentos y Salsas',
-            'Embutidos': '🌭 Embutidos',
-            'Frutos Secos': '🥜 Frutos Secos',
-            'Lácteos': '🧀 Lácteos',
-            'Pescados y Mariscos': '🐟 Pescados y Mariscos',
-            'Pollo': '🍗 Pollo',
-            'Res': '🥩 Res',
-            // Beijú
-            'Vegetarianos': '🥗 Vegetarianos',
-            'Especiales': '🌟 Especiales',
-            'Carne': '🥩 Carne',
-            'Dulces': '🍯 Dulces',
-            'Mixtos': '🥙 Mixtos',
-            // Veterinaria
-            'Antiparasitarios por Peso': '💊 Antiparasitarios por Peso',
-            'Concentrados y Bultos': '🦴 Concentrados y Bultos',
-            'Farmacia Veterinaria': '🩺 Farmacia Veterinaria',
-            'Higiene y Belleza': '🧼 Higiene y Belleza',
-            'Juguetes y Accesorios': '🎾 Juguetes y Accesorios',
-            // Restaurantes y Emprendedores
-            'Tortas & Postres': '🍰 Tortas & Postres',
-            'Ropa & Calzado': '👕 Ropa & Calzado',
-            'Artesanías & Chagra': '🧺 Artesanías & Chagra',
-            'Hamburguesas': '🍔 Hamburguesas',
-            'Salchipapas': '🍟 Salchipapas',
-            'Perros Calientes': '🌭 Perros Calientes',
-            'Carnes': '🥩 Carnes',
-            'Bebidas': '🥤 Bebidas'
-        };
-        return mapa[limpio] || ('🏷️ ' + limpio);
-    };
-
-    function obtenerCategoriasValidasDeLocal(comercioObj) {
-        var nom = ((comercioObj && comercioObj.nombre) || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-        var cat = ((comercioObj && comercioObj.categoria) || '').toLowerCase();
-        if (nom.indexOf('beiju') !== -1) return CATEGORIAS_BEIJU_OFICIAL;
-        if (nom.indexOf('prime') !== -1 || cat.indexOf('supermercado') !== -1) return CATEGORIAS_PRIME_OFICIAL;
-        if (cat.indexOf('veterinaria') !== -1 || nom.indexOf('veterinaria') !== -1) return CATEGORIAS_VET_OFICIAL;
-        return null;
+    // 1. MACAO: REEMPLAZO ESTRICTO PARA QUE NUNCA SE ACUMULEN DOS RESPUESTAS EN PANTALLA
+    function limpiarRespuestasAnterioresMacao() {
+        var cont = document.getElementById('chatHistorialMacao');
+        if (!cont) return;
+        // Eliminar cualquier burbuja previa que se haya insertado fuera de la grilla de botones
+        Array.from(cont.children).forEach(function(el, idx) {
+            if (idx > 1) el.remove();
+        });
+        var btnPagoMacao = cont.querySelector('button[onclick*="responderMacaoIA(\'pagos\')"]');
+        if (btnPagoMacao) btnPagoMacao.innerHTML = '💳 ¿Cómo pago por Transferencia Nequi o Llave Bre-B?';
     }
 
-    window._kumuOrigNormCat = window._kumuOrigNormCat || normalizarCategoriaPlato;
-    normalizarCategoriaPlato = function(cat, catComercio) {
-        var limpio = (cat || '').trim();
-        if (TODAS_CATEGORIAS_PRODUCTOS.indexOf(limpio) !== -1) return limpio;
-        return window._kumuOrigNormCat(cat, catComercio || '');
-    };
-
-    ocultarPinVisual = function(texto) {
-        if (!texto) return '';
-        return String(texto)
-            .replace(/\[PIN:\s*\d+\]/g, '[PIN: Protegido]')
-            .replace(/\[FACHADA:[^\]]+\]/g, '')
-            .replace(/\[CHAT:[^\]]+\]/g, '')
-            .replace(/\[VIP_SUBSIDIO_KUMU:\d+\]/g, '')
-            .replace(/\[Aceptó T&C[^\]]+\]/g, '')
-            .trim();
-    };
-
-    window.limpiarInfoDomiSoloTexto = function(infoRaw) {
-        if (!infoRaw) return '';
-        return String(infoRaw)
-            .replace(/\[GPS:[-\d.,]+\]/g, '')
-            .replace(/\[FACHADA:[^\]]+\]/g, '')
-            .replace(/\[CHAT:[^\]]+\]/g, '')
-            .replace(/\[MOTO_WA_TS:\d+\]/g, '')
-            .replace(/🔥\[Sale en 5 min[^\]]*\]/g, '')
-            .replace(/\[PAGO_INCOMPLETO\]/g, '')
-            .trim();
-    };
-
-    // 1. CARRUSEL DE 5 BANNERS NÍTIDOS (960x320 PX)
-    var BANNERS_5_DEFAULT = [
-        { id: 'b1', etiqueta: '🍄 PILOTO OFICIAL KUMU', titulo: '¡Todo Mitú en la puerta de tu casa!', subtitulo: 'Restaurantes, Beijú, PRIME!, Veterinaria, Droguería y Sanvi', destino: 'CATALOGO', imagen: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=960&h=320&fit=crop&q=85' },
-        { id: 'b2', etiqueta: '🛒 SUPERMERCADO PRIME!', titulo: 'Cerdo, Res, Pollo, Lácteos y Salsas', subtitulo: 'Pide tu mercado fácil y recíbelo rápido con PIN de seguridad', destino: 'PRIME', imagen: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=960&h=320&fit=crop&q=85' },
-        { id: 'b3', etiqueta: '🐾 SECCIÓN VETERINARIA', titulo: 'Antiparasitarios por Peso y Concentrados', subtitulo: 'Con selector de peso para tu mascota y entrega segura', destino: 'Veterinaria', imagen: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=960&h=320&fit=crop&q=85' },
-        { id: 'b4', etiqueta: '🚀 VITRINA GRATIS EN MITÚ', titulo: '¿Vendes desde casa o tienes local?', subtitulo: 'Registra GRATIS tu negocio en Kumu • 0% cobros ocultos', destino: 'WA_EMPRENDEDOR', imagen: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=960&h=320&fit=crop&q=85' },
-        { id: 'b5', etiqueta: '🛵🚲🛺 ESCUADRÓN KUMU', titulo: '¿Tienes Moto, Bici o Motocarro?', subtitulo: 'Gana el 100% de cada domicilio manejando tu propio tiempo', destino: 'WA_REPARTIDOR', imagen: 'https://images.unsplash.com/photo-1526367790999-0150786686a2?w=960&h=320&fit=crop&q=85' }
-    ];
-
-    obtenerListaBannersActivos = function() {
-        if (bannersPublicitariosCache && bannersPublicitariosCache.length > 0) {
-            return bannersPublicitariosCache.concat(BANNERS_5_DEFAULT).slice(0, 5);
-        }
-        return BANNERS_5_DEFAULT;
-    };
-
-    renderizarBannersPublicitarios = function() {
-        var cont = document.getElementById('cajaBannerPublicitario');
+    agregarMensajeChatMacao = function(preguntaUsuario, respuestaBot) {
+        var cont = document.getElementById('chatHistorialMacao');
         if (!cont) return;
-        var listaActiva = obtenerListaBannersActivos();
-        var total = listaActiva.length;
-        var idxActual = ((indiceBannerActual % total) + total) % total;
-        var b = listaActiva[idxActual];
+        limpiarRespuestasAnterioresMacao();
 
-        cont.innerHTML =
-            '<div onclick="abrirAccionBanner(' + idxActual + ')" ontouchstart="pausaCarruselHasta=Date.now()+12000" style="height:140px;" class="relative w-full rounded-2xl overflow-hidden shadow-lg border-2 border-[#D4AF37] cursor-pointer group bg-[#2D0B3A] select-none">' +
-                '<img src="' + escaparHTML(b.imagen) + '" loading="lazy" style="width:100%; height:140px; object-fit:cover; object-position:center center; filter:contrast(1.08) saturate(1.15) brightness(1.04);" class="group-hover:scale-105 transition duration-500" onerror="this.src=\'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=960&h=320&fit=crop\'">' +
-                '<div class="absolute inset-x-0 bottom-0 h-3/5 bg-gradient-to-t from-black/85 via-black/30 to-transparent pointer-events-none"></div>' +
-                '<div class="absolute inset-0 px-7 py-2.5 flex flex-col justify-between">' +
-                    '<div class="flex justify-between items-center">' +
-                        '<span class="bg-[#D4AF37] text-[#2D0B3A] text-[9px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider shadow">' + escaparHTML(b.etiqueta || '✨ DESTACADO EN MITÚ') + '</span>' +
-                        '<span class="text-[9px] text-white font-extrabold bg-black/55 px-1.5 py-0.5 rounded">' + (idxActual + 1) + '/' + total + '</span>' +
-                    '</div>' +
-                    '<div class="mt-auto pb-1">' +
-                        '<h3 class="text-white font-extrabold text-xs sm:text-sm leading-tight drop-shadow">' + escaparHTML(b.titulo) + '</h3>' +
-                        '<p class="text-amber-200 text-[10px] sm:text-[11px] font-semibold line-clamp-1 mt-0.5 drop-shadow">' + escaparHTML(b.subtitulo) + '</p>' +
-                    '</div>' +
-                    '<div class="flex justify-center space-x-1.5">' +
-                        listaActiva.map(function(_, i) {
-                            return '<button type="button" onclick="irASlideBanner(' + i + ', event)" class="h-1.5 rounded-full transition-all ' + (i === idxActual ? 'w-5 bg-[#D4AF37]' : 'w-1.5 bg-white/75') + '"></button>';
-                        }).join('') +
-                    '</div>' +
-                '</div>' +
-                '<button type="button" onclick="cambiarSlideBannerManual(-1, event)" class="absolute left-1 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/75 text-white w-6 h-8 rounded-full flex items-center justify-center text-sm font-bold">‹</button>' +
-                '<button type="button" onclick="cambiarSlideBannerManual(1, event)" class="absolute right-1 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/75 text-white w-6 h-8 rounded-full flex items-center justify-center text-sm font-bold">›</button>' +
+        var boxUnico = document.createElement('div');
+        boxUnico.id = 'respuestaUnicaMacaoBox';
+        boxUnico.className = 'space-y-1.5 pt-2 border-t-2 border-[#D4AF37]';
+        boxUnico.innerHTML =
+            '<div class="flex justify-end">' +
+                '<div class="bg-[#1B4D3E] text-white px-3 py-1.5 rounded-xl max-w-[85%] text-[11px] font-bold">' + escaparHTML(preguntaUsuario) + '</div>' +
+            '</div>' +
+            '<div class="bg-amber-50 border-2 border-[#D4AF37] p-2.5 rounded-xl shadow-sm text-gray-800 text-[11px] leading-relaxed">' +
+                '🌺 <b>MACAO:</b> ' + respuestaBot +
             '</div>';
+        cont.appendChild(boxUnico);
+        boxUnico.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     };
 
-    // 2. VISTA CLIENTE: BOTÓN "🟢 LOCALES ABIERTOS", PESTAÑAS CON EMOJIS Y BUSCADOR INTERNO
-    window.filtrarProductosDentroDeTienda = function(texto) {
-        window.busquedaInternaTienda = (texto || '').toLowerCase().trim();
-        var pList = document.getElementById('listaProductos');
-        if (!pList) return;
-        Array.from(pList.children).forEach(function(card) {
-            var contenido = (card.textContent || '').toLowerCase();
-            card.style.display = (!window.busquedaInternaTienda || contenido.indexOf(window.busquedaInternaTienda) !== -1) ? '' : 'none';
-        });
-    };
-
-    window._kumuOrigRenderCliente = window._kumuOrigRenderCliente || renderClienteView;
-    renderClienteView = async function(container, forzarRed) {
-        await window._kumuOrigRenderCliente(container, forzarRed);
-
-        if (!comercioSeleccionado) {
-            var btnAbiertos = container.querySelector('button[onclick="toggleSoloAbiertosFiltro()"]');
-            if (btnAbiertos) btnAbiertos.innerHTML = '🟢 Locales Abiertos';
-
-            var barraCats = container.querySelector('.flex.space-x-2.overflow-x-auto.kumu-scroll.pb-2\\.5.text-xs');
-            if (barraCats) {
-                var catsPrincipales = [
-                    { id: 'Todos', txt: '✨ Todos' },
-                    { id: 'Restaurantes & Comida Rápida', txt: '🍔 Restaurantes & Comida Rápida' },
-                    { id: 'Supermercados & Víveres', txt: '🛒 Supermercados & Víveres' },
-                    { id: 'Veterinaria', txt: '🐾 Veterinaria' },
-                    { id: 'Droguería', txt: '💊 Droguería' },
-                    { id: 'Emprendedores & Tiendas', txt: '🛍️ Emprendedores & Tiendas' },
-                    { id: 'Licores & Cigarrillos', txt: '🍺 Licores (+18) 🔞' },
-                    { id: 'Sanvi', txt: '🌾 Sanvi Campesino' }
-                ];
-                barraCats.innerHTML = catsPrincipales.map(function(c) {
-                    return '<button onclick="filtrarCat(\'' + c.id + '\')" class="px-3.5 py-2 rounded-full font-bold whitespace-nowrap shadow-sm ' + (categoriaFiltro === c.id ? 'bg-[#2D0B3A] text-[#D4AF37] border border-[#D4AF37]' : 'bg-white text-gray-700 border border-slate-200') + '">' + c.txt + '</button>';
-                }).join('');
+    responderMacaoIA = async function(tema) {
+        if (tema === 'tiempo') {
+            var idAct = localStorage.getItem('kumu_pedido_activo_id');
+            if (idAct) {
+                var r = await supabaseClient.from('pedidos').select('estado, domiciliario_info, comercios(nombre)').eq('id', idAct).maybeSingle();
+                if (r.data) {
+                    var pinM = localStorage.getItem('kumu_pin_activo_' + idAct) || 'Protegido';
+                    var domiTxt = window.limpiarInfoDomiSoloTexto(r.data.domiciliario_info) || 'Asignando repartidor';
+                    agregarMensajeChatMacao('🛵 ¿Cuánto tarda mi pedido y cómo veo dónde viene?', '📍 <b>Estado en vivo (' + escaparHTML(r.data.comercios ? r.data.comercios.nombre : 'Kumu') + '):</b> <b>' + escaparHTML(r.data.estado) + '</b>.<br>🛵 <b>Repartidor:</b> ' + escaparHTML(domiTxt) + '<br>🔐 <b>Tu PIN en Portería/Puerta:</b> <b>' + escaparHTML(pinM) + '</b>.');
+                    return;
+                }
             }
-            renderizarBannersPublicitarios();
-            return;
-        }
-
-        var barraCat = document.getElementById('barraCatProductos');
-        if (barraCat && !document.getElementById('inputBusquedaTiendaInterna')) {
-            var divBusq = document.createElement('div');
-            divBusq.className = 'mb-2.5';
-            divBusq.innerHTML = '<input type="text" id="inputBusquedaTiendaInterna" oninput="window.filtrarProductosDentroDeTienda(this.value)" placeholder="🔍 Buscar producto en ' + escaparHTML(comercioSeleccionado.nombre) + '..." class="w-full p-2.5 border-2 border-[#1B4D3E]/30 rounded-xl text-xs bg-amber-50/40 font-semibold outline-none focus:border-[#1B4D3E]">';
-            barraCat.insertAdjacentElement('beforebegin', divBusq);
-        }
-
-        // Pestañas exclusivas con su respectivo Emoji Alusivo
-        var pestanasExclusivas = obtenerCategoriasValidasDeLocal(comercioSeleccionado);
-        if (pestanasExclusivas && barraCat) {
-            window._categoriasProdsActuales = pestanasExclusivas;
-            barraCat.innerHTML = pestanasExclusivas.map(function(cat, idx) {
-                return '<button onclick="filtrarCatProductoPorIndice(' + idx + ')" class="px-3.5 py-1.5 rounded-full font-bold whitespace-nowrap shadow-sm ' + (categoriaProductoFiltro === cat ? 'bg-[#1B4D3E] text-[#D4AF37]' : 'bg-gray-200 text-gray-700 hover:bg-gray-300') + '">' + escaparHTML(obtenerTextoConEmojiCategoria(cat)) + '</button>';
+            agregarMensajeChatMacao('🛵 ¿Cuánto tarda mi pedido y cómo veo dónde viene?', 'Las entregas toman entre <b>25 y 35 minutos</b> (35–45 min si llueve). En Inicio ves los 4 pasos en vivo, el mapa GPS en tiempo real y tu PIN de 4 dígitos para recibir en Portería.');
+        } else if (tema === 'pagos') {
+            var botonesCuentas = (windowComerciosCache || []).slice(0, 6).map(function(c) {
+                return '<button onclick="comercioSeleccionado={telefono:\'' + escaparHTML(c.telefono) + '\'}; copiarCuentaComercioSeleccionado();" class="bg-amber-100 border border-amber-400 text-[#2D0B3A] px-2 py-1 rounded-lg text-[10px] font-extrabold m-0.5">📋 Copiar ' + escaparHTML(c.nombre) + '</button>';
             }).join('');
+            agregarMensajeChatMacao('💳 ¿Cómo pago por Transferencia Nequi o Llave Bre-B?', 'Por seguridad, todos los pedidos se pagan exclusivamente por <b>Transferencia Nequi o Llave Bre-B</b> directo al comercio. Toca <b>"📋 Copiar Cuenta"</b> en el carrito y envía tu comprobante por WhatsApp.<div class="mt-1.5 flex flex-wrap">' + botonesCuentas + '</div>');
+        } else if (tema === 'vender') {
+            agregarMensajeChatMacao('🚀 Quiero vender gratis en Kumu', '¡Entra <b>100% GRATIS</b> ($0 inscripción y $0 mensualidad)! Recibes tus pagos directo en tu Nequi o Llave Bre-B. Toca abajo en <b>"📲 Soporte WhatsApp"</b> para activar tu tienda virtual hoy mismo.');
+        } else if (tema === 'sanvi') {
+            agregarMensajeChatMacao('🌾 ¿Cómo compro o vendo cosecha en Sanvi?', '<b>Sanvi</b> conecta sin intermediarios a nuestras familias productoras con los hogares de Mitú. Apartas cosecha fresca por transferencia y la recibes en tu puerta.');
+        } else if (tema === 'encargo') {
+            agregarMensajeChatMacao('⏳ ¿Cómo funcionan los encargos "Bajo Pedido"?', 'En los negocios con etiqueta <b>"⏳ Bajo Pedido"</b> eliges en el carrito para qué día y hora necesitas tu producto y lo apartas mediante transferencia Nequi o Llave Bre-B.');
+        } else if (tema === 'clima') {
+            agregarMensajeChatMacao('🌧️ ¿Por qué el domicilio vale $4.000 o $5.000?', 'Monitoreamos el clima de Mitú en tiempo real: en tiempo seco (☀️) el envío vale <b>$4.000 COP</b> y cuando llueve (🌧️) vale <b>$5.000 COP</b> (100% para el repartidor).');
+        } else if (tema === 'pqrsf') {
+            agregarMensajeChatMacao('🛡️ ¿Qué hago si tengo un inconveniente o PQRSF?', 'Toca el botón morado de abajo <b>"📝 Radicar PQRSF"</b> para generar tu radicado inmediato o escribe a <b>"📲 Soporte WhatsApp"</b>.');
+        } else if (tema === 'instalar') {
+            cerrarMacaoIA();
+            document.getElementById('modalInstalar').classList.remove('hidden');
+        }
+    };
+
+    // 2. CONFIGURACIÓN DE 2 NÚMEROS POR TIENDA (1. CONSIGNACIONES NEQUI/BRE-B Y 2. WHATSAPP DONDE RECIBE PEDIDOS)
+    configurarAdicionesYEncargoAdmin = async function(comercioId) {
+        var c = (windowComerciosCache || []).find(function(item) { return String(item.id) === String(comercioId); });
+        if (!c) return;
+        var meta = extraerMetadatosComercio(c);
+        var waActual = window.obtenerWhatsAppPedidosComercio(c);
+
+        var nuevaCuentaPago = await kumuPrompt('💳 1. Número Nequi / Llave Bre-B donde ' + c.nombre + ' recibe las CONSIGNACIONES (y nombre del titular):', c.telefono || '', 'Cuenta para Consignaciones', '💳');
+        if (nuevaCuentaPago === null) return;
+
+        var nuevoWaPedidos = await kumuPrompt('📲 2. Número de WhatsApp (10 dígitos) donde ' + c.nombre + ' recibe los MENSAJES DE PEDIDOS:', waActual, 'WhatsApp Receptor de Pedidos', '📲', 'tel');
+        if (nuevoWaPedidos === null) return;
+        var waLimpio = nuevoWaPedidos.replace(/\D/g, '').slice(-10);
+
+        var nuevasAdic = await kumuPrompt('➕ Adiciones propias de ' + c.nombre + ' (Nombre:Precio separados por coma):', meta.textoAdicionesRaw || '', 'Adiciones del Local', '➕');
+        if (nuevasAdic === null) return;
+
+        var empResp = await kumuPrompt('🥡 Costo de Empaque / Icopor por plato en ' + c.nombre + ' ($COP - Pon 0 si no cobra):', String(meta.costoEmpaque || 0), 'Costo de Empaque', '🥡', 'number');
+        if (empResp === null) return;
+
+        var nuevaCredencial = await kumuPrompt('🔑 Usuario y Contraseña del Local (Formato usuario:clave, ej. texas:5555):', c.pin_local || '5555', 'Credenciales del Local', '🔑');
+        if (nuevaCredencial === null) return;
+
+        var nuevaDir = construirDireccionConMetadatos(meta.dirLimpia, meta.esVIP, meta.esEncargo, meta.fechaEncargo, nuevasAdic.trim(), meta.esAsistido, Number(empResp) || 0);
+        if (waLimpio.length === 10) nuevaDir += ' [WA:' + waLimpio + ']';
+
+        var res = await supabaseClient.from('comercios').update({
+            telefono: limpiarInputUsuario(nuevaCuentaPago),
+            direccion: nuevaDir.trim(),
+            pin_local: nuevaCredencial.trim()
+        }).eq('id', comercioId);
+
+        if (res.error) await kumuAlert('Error: ' + res.error.message, 'Error', '❌');
+        else {
+            await kumuAlert('✅ Configuración guardada para ' + c.nombre + ':\n• Consignaciones: ' + nuevaCuentaPago + '\n• WhatsApp Pedidos: ' + waLimpio, 'Números Configurados', '✅');
+            initApp(true);
+        }
+    };
+
+    guardarInfoGeneralAliado = async function() {
+        if (!comercioLogueado) return;
+        var nombre = limpiarInputUsuario(document.getElementById('editNombreLocal').value);
+        var telefonoConsignaciones = limpiarInputUsuario(document.getElementById('editTelLocal').value);
+        var waPedidosInput = (document.getElementById('editWaPedidosLocal') ? document.getElementById('editWaPedidosLocal').value : '').replace(/\D/g, '').slice(-10);
+        var dirBase = limpiarInputUsuario(document.getElementById('editDirLocal').value);
+        var empCosto = Number(document.getElementById('editEmpaqueLocal') ? document.getElementById('editEmpaqueLocal').value : 0);
+        var adicionesTxt = limpiarInputUsuario(document.getElementById('editAdicionesLocal') ? document.getElementById('editAdicionesLocal').value : '');
+        var fechaEncargoTxt = limpiarInputUsuario(document.getElementById('editFechaEncargoLocal') ? document.getElementById('editFechaEncargoLocal').value : '');
+        var meta = extraerMetadatosComercio(comercioLogueado);
+        var esEncargo = meta.esEncargo || fechaEncargoTxt !== '';
+        var direccion = construirDireccionConMetadatos(dirBase, meta.esVIP, esEncargo, fechaEncargoTxt, adicionesTxt, meta.esAsistido, empCosto);
+        if (waPedidosInput.length === 10) direccion += ' [WA:' + waPedidosInput + ']';
+
+        var imagen_url = fotoBase64EditarLocal || document.getElementById('editFotoUrlLocal').value.trim() || comercioLogueado.imagen_url;
+        if (!nombre || !telefonoConsignaciones || !dirBase) return kumuAlert('Completa nombre, cuenta de consignaciones y dirección.', 'Campos Requeridos', '⚠️');
+        var res = await supabaseClient.from('comercios').update({ nombre: nombre, telefono: telefonoConsignaciones, direccion: direccion.trim(), imagen_url: imagen_url }).eq('id', comercioLogueado.id);
+        if (res.error) await kumuAlert('Error: ' + res.error.message, 'Error', '❌');
+        else {
+            Object.assign(comercioLogueado, { nombre: nombre, telefono: telefonoConsignaciones, direccion: direccion.trim(), imagen_url: imagen_url });
+            fotoBase64EditarLocal = '';
+            await kumuAlert('Datos actualizados (Cuenta de consignaciones y WhatsApp de pedidos guardados).', 'Guardado', '✅');
+            initApp(true);
+        }
+    };
+
+    // 3. ENVÍO DE PEDIDO AL NÚMERO EXCLUSIVO DE WHATSAPP DE PEDIDOS ([WA:...]) + COBRO A CUENTA DE CONSIGNACIONES
+    window.consultarPedidosVIPPorTelefono = async function(telefono10) {
+        var tel = String(telefono10 || '').replace(/\D/g, '');
+        if (tel.length !== 10) return { conteo: 0, esGratisAhora: false, nombre: '' };
+        try {
+            var r = await supabaseClient.from('pedidos').select('id, cliente_nombre, estado').eq('cliente_telefono', tel);
+            var entregadosReales = (r.data || []).filter(function(p) { return (p.estado || '').indexOf('Entregado') !== -1; });
+            var cant = entregadosReales.length;
+            localStorage.setItem('kumu_mis_pedidos_contador', String(cant));
+            return { conteo: cant, enCiclo: cant % 10, esGratisAhora: (cant > 0 && (cant % 10 === 9)), nombre: entregadosReales.length > 0 ? entregadosReales[0].cliente_nombre : '' };
+        } catch (e) { return { conteo: 0, enCiclo: 0, esGratisAhora: false, nombre: '' }; }
+    };
+
+    enviarPedido = async function(total, subtotal, domicilioRealRepartidor, comision, tieneLicor, totalEmpaque) {
+        totalEmpaque = totalEmpaque || 0;
+        var ultEnvioTs = Number(localStorage.getItem('kumu_antispam_pedido_ts') || 0);
+        if (Date.now() - ultEnvioTs < 35000) {
+            var segEsp = Math.ceil((35000 - (Date.now() - ultEnvioTs)) / 1000);
+            return kumuAlert('Espera ' + segEsp + ' segundos antes de enviar otro pedido.', '🛡️ Protección Anti-Spam', '⏳');
         }
 
-        var opcionesSelect = pestanasExclusivas ? ['General'].concat(pestanasExclusivas.filter(function(c) { return c !== 'Todos'; })) : TODAS_CATEGORIAS_PRODUCTOS;
-        container.querySelectorAll('select[onchange^="cambiarCategoriaProducto"]').forEach(function(sel) {
-            var m = sel.getAttribute('onchange').match(/'([^']+)'/);
-            var prodId = m ? m[1] : '';
-            var prodObj = (windowProductosCache || []).find(function(p) { return String(p.id) === String(prodId); });
-            var catActual = (prodObj && prodObj.categoria) ? prodObj.categoria.trim() : 'General';
-            sel.innerHTML = opcionesSelect.map(function(op) {
-                return '<option value="' + escaparHTML(op) + '" ' + (catActual === op ? 'selected' : '') + '>' + escaparHTML(obtenerTextoConEmojiCategoria(op)) + '</option>';
-            }).join('');
-        });
+        var nombre = limpiarInputUsuario(document.getElementById('nombreCliente') ? document.getElementById('nombreCliente').value : '');
+        var telRaw = ((document.getElementById('telefonoCliente') ? document.getElementById('telefonoCliente').value : '') || '').replace(/\D/g, '');
+        var direccion = limpiarInputUsuario(document.getElementById('direccionCliente') ? document.getElementById('direccionCliente').value : '');
+        var cedulaRaw = ((document.getElementById('cedulaCliente') ? document.getElementById('cedulaCliente').value : '') || '').replace(/\D/g, '');
+        var metaLocal = extraerMetadatosComercio(comercioSeleccionado);
+        var fechaEnc = limpiarInputUsuario(document.getElementById('fechaEntregaEncargoCliente') ? document.getElementById('fechaEntregaEncargoCliente').value : '');
+
+        if (!nombre || nombre.length < 3 || !direccion || direccion.length < 4) {
+            return kumuAlert('Ingresa tu Nombre Completo y Dirección en Mitú.', 'Datos Incompletos', '⚠️');
+        }
+        if (!/^3\d{9}$/.test(telRaw) || /^3(\d)\1{8}$/.test(telRaw)) {
+            return kumuAlert('Ingresa un número de celular WhatsApp válido de 10 dígitos.', 'WhatsApp Inválido', '📱');
+        }
+        if (tieneLicor && (cedulaRaw.length < 6 || cedulaRaw.length > 11)) {
+            return kumuAlert('Para pedidos +18 debes ingresar tu Cédula.', 'Cédula Requerida', '🔞');
+        }
+
+        var vipInfo = await window.consultarPedidosVIPPorTelefono(telRaw);
+        var subsidioVIPKumu = vipInfo.esGratisAhora ? domicilioRealRepartidor : 0;
+        var totalCobrarAlCliente = subtotal + totalEmpaque + (vipInfo.esGratisAhora ? 0 : domicilioRealRepartidor) + comision;
+
+        var montoStr = await kumuPrompt(
+            'Por seguridad, todos los pedidos se procesan por transferencia.\n\n💰 TOTAL A TRANSFERIR: $' + totalCobrarAlCliente.toLocaleString() + ' COP\n\nEscribe el valor exacto en pesos que transferiste en tu comprobante:',
+            '0',
+            '🔐 Verificación de Pago',
+            '💳',
+            'number'
+        );
+        if (montoStr === null) return;
+        var montoDig = Number(String(montoStr).replace(/\D/g, '')) || 0;
+        if (montoDig > 0 && montoDig < 1000) montoDig *= 1000;
+        if (montoDig < totalCobrarAlCliente) {
+            return kumuAlert('El valor ingresado ($' + montoDig.toLocaleString() + ' COP) está incompleto.\n\n💰 Total obligatorio: $' + totalCobrarAlCliente.toLocaleString() + ' COP\n\nPor favor transfiere el valor completo para confirmar tu pedido.', '⚠️ Valor Incompleto', '🛑');
+        }
+
+        if (comercioSeleccionado) {
+            localStorage.setItem('ultimoComercioId', comercioSeleccionado.id);
+            localStorage.setItem('ultimoComercioNombre', comercioSeleccionado.nombre);
+        }
+        guardarClienteFrecuente(nombre, telRaw, direccion);
+        localStorage.setItem('kumu_antispam_pedido_ts', String(Date.now()));
+
+        var pinSeguro = Math.floor(1000 + Math.random() * 9000);
+        var detallePedido = carrito.map(function(i) { return i.cantidad + 'x ' + limpiarInputUsuario(i.nombre) + (i.notas ? ' (' + limpiarInputUsuario(i.notas) + ')' : ''); }).join(', ');
+        var tagPin = (tieneLicor ? ' [LICOR - CC: ' + cedulaRaw + ']' : '') + ' [PIN: ' + pinSeguro + ']';
+        var tagVIP = subsidioVIPKumu > 0 ? ' [VIP_SUBSIDIO_KUMU:' + subsidioVIPKumu + ']' : '';
+        var tagEnc = metaLocal.esEncargo && fechaEnc ? ' [ENCARGO PARA: ' + fechaEnc + ']' : '';
+        var tagMapa = gpsClienteActual ? ' | MapaCliente: ' + gpsClienteActual : '';
+        var tagFach = window.fotoFachadaTemp ? ' [FACHADA:' + window.fotoFachadaTemp + ']' : '';
+        var desgloseDir = direccion + tagVIP + tagEnc + tagMapa + ' [Pago: Transferencia $' + totalCobrarAlCliente.toLocaleString() + ']' + tagPin + tagFach + ' | Detalle: ' + detallePedido + ' | Sub: ' + subtotal + ' | Emp: ' + totalEmpaque + ' | Domi: ' + domicilioRealRepartidor;
+
+        var res = await supabaseClient.from('pedidos').insert([{
+            cliente_nombre: nombre,
+            cliente_telefono: telRaw,
+            direccion_entrega: desgloseDir,
+            comercio_id: comercioSeleccionado.id,
+            total: totalCobrarAlCliente,
+            estado: 'Por Verificar Pago',
+            domiciliario_info: ''
+        }]).select().maybeSingle();
+
+        if (res.error) return kumuAlert('Error al registrar el pedido: ' + res.error.message, 'Error', '❌');
+        window.fotoFachadaTemp = '';
+        window.esDomicilioGratisVIP = false;
+        if (res.data && res.data.id) {
+            localStorage.setItem('kumu_pedido_activo_id', res.data.id);
+            localStorage.setItem('kumu_pin_activo_' + res.data.id, String(pinSeguro));
+            ultimoEstadoConocidoCliente = 'Por Verificar Pago';
+        }
+
+        var itemsWA = carrito.map(function(i) { return '• ' + i.cantidad + 'x ' + limpiarInputUsuario(i.nombre) + (i.notas ? ' (' + limpiarInputUsuario(i.notas) + ')' : ''); }).join('\n');
+        var msgWA = '¡Hola *' + comercioSeleccionado.nombre + '*! Acabo de realizar este pedido por *Kumu*:\n\n*Mi pedido:*\n' + itemsWA + '\n';
+        if (metaLocal.esEncargo && fechaEnc) msgWA += '\n*Fecha de entrega:* ' + fechaEnc;
+        msgWA += '\n*Total transferido:* *$' + totalCobrarAlCliente.toLocaleString() + ' COP*\n';
+        msgWA += '*Consignado a:* ' + (comercioSeleccionado.telefono || 'Cuenta del local') + '\n';
+        msgWA += '\n*Datos de entrega:*\n• *Cliente:* ' + nombre + '\n• *Dirección:* ' + direccion;
+        if (gpsClienteActual) msgWA += '\n• *Ubicación GPS:* ' + gpsClienteActual;
+        msgWA += '\n• *PIN de recepción:* ' + pinSeguro + '\n\nAdjunto el comprobante de mi transferencia. ¡Muchas gracias!';
+
+        await kumuAlert('¡Tu pedido fue registrado con éxito!\n\n🔐 Tu PIN de seguridad es: ' + pinSeguro + '\n\nAhora envía tu comprobante de transferencia en el WhatsApp de pedidos del comercio.', '✅ Pedido Confirmado', '🍄');
+        // Enviar mensaje al número exclusivo de WhatsApp de pedidos (ej. Texas Pedidos) y no al de consignaciones
+        var telWaDestino = window.obtenerWhatsAppPedidosComercio(comercioSeleccionado);
+        window.open('https://wa.me/57' + telWaDestino + '?text=' + encodeURIComponent(msgWA), '_blank');
+        carrito = []; gpsClienteActual = ''; guardarCarritoInmortal(); comercioSeleccionado = null; initApp(true);
+    };
+
+    // 4. IMPORTADOR MASIVO INTELIGENTE (TREINTA / EXCEL / TEXTO) + HABILITAR CARGA COMPLETA EN LOCALES ALIADOS
+    window.detectarCategoriaAutoPrime = function(nombreProd, catDefecto) {
+        var n = (nombreProd || '').toLowerCase();
+        if (/cerdo|costilla|chuleta|lomo de cerdo|tocineta|bondiola|pernil/.test(n)) return 'Cerdo';
+        if (/pollo|pechuga|alita|muslo|contramuslo|gallina/.test(n)) return 'Pollo';
+        if (/pescado|cachama|tilapia|mojarra|bagre|camaron|marisco|trucha|filete|salm/.test(n)) return 'Pescados y Mariscos';
+        if (/chorizo|salchicha|jamon|mortadela|butifarra| salami|morcilla|embutido/.test(n)) return 'Embutidos';
+        if (/queso|leche|mantequilla|yogurt|kumis|crema de leche|suero|lacteo/.test(n)) return 'Lácteos';
+        if (/mani|almendra|nuez|arandano|pistacho|fruto seco|semilla|marañon/.test(n)) return 'Frutos Secos';
+        if (/salsa|condimento|adobo|ajo|pimienta|especia|chimichurri|mostaza|mayonesa|bbq|vinagre|aceite|sal/.test(n)) return 'Condimentos y Salsas';
+        if (/res|carne|chatas|punta de anca|sobrebarriga|molida|lomo fino|cadera|bola|muchacho|hueso|costilla de res|bife|asado/.test(n)) return 'Res';
+        return catDefecto || 'General';
+    };
+
+    window.procesarImportacionMasivaProductos = async function(comercioIdDestino) {
+        if (!comercioIdDestino) return kumuAlert('Selecciona primero el negocio al que deseas cargar el inventario.', 'Selecciona un Local', '🏪');
+        var rawTxt = (document.getElementById('textareaImportMasivo') ? document.getElementById('textareaImportMasivo').value : '').trim();
+        if (!rawTxt) return kumuAlert('Pega el listado de productos (puedes copiar y pegar desde el catálogo web de Treinta, Excel o WhatsApp).', 'Caja Vacía', '📋');
+
+        var lineas = rawTxt.split(/\r?\n/).map(function(l) { return l.trim(); }).filter(function(l) { return l.length > 1; });
+        var loteInsertar = [];
+        var nombrePendiente = '';
+
+        for (var i = 0; i < lineas.length; i++) {
+            var lin = lineas[i];
+            if (/^(categor|buscar|carrito|agregar|agotado|ver m|filtrar)/i.test(lin)) continue;
+
+            // Caso 1: Formato separado por | o ; o tabulador (Nombre | Precio | Categoría | Descripción)
+            if (lin.indexOf('|') !== -1 || lin.indexOf('\t') !== -1) {
+                var sep = lin.indexOf('|') !== -1 ? '|' : '\t';
+                var partes = lin.split(sep).map(function(x) { return x.trim(); });
+                var nom1 = limpiarInputUsuario(partes[0]);
+                var prec1 = Number((partes[1] || '').replace(/[^\d]/g, '')) || 0;
+                if (prec1 > 0 && prec1 < 1000) prec1 *= 1000;
+                var cat1 = partes[2] ? partes[2].trim() : window.detectarCategoriaAutoPrime(nom1, 'Res');
+                var desc1 = limpiarInputUsuario(partes[3] || '');
+                if (nom1 && prec1 >= 500) {
+                    loteInsertar.push({ comercio_id: comercioIdDestino, nombre: nom1, precio: prec1, categoria: cat1, descripcion: desc1, imagen: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=300' });
+                    nombrePendiente = '';
+                    continue;
+                }
+            }
+
+            // Caso 2: Línea que tiene Nombre y Precio juntos (Ej: "Punta de Anca x Kg $38.000" o "Chorizo Santarrosano - 18000")
+            var matchLineaCompleta = lin.match(/^(.+?)\s+[\$\-]?\s*(\d{1,3}(?:[.,]\d{3})+|\d{4,7})\b/);
+            if (matchLineaCompleta) {
+                var nom2 = limpiarInputUsuario(matchLineaCompleta[1].replace(/[-:]+$/, '').trim());
+                var prec2 = Number(matchLineaCompleta[2].replace(/[.,]/g, ''));
+                if (nom2 && prec2 >= 500) {
+                    loteInsertar.push({
+                        comercio_id: comercioIdDestino,
+                        nombre: nom2,
+                        precio: prec2,
+                        categoria: window.detectarCategoriaAutoPrime(nom2, 'Res'),
+                        descripcion: '',
+                        imagen: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=300'
+                    });
+                    nombrePendiente = '';
+                    continue;
+                }
+            }
+
+            // Caso 3: Formato catálogo Treinta (Una línea tiene el precio "$ 25.000" y la anterior o siguiente tiene el nombre)
+            var soloPrecio = lin.match(/^\$?\s*(\d{1,3}(?:[.,]\d{3})+|\d{4,7})(?:\s*COP)?$/i);
+            if (soloPrecio && nombrePendiente) {
+                var prec3 = Number(soloPrecio[1].replace(/[.,]/g, ''));
+                if (prec3 >= 500) {
+                    loteInsertar.push({
+                        comercio_id: comercioIdDestino,
+                        nombre: limpiarInputUsuario(nombrePendiente),
+                        precio: prec3,
+                        categoria: window.detectarCategoriaAutoPrime(nombrePendiente, 'Res'),
+                        descripcion: '',
+                        imagen: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=300'
+                    });
+                    nombrePendiente = '';
+                    continue;
+                }
+            } else if (!soloPrecio && lin.length >= 3 && !/^\$/.test(lin)) {
+                nombrePendiente = lin;
+            }
+        }
+
+        if (loteInsertar.length === 0) {
+            return kumuAlert('No se detectaron productos con precio válido.\n\nEscribe o pega cada producto así:\nNombre del producto $Precio\no copiado directamente de Treinta.', 'Formato no detectado', '⚠️');
+        }
+
+        var confirmar = await kumuConfirm('⚡ Se detectaron ' + loteInsertar.length + ' productos clasificados automáticamente por categoría.\n\n¿Deseas subirlos todos en un solo lote a la tienda?', 'Importar ' + loteInsertar.length + ' Productos', '🚀');
+        if (!confirmar) return;
+
+        var res = await supabaseClient.from('productos').insert(loteInsertar);
+        if (res.error) return kumuAlert('Error al importar lote: ' + res.error.message, 'Error', '❌');
+        document.getElementById('textareaImportMasivo').value = '';
+        await kumuAlert('🎉 ¡' + loteInsertar.length + ' productos cargados y clasificados con éxito en menos de 2 segundos!', 'Importación Exitosa', '✅');
+        initApp(true);
+    };
+
+    window.crearProductoDesdeAliado = async function() {
+        if (!comercioLogueado) return;
+        var nombre = limpiarInputUsuario(document.getElementById('aliadoProdNombre') ? document.getElementById('aliadoProdNombre').value : '');
+        var descripcion = limpiarInputUsuario(document.getElementById('aliadoProdDesc') ? document.getElementById('aliadoProdDesc').value : '');
+        var precio = Number(document.getElementById('aliadoProdPrecio') ? document.getElementById('aliadoProdPrecio').value : 0);
+        var stockVal = (document.getElementById('aliadoProdStock') ? document.getElementById('aliadoProdStock').value : '').trim();
+        var categoria = document.getElementById('aliadoProdCat') ? document.getElementById('aliadoProdCat').value : 'General';
+        var urlManual = (document.getElementById('aliadoProdFotoUrl') ? document.getElementById('aliadoProdFotoUrl').value : '').trim();
+        var imagen = fotoBase64Producto || urlManual || 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=300';
+
+        if (precio > 0 && precio < 1000) precio *= 1000;
+        if (!nombre || !precio) return kumuAlert('Ingresa el nombre del producto y su precio.', 'Datos Incompletos', '⚠️');
+        if (stockVal !== '' && !isNaN(Number(stockVal))) descripcion = (descripcion + ' [STOCK:' + Math.max(0, Math.floor(Number(stockVal))) + ']').trim();
+        var res = await supabaseClient.from('productos').insert([{ comercio_id: comercioLogueado.id, nombre: nombre, descripcion: descripcion, precio: precio, categoria: categoria, imagen: imagen }]);
+        if (res.error) return kumuAlert('Error al guardar: ' + res.error.message, 'Error', '❌');
+        fotoBase64Producto = '';
+        await kumuAlert('¡Producto agregado en "' + obtenerTextoConEmojiCategoria(categoria) + '"!', '✅ Producto Creado', '🛍️');
+        initApp(true);
+    };
+
+    // Permitir que el Aliado también edite el precio/foto y elimine productos de su tienda sin pedirte tu Clave Admin
+    eliminarProducto = async function(productoId) {
+        if (!comercioLogueado) {
+            await cargarClaveYClimaAdminDesdeSupabase();
+            var pass = await kumuPrompt('Ingresa tu Clave Maestra de Administrador:', '', 'Autorización Requerida', '🔐', 'password');
+            if (!(await verificarCoincidenciaClaveAdmin(pass))) return kumuAlert('Clave incorrecta.', 'Acceso Denegado', '❌');
+        }
+        if (!(await kumuConfirm('¿Estás seguro de eliminar este producto del catálogo?', 'Eliminar Producto', '🗑️'))) return;
+        var res = await supabaseClient.from('productos').delete().eq('id', productoId);
+        if (res.error) await kumuAlert('Error: ' + res.error.message, 'Error', '❌');
+        else { await kumuAlert('Producto eliminado.', 'Eliminado', '✅'); initApp(true); }
     };
 
     window._kumuOrigRenderProdsAliado = window._kumuOrigRenderProdsAliado || renderProductosAliado;
@@ -4834,160 +5061,131 @@
             sel.onchange = function() { cambiarCategoriaProducto(prodId, this.value); };
             sel.innerHTML = ops.map(function(op) { return '<option value="' + escaparHTML(op) + '" ' + (catAct === op ? 'selected' : '') + '>' + escaparHTML(obtenerTextoConEmojiCategoria(op)) + '</option>'; }).join('');
             btnCupo.insertAdjacentElement('beforebegin', sel);
+
+            var btnPrecio = document.createElement('button');
+            btnPrecio.type = 'button';
+            btnPrecio.className = 'bg-blue-600 text-white font-bold py-0.5 px-1.5 rounded text-[10px]';
+            btnPrecio.innerHTML = '✏️ Precio';
+            btnPrecio.onclick = function(ev) { ev.stopPropagation(); editarPrecioFotoProducto(prodId); };
+            btnCupo.insertAdjacentElement('afterend', btnPrecio);
         });
     };
 
-    // 3. SELECTOR DE PESO VETERINARIA, COPIAR CUENTA NEQUI/BRE-B Y FOTO DE FACHADA (CÁMARA Y GALERÍA)
-    window._kumuOrigAgregarCarrito = window._kumuOrigAgregarCarrito || agregarAlCarrito;
-    agregarAlCarrito = async function(producto) {
-        var comb = ((producto.nombre || '') + ' ' + (producto.descripcion || '')).toLowerCase();
-        if (comb.indexOf('[peso]') !== -1 || comb.indexOf('nexgard') !== -1 || comb.indexOf('simparica') !== -1 || comb.indexOf('bravecto') !== -1 || comb.indexOf('antiparasitario') !== -1) {
-            var peso = await kumuPrompt('⚖️ ' + producto.nombre + ':\nIndica el peso de tu mascota en kg (Ej: 2 a 4 kg / 4.1 a 10 kg / 10.1 a 25 kg):', '4.1 a 10 kg', '🐾 Peso de Mascota', '⚖️');
-            if (!peso || !peso.trim()) return;
-            producto = Object.assign({}, producto, { nombre: producto.nombre + ' [Peso: ' + limpiarInputUsuario(peso) + ']' });
-        }
-        await window._kumuOrigAgregarCarrito(producto);
+    window.reiniciarHistoricoCeroAdmin = async function() {
+        await cargarClaveYClimaAdminDesdeSupabase();
+        var pass = await kumuPrompt('🔐 Ingresa tu Clave Maestra de Administrador para autorizar el borrado de pedidos y calificaciones:', '', 'Autorización Admin Requerida', '🔑', 'password');
+        if (!pass) return;
+        if (!(await verificarCoincidenciaClaveAdmin(pass))) return kumuAlert('Clave Maestra incorrecta.', '❌ Acceso Denegado', '🚫');
+        if (!(await kumuConfirm('¿Confirmas dejar en $0 COP todos los pedidos y calificaciones?\n(Tus comercios y productos NO se borrarán).', '🧹 Confirmar Reinicio a $0', '🧹'))) return;
+        await supabaseClient.from('pedidos').delete().neq('estado', '__NUNCA__');
+        await supabaseClient.from('calificaciones').delete().gte('puntuacion', 0);
+        localStorage.removeItem('kumu_pedido_activo_id');
+        localStorage.removeItem('kumu_gastos_diarios');
+        await kumuAlert('¡Histórico reiniciado en $0 COP!', '✅ Sistema en $0 COP', '🧹');
+        initApp(true);
     };
 
-    copiarCuentaComercioSeleccionado = async function() {
-        var raw = (comercioSeleccionado && comercioSeleccionado.telefono) || '';
-        var sinEsp = raw.replace(/(\d)\s+(\d)/g, '$1$2').replace(/(\d)\s+(\d)/g, '$1$2');
-        var mCel = sinEsp.match(/3\d{9}/) || sinEsp.match(/\d{7,15}/);
-        var mLlave = sinEsp.match(/@[a-zA-Z0-9._-]+/) || raw.match(/llave[:\s]+([a-zA-Z0-9.@_-]+)/i);
-        var numNequi = mCel ? mCel[0] : sinEsp.trim();
-        var llaveBreB = mLlave ? (mLlave[1] || mLlave[0]) : '';
+    window._kumuOrigRenderNegocios = window._kumuOrigRenderNegocios || renderNegociosView;
+    renderNegociosView = async function(container) {
+        await window._kumuOrigRenderNegocios(container);
 
-        if (navigator.clipboard) await navigator.clipboard.writeText(numNequi);
-        if (llaveBreB) {
-            var copiarLlave = await kumuConfirm('📋 Número Nequi copiado sin espacios: ' + numNequi + '\n\n🔑 ¿Deseas copiar la Llave Bre-B (' + llaveBreB + ') por separado?', 'Nequi y Llave Bre-B', '💳');
-            if (copiarLlave && navigator.clipboard) {
-                await navigator.clipboard.writeText(llaveBreB);
-                await kumuAlert('🔑 Llave Bre-B copiada:\n\n' + llaveBreB, 'Llave Copiada', '✅');
+        // En Admin: agregar casilla de WhatsApp de pedidos separado del Nequi + Importador Masivo PRIME!/Treinta
+        if (modoAdminVisible) {
+            var btnBackup = container.querySelector('button[onclick="descargarBackupSupabase()"]');
+            if (btnBackup && !document.getElementById('btnResetCeroKumu')) {
+                var btnZero = document.createElement('button');
+                btnZero.id = 'btnResetCeroKumu';
+                btnZero.className = 'bg-red-700 text-white px-2.5 py-1 rounded-lg text-[10px] font-extrabold shadow ml-1';
+                btnZero.innerHTML = '🧹 Borrar Datos a $0';
+                btnZero.onclick = window.reiniciarHistoricoCeroAdmin;
+                btnBackup.insertAdjacentElement('afterend', btnZero);
             }
-        } else {
-            await kumuAlert('📋 Número copiado sin espacios:\n\n' + numNequi + '\n\nDatos: ' + raw, 'Cuenta Copiada', '💳');
-        }
-    };
+            var inpTelNuevo = document.getElementById('negTel');
+            if (inpTelNuevo && !document.getElementById('negWaPedidos')) {
+                inpTelNuevo.placeholder = '💳 Nequi / Llave Bre-B para CONSIGNACIONES y Titular';
+                var inpWa = document.createElement('input');
+                inpWa.type = 'tel';
+                inpWa.id = 'negWaPedidos';
+                inpWa.placeholder = '📲 WhatsApp para recibir PEDIDOS (10 dígitos - Ej. Texas Pedidos)';
+                inpWa.className = 'w-full p-2 border-2 border-emerald-600/40 rounded-xl text-xs bg-emerald-50/40 font-bold';
+                inpTelNuevo.insertAdjacentElement('afterend', inpWa);
+            }
+            var selProdCat = document.getElementById('prodCat');
+            if (selProdCat) {
+                selProdCat.innerHTML = TODAS_CATEGORIAS_PRODUCTOS.map(function(op) { return '<option value="' + escaparHTML(op) + '">' + escaparHTML(obtenerTextoConEmojiCategoria(op)) + '</option>'; }).join('');
+            }
+            var btnCrearProd = container.querySelector('button[onclick="crearProducto()"]');
+            if (btnCrearProd && !document.getElementById('boxImportadorMasivoKumu')) {
+                var divImp = document.createElement('div');
+                divImp.id = 'boxImportadorMasivoKumu';
+                divImp.className = 'bg-amber-50 border-2 border-[#D4AF37] p-3 rounded-2xl space-y-2 mt-3';
+                divImp.innerHTML =
+                    '<h4 class="font-extrabold text-xs text-[#2D0B3A] uppercase">⚡ Carga Rápida por Lote (Copiar y Pegar desde Treinta / Excel)</h4>' +
+                    '<p class="text-[10px] text-gray-600 leading-snug">Selecciona arriba el Negocio (ej. PRIME!), copia los productos desde <b>catalogo.treinta.co/primescarnes</b> o pega una lista (<i>Nombre $Precio</i>) y súbelos todos en 1 clic:</p>' +
+                    '<textarea id="textareaImportMasivo" rows="4" placeholder="Ejemplo:\nPunta de Anca x Kg $38.000\nCostilla de Cerdo $26.000\nCachama Fresca $18.000" class="w-full p-2 border rounded-xl text-xs bg-white font-mono"></textarea>' +
+                    '<button type="button" onclick="window.procesarImportacionMasivaProductos(document.getElementById(\'selectLocalProd\').value)" class="w-full bg-[#2D0B3A] text-[#D4AF37] py-2 rounded-xl text-xs font-extrabold shadow">🚀 Subir Lote de Productos y Auto-Clasificar</button>';
+                btnCrearProd.insertAdjacentElement('afterend', divImp);
+            }
+        } else if (comercioLogueado) {
+            // En Mi Local: campo separado para Consignaciones vs. WhatsApp de Pedidos + Creador e Importador de Productos
+            var inpEditTel = document.getElementById('editTelLocal');
+            if (inpEditTel && !document.getElementById('editWaPedidosLocal')) {
+                inpEditTel.placeholder = '💳 Cuenta Nequi / Llave Bre-B (Donde llegan Consignaciones)';
+                var waAct = window.obtenerWhatsAppPedidosComercio(comercioLogueado);
+                var divWaEdit = document.createElement('div');
+                divWaEdit.innerHTML = '<label class="block text-[10px] font-extrabold text-[#1B4D3E]">📲 WhatsApp donde recibes los MENSAJES DE PEDIDOS (10 dígitos):</label>' +
+                    '<input type="tel" id="editWaPedidosLocal" value="' + escaparHTML(waAct) + '" placeholder="Ej. 3101234567" class="w-full p-1.5 border-2 border-emerald-600/40 rounded-lg text-xs bg-emerald-50/30 font-bold">';
+                inpEditTel.insertAdjacentElement('afterend', divWaEdit);
+            }
 
-    window.adjuntarFotoFachadaCliente = function(usarCamara) {
-        var inp = document.createElement('input');
-        inp.type = 'file';
-        inp.accept = 'image/*';
-        if (usarCamara) inp.setAttribute('capture', 'environment');
-        inp.onchange = function() {
-            var file = inp.files && inp.files[0];
-            if (!file) return;
-            var reader = new FileReader();
-            reader.onload = function(e) {
-                var img = new Image();
-                img.onload = function() {
-                    var max = 480, w = img.width, h = img.height;
-                    if (w > h && w > max) { h = Math.round(h * (max / w)); w = max; }
-                    else if (h >= w && h > max) { w = Math.round(w * (max / h)); h = max; }
-                    var cv = document.createElement('canvas');
-                    cv.width = w; cv.height = h;
-                    cv.getContext('2d').drawImage(img, 0, 0, w, h);
-                    window.fotoFachadaTemp = cv.toDataURL('image/jpeg', 0.68);
-                    var lbl = document.getElementById('estadoFotoFachadaCliente');
-                    if (lbl) { lbl.innerHTML = '✅ Foto de fachada adjuntada correctamente (Se borrará al entregar)'; lbl.classList.remove('hidden'); }
-                };
-                img.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        };
-        inp.click();
-    };
-
-    // 4. CARRITO SIN LA PALABRA "GARANTÍA" ("🛡️ Soporte y Plataforma:") Y TARIFA $4.000 / $5.000
-    actualizarBarraCarritoFlotante = function() {
-        var barra = document.getElementById('barraCarritoFlotante');
-        var badge = document.getElementById('badgeCantCarritoFlotante');
-        var txtTienda = document.getElementById('textoTiendaCarritoFlotante');
-        var txtSub = document.getElementById('textoSubtotalCarritoFlotante');
-        if (!barra) return;
-        if (currentView !== 'cliente' || carrito.length === 0) { barra.classList.add('hidden'); return; }
-        var totalCant = carrito.reduce(function(a, b) { return a + b.cantidad; }, 0);
-        var subtotal = carrito.reduce(function(a, b) { return a + ((b.precioCalculado || b.precio || 0) * b.cantidad); }, 0);
-        var comId = carrito[0] ? carrito[0].comercio_id : null;
-        var localObj = (windowComerciosCache || []).find(function(c) { return String(c.id) === String(comId); });
-        var metaL = extraerMetadatosComercio(localObj);
-        var udsEmp = metaL.costoEmpaque > 0 ? carrito.reduce(function(a, i) { return a + (itemRequiereEmpaque(i) ? i.cantidad : 0); }, 0) : 0;
-        var totEmp = udsEmp * (metaL.costoEmpaque || 0);
-        var comKumu = Math.round(subtotal * PORCENTAJE_COMISION);
-        var domi = window.esDomicilioGratisVIP ? 0 : (estaLloviendo ? 5000 : 4000);
-        var totalTodoSumado = subtotal + totEmp + domi + comKumu;
-
-        badge.textContent = String(totalCant);
-        txtTienda.textContent = localObj ? ('🛒 Pedido en ' + localObj.nombre) : '🛒 Tu Carrito Activo';
-        txtSub.textContent = 'Total: $' + totalTodoSumado.toLocaleString() + ' COP';
-        barra.classList.remove('hidden');
-    };
-
-    window._kumuOrigRenderCarrito = window._kumuOrigRenderCarrito || renderizarCarrito;
-    renderizarCarrito = function() {
-        var uds = carrito.reduce(function(a, b) { return a + (Number(b.cantidad) || 0); }, 0);
-        var exigeMotocarroExplicito = carrito.some(function(i) { return /\[motocarro\]|\[bulto\]/i.test((i.nombre || '') + ' ' + (i.descripcion || '')); });
-        tarifaDomicilio = (uds > 10 || exigeMotocarroExplicito) ? 8000 : (uds >= 9 ? 5000 : (estaLloviendo ? 5000 : 4000));
-        window._kumuOrigRenderCarrito();
-
-        var resumen = document.getElementById('carritoResumen');
-        if (!resumen || carrito.length === 0) return;
-
-        var metaLocal = extraerMetadatosComercio(comercioSeleccionado);
-        var subtotalProductos = carrito.reduce(function(acc, item) { return acc + ((item.precioCalculado || item.precio) * item.cantidad); }, 0);
-        var unidadesEmp = metaLocal.costoEmpaque > 0 ? carrito.reduce(function(acc, item) { return acc + (itemRequiereEmpaque(item) ? item.cantidad : 0); }, 0) : 0;
-        var totalEmpaque = unidadesEmp * (metaLocal.costoEmpaque || 0);
-        var cargoPlataforma = Math.round(subtotalProductos * PORCENTAJE_COMISION);
-        var domiCobrarCliente = window.esDomicilioGratisVIP ? 0 : tarifaDomicilio;
-        var totalConTodoSumado = subtotalProductos + totalEmpaque + domiCobrarCliente + cargoPlataforma;
-        var tieneLicor = (comercioSeleccionado && comercioSeleccionado.categoria === 'Licores & Cigarrillos') || carrito.some(function(i) { return i.esLicor; });
-
-        var cajaSubtotales = resumen.querySelector('.bg-emerald-50\\/50.p-2\\.5.rounded-xl.border');
-        if (cajaSubtotales) {
-            cajaSubtotales.outerHTML =
-                '<details class="text-xs text-gray-600 bg-emerald-50/50 p-2.5 rounded-xl border cursor-pointer">' +
-                    '<summary class="font-extrabold text-[#1B4D3E] select-none">▾ Ver detalles de la orden</summary>' +
-                    '<div class="space-y-1 pt-2 mt-2 border-t border-emerald-200">' +
-                        '<div class="flex justify-between"><span>Productos (' + escaparHTML(comercioSeleccionado.nombre) + '):</span><span class="font-semibold">$' + subtotalProductos.toLocaleString() + ' COP</span></div>' +
-                        (totalEmpaque > 0 ? '<div class="flex justify-between"><span>🥡 Empaques (' + unidadesEmp + 'x):</span><span class="font-semibold">$' + totalEmpaque.toLocaleString() + ' COP</span></div>' : '') +
-                        '<div class="flex justify-between text-emerald-800"><span>🛵 Domicilio ' + (window.esDomicilioGratisVIP ? '🎁 (¡GRATIS VIP #10!)' : (estaLloviendo ? '🌧️' : '☀️')) + ':</span><span class="font-bold">$' + domiCobrarCliente.toLocaleString() + ' COP</span></div>' +
-                        '<div class="flex justify-between text-gray-600"><span>🛡️ Soporte y Plataforma:</span><span class="font-semibold">$' + cargoPlataforma.toLocaleString() + ' COP</span></div>' +
+            var boxListaProds = document.getElementById('listaProductosAliado');
+            if (boxListaProds && !document.getElementById('boxCrearProductoAliado')) {
+                var exc = obtenerCategoriasValidasDeLocal(comercioLogueado);
+                var ops = exc ? exc.filter(function(c) { return c !== 'Todos'; }).concat(['General']) : TODAS_CATEGORIAS_PRODUCTOS;
+                var cardNuevoProd = document.createElement('div');
+                cardNuevoProd.id = 'boxCrearProductoAliado';
+                cardNuevoProd.className = 'bg-emerald-50/70 border-2 border-[#1B4D3E] rounded-2xl p-3 shadow-sm space-y-2 mb-3';
+                cardNuevoProd.innerHTML =
+                    '<h3 class="font-extrabold text-xs uppercase text-[#1B4D3E]">➕ Cargar Productos a Mi Tienda (Individual o por Lote)</h3>' +
+                    '<input type="text" id="aliadoProdNombre" placeholder="Nombre del producto" class="w-full p-2 border rounded-xl text-xs bg-white">' +
+                    '<input type="text" id="aliadoProdDesc" placeholder="Descripción, peso o ingredientes" class="w-full p-2 border rounded-xl text-xs bg-white">' +
+                    '<div class="grid grid-cols-2 gap-2">' +
+                        '<input type="number" id="aliadoProdPrecio" placeholder="Precio ($COP)" class="w-full p-2 border rounded-xl text-xs bg-white font-bold">' +
+                        '<input type="number" id="aliadoProdStock" placeholder="Cupos disp. (Opcional)" class="w-full p-2 border rounded-xl text-xs bg-white">' +
                     '</div>' +
-                '</details>';
-        }
-
-        resumen.querySelectorAll('div.flex.justify-between').forEach(function(fila) {
-            if (fila.textContent.indexOf('Total a Pagar:') !== -1) {
-                fila.innerHTML = '<span>Total de tu Compra:</span><span class="text-lg font-black text-[#1B4D3E]">$' + totalConTodoSumado.toLocaleString() + ' COP</span>';
+                    '<div><label class="block text-[10px] font-extrabold text-[#2D0B3A] mb-0.5">🏷️ Categoría en tu Tienda:</label>' +
+                    '<select id="aliadoProdCat" class="w-full p-2 border rounded-xl text-xs bg-amber-50 font-bold text-[#2D0B3A]">' +
+                        ops.map(function(op) { return '<option value="' + escaparHTML(op) + '">' + escaparHTML(obtenerTextoConEmojiCategoria(op)) + '</option>'; }).join('') +
+                    '</select></div>' +
+                    '<div class="bg-white p-2 border rounded-xl text-xs space-y-1">' +
+                        '<label class="font-bold text-gray-600 block">📸 Foto del Producto:</label>' +
+                        '<input type="file" accept="image/*" onchange="cargarImagenGaleria(event, \'producto\')" class="w-full text-xs">' +
+                        '<input type="text" id="aliadoProdFotoUrl" placeholder="o pega URL de foto (Opcional)" class="w-full p-1 border rounded text-[11px] mt-1">' +
+                    '</div>' +
+                    '<button type="button" onclick="window.crearProductoDesdeAliado()" class="w-full bg-[#1B4D3E] text-[#D4AF37] py-2.5 rounded-xl text-xs font-extrabold shadow">➕ Guardar Producto en Mi Tienda</button>' +
+                    '<details class="pt-2 border-t border-emerald-300 text-xs">' +
+                        '<summary class="font-extrabold text-[#2D0B3A] cursor-pointer">⚡ ¿Tienes muchos productos? Pégalos en lote aquí</summary>' +
+                        '<div class="space-y-1.5 pt-2">' +
+                            '<textarea id="textareaImportMasivo" rows="3" placeholder="Pega aquí tu lista (Nombre $Precio en cada línea)..." class="w-full p-2 border rounded-xl text-xs bg-white font-mono"></textarea>' +
+                            '<button type="button" onclick="window.procesarImportacionMasivaProductos(\'' + comercioLogueado.id + '\')" class="w-full bg-[#2D0B3A] text-[#D4AF37] py-2 rounded-xl text-xs font-extrabold shadow">🚀 Subir Lote Completo</button>' +
+                        '</div>' +
+                    '</details>';
+                boxListaProds.parentNode.insertAdjacentElement('beforebegin', cardNuevoProd);
             }
-        });
-
-        var selPago = document.getElementById('metodoPago');
-        if (selPago) selPago.innerHTML = '<option value="Transferencia" selected>Transferencia Nequi / Llave Bre-B ($' + totalConTodoSumado.toLocaleString() + ' COP)</option>';
-        var divEf = document.getElementById('divEfectivoCambio');
-        if (divEf) divEf.remove();
-        var divTr = document.getElementById('divTransferenciaInfo');
-        if (divTr) divTr.style.display = 'block';
-
-        var btnEnv = resumen.querySelector('button[onclick^="enviarPedido("]');
-        if (btnEnv) btnEnv.setAttribute('onclick', 'enviarPedido(' + totalConTodoSumado + ', ' + subtotalProductos + ', ' + tarifaDomicilio + ', ' + cargoPlataforma + ', ' + tieneLicor + ', ' + totalEmpaque + ')');
-
-        var inpDir = document.getElementById('direccionCliente');
-        if (inpDir && !document.getElementById('boxBotonesFachadaCliente')) {
-            var boxF = document.createElement('div');
-            boxF.id = 'boxBotonesFachadaCliente';
-            boxF.className = 'space-y-1';
-            boxF.innerHTML =
-                '<div class="grid grid-cols-2 gap-1.5">' +
-                    '<button type="button" onclick="window.adjuntarFotoFachadaCliente(true)" class="bg-purple-50 hover:bg-purple-100 text-[#2D0B3A] border border-dashed border-[#2D0B3A] py-1.5 px-2 rounded-xl text-[11px] font-extrabold shadow-sm">📷 Tomar Foto Fachada</button>' +
-                    '<button type="button" onclick="window.adjuntarFotoFachadaCliente(false)" class="bg-amber-50 hover:bg-amber-100 text-[#2D0B3A] border border-dashed border-[#C85A17] py-1.5 px-2 rounded-xl text-[11px] font-extrabold shadow-sm">🖼️ Subir de Galería</button>' +
-                '</div>' +
-                '<p id="estadoFotoFachadaCliente" class="' + (window.fotoFachadaTemp ? '' : 'hidden') + ' text-[10px] text-emerald-700 font-extrabold text-center">✅ Foto de fachada lista (Se borrará al entregar)</p>';
-            inpDir.insertAdjacentElement('afterend', boxF);
         }
-        actualizarBarraCarritoFlotante();
+    };
+
+    // Guardar también el WhatsApp de pedidos al registrar un comercio nuevo desde Admin
+    window._kumuOrigCrearComercio = window._kumuOrigCrearComercio || crearComercio;
+    crearComercio = async function() {
+        var waNuevo = (document.getElementById('negWaPedidos') ? document.getElementById('negWaPedidos').value : '').replace(/\D/g, '').slice(-10);
+        var inpDir = document.getElementById('negDir');
+        if (inpDir && waNuevo.length === 10 && inpDir.value.indexOf('[WA:') === -1) {
+            inpDir.value = (inpDir.value.trim() + ' [WA:' + waNuevo + ']').trim();
+        }
+        await window._kumuOrigCrearComercio();
     };
 </script>
-<!-- === FIN BLOQUE 1 DE 2 KUMU V6 === -->
+<!-- === FIN BLOQUE 2 DE 2 KUMU V7 === -->
 </body>
 </html>
