@@ -5187,5 +5187,259 @@
     };
 </script>
 <!-- === FIN BLOQUE 2 DE 2 KUMU V7 === -->
+<!-- === INICIO BLOQUE 3 COMPLEMENTARIO: CHAT DIRECTO EN VIVO Y PRIVACIDAD TOTAL DE NÚMEROS === -->
+<script>
+    window._chatPollTimer = null;
+    window._chatLastCount = -1;
+
+    // 1. EXTRAER MENSAJES DEL CHAT INTERNO ANÓNIMO
+    function extraerChatPedidoKumu(pedObj) {
+        var raw = ((pedObj && pedObj.direccion_entrega) || '') + ' ' + ((pedObj && pedObj.domiciliario_info) || '');
+        var out = [], reg = /\[CHAT:([^|]+)\|([^|]+)\|([^\]]+)\]/g, m;
+        while ((m = reg.exec(raw)) !== null) {
+            out.push({ rol: m[1], hora: m[2], txt: m[3] });
+        }
+        return out;
+    }
+
+    window.cerrarChatAnonimoKumu = function() {
+        if (window._chatPollTimer) {
+            clearInterval(window._chatPollTimer);
+            window._chatPollTimer = null;
+        }
+        var m = document.getElementById('modalChatAnonimoKumu');
+        if (m) m.remove();
+    };
+
+    function dibujarBurbujaMensajesChat(msgs, miRol) {
+        if (msgs.length === 0) {
+            return '<p class="text-center text-gray-400 text-xs py-4">🔒 Chat privado activo. Escribe aquí para coordinar la entrega sin exponer tu número de celular.</p>';
+        }
+        return msgs.map(function(m) {
+            var mio = m.rol === miRol;
+            return '<div class="flex flex-col ' + (mio ? 'items-end' : 'items-start') + '">' +
+                '<span class="text-[9px] text-gray-500 font-bold">' + escaparHTML(m.rol) + ' • ' + escaparHTML(m.hora) + '</span>' +
+                '<div class="px-3 py-1.5 rounded-xl text-xs font-semibold max-w-[85%] ' + (mio ? 'bg-[#2D0B3A] text-[#D4AF37]' : 'bg-white text-gray-800 border') + '">' + escaparHTML(m.txt) + '</div></div>';
+        }).join('');
+    }
+
+    // 2. ABRIR VENTANA DE CHAT DIRECTO EN LA APP (AUTO-ACTUALIZABLE CADA 2.5 SEGUNDOS)
+    window.abrirChatAnonimoKumu = async function(pedidoId, miRol) {
+        var res = await supabaseClient.from('pedidos').select('*').eq('id', pedidoId).maybeSingle();
+        var p = res.data;
+        if (!p) return;
+        window.cerrarChatAnonimoKumu();
+
+        var msgs = extraerChatPedidoKumu(p);
+        window._chatLastCount = msgs.length;
+        var rapidas = miRol === 'Repartidor'
+            ? ['Estoy afuera en la puerta 🛵', 'Voy saliendo para tu barrio 🚀', 'Recuerda tener tu PIN de 4 dígitos 🔐']
+            : ['Ya salgo a recibirte 🏃', 'Casa de rejas blancas 🏠', 'Gracias, aquí te espero 👍'];
+
+        var modal = document.createElement('div');
+        modal.id = 'modalChatAnonimoKumu';
+        modal.className = 'fixed inset-0 bg-black/75 z-[10002] flex items-center justify-center p-4';
+        modal.innerHTML =
+            '<div class="bg-[#FDFBF7] w-full max-w-sm rounded-2xl overflow-hidden shadow-2xl border-2 border-[#D4AF37] flex flex-col max-h-[82vh]">' +
+                '<div class="kumu-header px-4 py-3 text-white flex justify-between items-center">' +
+                    '<div><h3 class="text-xs font-extrabold text-[#D4AF37]">💬 CHAT PRIVADO EN VIVO KUMU</h3><p class="text-[10px] text-emerald-200">🔒 Números telefónicos ocultos por privacidad</p></div>' +
+                    '<button type="button" onclick="window.cerrarChatAnonimoKumu()" class="bg-white/20 text-white w-7 h-7 rounded-full font-bold text-sm">✕</button>' +
+                '</div>' +
+                '<div id="cajaMensajesChatEnVivo" class="p-3 overflow-y-auto space-y-2 flex-1 bg-slate-100 max-h-60">' + dibujarBurbujaMensajesChat(msgs, miRol) + '</div>' +
+                '<div class="p-2 bg-amber-50 border-t flex gap-1.5 overflow-x-auto kumu-scroll">' +
+                    rapidas.map(function(r) { return '<button type="button" onclick="window.enviarMensajeChatAnonimo(\'' + p.id + '\',\'' + miRol + '\',\'' + r + '\')" class="px-2 py-1 bg-white border border-[#D4AF37] rounded-lg text-[10px] font-bold whitespace-nowrap">' + r + '</button>'; }).join('') +
+                '</div>' +
+                '<div class="p-2.5 bg-white border-t flex gap-1.5">' +
+                    '<input id="inpTextoChatAnonimo" type="text" onkeydown="if(event.key===\'Enter\') window.enviarMensajeChatAnonimo(\'' + p.id + '\',\'' + miRol + '\')" placeholder="Escribe un mensaje..." class="flex-1 p-2 border rounded-xl text-xs font-semibold">' +
+                    '<button type="button" onclick="window.enviarMensajeChatAnonimo(\'' + p.id + '\',\'' + miRol + '\')" class="btn-vaupes px-3 py-2 rounded-xl text-xs font-extrabold">Enviar</button>' +
+                '</div>' +
+            '</div>';
+        document.body.appendChild(modal);
+        var box = document.getElementById('cajaMensajesChatEnVivo');
+        if (box) box.scrollTop = box.scrollHeight;
+
+        window._chatPollTimer = setInterval(async function() {
+            var boxAct = document.getElementById('cajaMensajesChatEnVivo');
+            if (!boxAct) { window.cerrarChatAnonimoKumu(); return; }
+            var rAct = await supabaseClient.from('pedidos').select('direccion_entrega, domiciliario_info').eq('id', pedidoId).maybeSingle();
+            if (!rAct.data) return;
+            var nMsgs = extraerChatPedidoKumu(rAct.data);
+            if (nMsgs.length !== window._chatLastCount) {
+                if (nMsgs.length > window._chatLastCount && nMsgs[nMsgs.length - 1].rol !== miRol) {
+                    reproducirTonoAlerta('normal');
+                }
+                window._chatLastCount = nMsgs.length;
+                boxAct.innerHTML = dibujarBurbujaMensajesChat(nMsgs, miRol);
+                boxAct.scrollTop = boxAct.scrollHeight;
+            }
+        }, 2500);
+    };
+
+    window.enviarMensajeChatAnonimo = async function(pedidoId, miRol, txtRapido) {
+        var inp = document.getElementById('inpTextoChatAnonimo');
+        var txt = limpiarInputUsuario(txtRapido || (inp ? inp.value : ''));
+        if (!txt) return;
+        if (inp && !txtRapido) inp.value = '';
+        var r = await supabaseClient.from('pedidos').select('direccion_entrega').eq('id', pedidoId).maybeSingle();
+        var hora = new Date().toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' });
+        var nuevaDir = (((r.data && r.data.direccion_entrega) || '') + ' [CHAT:' + miRol + '|' + hora + '|' + txt + ']').trim();
+        await supabaseClient.from('pedidos').update({ direccion_entrega: nuevaDir }).eq('id', pedidoId);
+        var r2 = await supabaseClient.from('pedidos').select('direccion_entrega, domiciliario_info').eq('id', pedidoId).maybeSingle();
+        var boxAct = document.getElementById('cajaMensajesChatEnVivo');
+        if (boxAct && r2.data) {
+            var msgs = extraerChatPedidoKumu(r2.data);
+            window._chatLastCount = msgs.length;
+            boxAct.innerHTML = dibujarBurbujaMensajesChat(msgs, miRol);
+            boxAct.scrollTop = boxAct.scrollHeight;
+        }
+    };
+
+    // 3. VISOR DE FOTO DE FACHADA PARA EL REPARTIDOR
+    window.cerrarModalFachadaKumu = function() {
+        var m = document.getElementById('modalFachadaKumu');
+        if (m) m.remove();
+    };
+
+    window.verFotoFachadaRepartidor = async function(pedidoId) {
+        var r = await supabaseClient.from('pedidos').select('direccion_entrega, domiciliario_info').eq('id', pedidoId).maybeSingle();
+        var comb = ((r.data && r.data.direccion_entrega) || '') + ' ' + ((r.data && r.data.domiciliario_info) || '');
+        var m = comb.match(/\[FACHADA:(data:image\/[^\]]+)\]/);
+        if (!m) return kumuAlert('El cliente no adjuntó foto de fachada en este pedido.', '🏠 Sin Foto de Fachada', '🏠');
+        window.cerrarModalFachadaKumu();
+        var modal = document.createElement('div');
+        modal.id = 'modalFachadaKumu';
+        modal.onclick = function(ev) { if (ev.target === modal) window.cerrarModalFachadaKumu(); };
+        modal.className = 'fixed inset-0 bg-black/85 z-[10004] flex items-center justify-center p-4';
+        modal.innerHTML =
+            '<div class="bg-[#FDFBF7] max-w-sm w-full rounded-2xl p-4 border-2 border-[#D4AF37] text-center space-y-3 shadow-2xl">' +
+                '<div class="flex justify-between items-center border-b pb-2">' +
+                    '<h4 class="font-extrabold text-xs text-[#2D0B3A] uppercase">🏠 Foto de Fachada / Referencia</h4>' +
+                    '<button type="button" onclick="window.cerrarModalFachadaKumu()" class="bg-red-600 text-white w-7 h-7 rounded-full font-extrabold text-xs">✕</button>' +
+                '</div>' +
+                '<div class="bg-black/5 rounded-xl p-1 flex items-center justify-center">' +
+                    '<img src="' + m[1] + '" style="max-height:55vh; width:auto; max-width:100%; object-fit:contain;" class="rounded-lg mx-auto">' +
+                '</div>' +
+                '<button type="button" onclick="window.cerrarModalFachadaKumu()" class="w-full bg-[#2D0B3A] text-[#D4AF37] py-2.5 rounded-xl font-extrabold text-xs shadow">Cerrar Foto</button>' +
+            '</div>';
+        document.body.appendChild(modal);
+    };
+
+    // 4. INYECTAR CHAT EN LA PANTALLA DEL CLIENTE Y OCULTAR NÚMERO DEL REPARTIDOR
+    window._kumuOrigRenderSegV8 = window._kumuOrigRenderSegV8 || renderizarSeguimientoCliente;
+    renderizarSeguimientoCliente = async function(esAutoRefresh) {
+        await window._kumuOrigRenderSegV8(esAutoRefresh);
+        var cont = document.getElementById('cajaSeguimientoMapaCliente');
+        var ultimoId = localStorage.getItem('kumu_pedido_activo_id');
+        if (!cont || !ultimoId || !cont.innerHTML.trim()) return;
+
+        // Ocultar teléfono del repartidor y etiquetas técnicas en el cuadro del cliente
+        cont.querySelectorAll('p').forEach(function(pEl) {
+            var t = pEl.textContent || '';
+            if (t.indexOf('[FACHADA:') !== -1 || t.indexOf('[CHAT:') !== -1 || t.indexOf('Tel:') !== -1) {
+                var sinTel = window.limpiarInfoDomiSoloTexto(t).replace(/\|\s*Tel:\s*\d+/gi, '').replace(/\|\s*CC:\s*\d+/gi, '').trim();
+                pEl.textContent = sinTel || '🛵 Repartidor asignado en camino';
+            }
+        });
+
+        // Eliminar cualquier enlace de WhatsApp que exponga el celular
+        cont.querySelectorAll('a[href*="wa.me"]').forEach(function(a) { a.remove(); });
+
+        if (!document.getElementById('btnChatClienteConDomi')) {
+            var pinG = localStorage.getItem('kumu_pin_activo_' + ultimoId) || '----';
+            var barra = document.createElement('div');
+            barra.id = 'btnChatClienteConDomi';
+            barra.className = 'flex gap-2 pt-2 border-t border-emerald-200 mt-2';
+            barra.innerHTML =
+                '<span class="bg-[#D4AF37] text-[#2D0B3A] font-extrabold text-[11px] px-2.5 py-1.5 rounded-lg">🔐 PIN: ' + escaparHTML(pinG) + '</span>' +
+                '<button type="button" onclick="window.abrirChatAnonimoKumu(\'' + ultimoId + '\',\'Cliente\')" class="flex-1 bg-[#2D0B3A] text-[#D4AF37] py-1.5 px-3 rounded-lg text-xs font-extrabold shadow animate-pulse">💬 Chat Interno con Repartidor</button>';
+            if (cont.firstElementChild) cont.firstElementChild.appendChild(barra);
+        }
+    };
+
+    // 5. PANEL DEL REPARTIDOR: REEMPLAZAR WHATSAPP POR CHAT INTERNO Y OCULTAR SIEMPRE EL CELULAR DEL CLIENTE
+    window._kumuOrigRenderDomiV8 = window._kumuOrigRenderDomiV8 || renderDomiciliarioView;
+    renderDomiciliarioView = async function(container) {
+        await window._kumuOrigRenderDomiV8(container);
+        var lista = document.getElementById('listaPedidos');
+        if (!lista) return;
+
+        lista.querySelectorAll('p').forEach(function(pEl) {
+            if (pEl.textContent.indexOf('[FACHADA:') !== -1 || pEl.textContent.indexOf('[CHAT:') !== -1 || pEl.textContent.indexOf('[MOTO_WA_TS:') !== -1) {
+                pEl.textContent = window.limpiarInfoDomiSoloTexto(pEl.textContent);
+            }
+        });
+
+        // En cada tarjeta activa del repartidor: quitar WhatsApp del cliente y poner el botón de Chat Interno Anónimo
+        lista.querySelectorAll('.bg-white.border.rounded-2xl').forEach(function(card) {
+            var btnGps = card.querySelector('button[onclick^="transmitirGPSPedido"]');
+            var mId = btnGps ? btnGps.getAttribute('onclick').match(/'([^']+)'/) : null;
+            if (!mId) return;
+            var pedId = mId[1];
+
+            // Si había botón de WhatsApp al cliente, reemplazarlo por Chat Interno
+            var linkWa = card.querySelector('a[href*="wa.me"]');
+            var btnChat = document.createElement('button');
+            btnChat.type = 'button';
+            btnChat.className = 'block w-full text-center bg-[#2D0B3A] text-[#D4AF37] border border-[#D4AF37] font-extrabold py-1.5 px-1 rounded-lg text-[10px] shadow';
+            btnChat.innerHTML = '💬 Chat Cliente';
+            btnChat.onclick = function() { window.abrirChatAnonimoKumu(pedId, 'Repartidor'); };
+
+            if (linkWa) {
+                linkWa.replaceWith(btnChat);
+            } else {
+                var grid3 = card.querySelector('.grid.grid-cols-3');
+                if (grid3 && !card.querySelector('.btn-chat-domi-fijo')) {
+                    btnChat.classList.add('btn-chat-domi-fijo');
+                    grid3.insertBefore(btnChat, btnGps);
+                }
+            }
+
+            if (!card.querySelector('.btn-fachada-domi-fijo')) {
+                var btnFach = document.createElement('button');
+                btnFach.type = 'button';
+                btnFach.className = 'btn-fachada-domi-fijo w-full mt-1 bg-purple-100 text-[#2D0B3A] border border-purple-300 font-extrabold py-1.5 px-2 rounded-lg text-[10px]';
+                btnFach.innerHTML = '🏠 Ver Foto de Fachada';
+                btnFach.onclick = function() { window.verFotoFachadaRepartidor(pedId); };
+                var gridCont = card.querySelector('.grid.grid-cols-3');
+                if (gridCont) gridCont.insertAdjacentElement('afterend', btnFach);
+            }
+        });
+    };
+
+    // 6. VALIDAR PIN DE 4 DÍGITOS AL ENTREGAR Y BORRAR CHAT/FACHADA PARA PROTEGER LA PRIVACIDAD DEL CLIENTE
+    window._kumuOrigActEstadoV8 = window._kumuOrigActEstadoV8 || actualizarEstado;
+    actualizarEstado = async function(id, estado) {
+        if (estado === 'Entregado') {
+            var r = await supabaseClient.from('pedidos').select('direccion_entrega, domiciliario_info').eq('id', id).maybeSingle();
+            var p = r.data;
+            var mPin = ((p && p.direccion_entrega) || '').match(/\[PIN:\s*(\d{4})\]/);
+            if (mPin && !modoAdminVisible) {
+                var pinDig = await kumuPrompt('🔐 Solicita al cliente el PIN de 4 dígitos para confirmar la entrega en puerta:', '', 'Validar PIN de Entrega', '🔑', 'number');
+                if (!pinDig || pinDig.trim() !== mPin[1]) return kumuAlert('El PIN ingresado no coincide con el del cliente.', '❌ PIN Incorrecto', '🚫');
+            }
+            var dirLimpia = ((p && p.direccion_entrega) || '').replace(/\[FACHADA:[^\]]+\]/g, '').replace(/\[CHAT:[^\]]+\]/g, '').trim();
+            var domiLimpio = window.limpiarInfoDomiSoloTexto(p && p.domiciliario_info);
+            await supabaseClient.from('pedidos').update({ estado: 'Entregado', direccion_entrega: dirLimpia, domiciliario_info: domiLimpio }).eq('id', id);
+            await kumuAlert('¡Pedido entregado! El chat y la foto de fachada fueron eliminados por privacidad.', '✅ Entrega Exitosa', '🎉');
+            initApp(true);
+            return;
+        }
+        await window._kumuOrigActEstadoV8(id, estado);
+    };
+
+    // 7. SELLO DE PRIVACIDAD Y SEGURIDAD ANTI-RUMORES EN EL CARRITO DEL CLIENTE
+    window._kumuOrigRenderCarritoV8 = window._kumuOrigRenderCarritoV8 || renderizarCarrito;
+    renderizarCarrito = function() {
+        window._kumuOrigRenderCarritoV8();
+        var resumen = document.getElementById('carritoResumen');
+        if (!resumen || document.getElementById('selloPrivacidadKumuCarrito')) return;
+        var sello = document.createElement('div');
+        sello.id = 'selloPrivacidadKumuCarrito';
+        sello.className = 'bg-emerald-950 text-amber-100 p-2.5 rounded-xl border border-[#D4AF37] text-[10px] leading-snug mb-2 flex items-center gap-2 shadow-sm';
+        sello.innerHTML = '<span class="text-lg">🛡️</span><div><b class="text-[#D4AF37] block">Compra 100% Segura y Privada en Mitú:</b>Jamás pedimos claves ni tarjetas. Tu número celular se mantiene oculto para los repartidores (hablas por nuestro Chat Interno Anónimo).</div>';
+        resumen.insertBefore(sello, resumen.firstChild);
+    };
+</script>
+<!-- === FIN BLOQUE 3 COMPLEMENTARIO === -->
 </body>
 </html>
