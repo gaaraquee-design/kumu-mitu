@@ -5441,5 +5441,176 @@
     };
 </script>
 <!-- === FIN BLOQUE 3 COMPLEMENTARIO === -->
+<!-- === INICIO BLOQUE 4: BANNERS A TIENDA KUMU, SIN ETIQUETA DESTACADO, CLAVE ALIADOS Y DOMIS SIN EFECTIVO === -->
+<script>
+    // 1. BANNERS: QUITAR LETRERO "DESTACADO EN MITÚ" DE TODOS LOS BANNERS (DEJANDO SOLO EL CONTADOR 4/5 A LA DERECHA)
+    renderizarBannersPublicitarios = function() {
+        var cont = document.getElementById('cajaBannerPublicitario');
+        if (!cont) return;
+        var listaActiva = obtenerListaBannersActivos();
+        var total = listaActiva.length;
+        var idxActual = ((indiceBannerActual % total) + total) % total;
+        var b = listaActiva[idxActual];
+
+        cont.innerHTML =
+            '<div onclick="abrirAccionBanner(' + idxActual + ')" ontouchstart="pausaCarruselHasta=Date.now()+12000" style="height:140px;" class="relative w-full rounded-2xl overflow-hidden shadow-lg border-2 border-[#D4AF37] cursor-pointer group bg-[#2D0B3A] select-none">' +
+                '<img src="' + escaparHTML(b.imagen) + '" loading="lazy" style="width:100%; height:140px; object-fit:cover; object-position:center center; filter:contrast(1.08) saturate(1.14) brightness(1.04);" class="group-hover:scale-105 transition duration-500" onerror="this.src=\'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=960&h=320&fit=crop\'">' +
+                '<div class="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/80 via-black/25 to-transparent pointer-events-none"></div>' +
+                '<div class="absolute inset-0 px-7 py-2.5 flex flex-col justify-between">' +
+                    '<div class="flex justify-end items-center">' +
+                        '<span class="text-[9px] text-white font-extrabold bg-black/55 px-1.5 py-0.5 rounded">' + (idxActual + 1) + '/' + total + '</span>' +
+                    '</div>' +
+                    '<div class="mt-auto pb-1">' +
+                        '<h3 class="text-white font-extrabold text-xs sm:text-sm leading-tight drop-shadow">' + escaparHTML(b.titulo) + '</h3>' +
+                        '<p class="text-amber-200 text-[10px] sm:text-[11px] font-semibold line-clamp-1 mt-0.5 drop-shadow">' + escaparHTML(b.subtitulo) + '</p>' +
+                    '</div>' +
+                    '<div class="flex justify-center space-x-1.5">' +
+                        listaActiva.map(function(_, i) {
+                            return '<button type="button" onclick="irASlideBanner(' + i + ', event)" class="h-1.5 rounded-full transition-all ' + (i === idxActual ? 'w-5 bg-[#D4AF37]' : 'w-1.5 bg-white/75') + '"></button>';
+                        }).join('') +
+                    '</div>' +
+                '</div>' +
+                '<button type="button" onclick="cambiarSlideBannerManual(-1, event)" class="absolute left-1 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/75 text-white w-6 h-8 rounded-full flex items-center justify-center text-sm font-bold">‹</button>' +
+                '<button type="button" onclick="cambiarSlideBannerManual(1, event)" class="absolute right-1 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/75 text-white w-6 h-8 rounded-full flex items-center justify-center text-sm font-bold">›</button>' +
+            '</div>';
+    };
+
+    // 2. BANNERS: LLEVAR SIEMPRE A LA TIENDA DENTRO DE KUMU (NUNCA AL WHATSAPP DEL ALIADO)
+    abrirAccionBanner = function(idxBanner) {
+        var lista = obtenerListaBannersActivos();
+        var b = lista[idxBanner] || lista[0];
+        if (!b) return;
+
+        var norm = function(str) {
+            return String(str || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+        };
+
+        var destinoRaw = (b.destino || '').trim();
+        var destinoNorm = norm(destinoRaw);
+        var tituloNorm = norm(b.titulo || '');
+        var comercios = windowComerciosCache || [];
+
+        // Buscar tienda en Kumu por ID exacto, por Destino o por el Título del Banner (ej. "Terraflora")
+        var localEncontrado = comercios.find(function(c) {
+            var nomC = norm(c.nombre);
+            if (!nomC) return false;
+            if (String(c.id) === destinoRaw) return true;
+            if (destinoNorm && destinoNorm !== 'catalogo' && !destinoNorm.startsWith('wa_') && !destinoNorm.startsWith('http') && (nomC.indexOf(destinoNorm) !== -1 || destinoNorm.indexOf(nomC) !== -1)) return true;
+            if (tituloNorm && (nomC.indexOf(tituloNorm) !== -1 || tituloNorm.indexOf(nomC) !== -1)) return true;
+            return false;
+        });
+
+        // Si en destino pusieron el teléfono del local, buscar a qué tienda de Kumu pertenece y abrir su tienda en Kumu
+        if (!localEncontrado) {
+            var numDestino = destinoRaw.replace(/\D/g, '').slice(-10);
+            if (numDestino.length === 10) {
+                localEncontrado = comercios.find(function(c) {
+                    var telLocal = String(c.telefono || '').replace(/\D/g, '');
+                    var waLocal = window.obtenerWhatsAppPedidosComercio ? window.obtenerWhatsAppPedidosComercio(c) : '';
+                    return (telLocal && telLocal.indexOf(numDestino) !== -1) || (waLocal && waLocal === numDestino);
+                });
+            }
+        }
+
+        if (localEncontrado) {
+            seleccionarComercioPorId(localEncontrado.id);
+            return;
+        }
+
+        // Si no coincide con un comercio puntual, llevar al listado de tiendas de Kumu sin salir a WhatsApp
+        var elCatalogo = document.getElementById('listaComercios');
+        if (elCatalogo) elCatalogo.scrollIntoView({ behavior: 'smooth' });
+    };
+
+    // 3. MÓDULO DE ALIADOS: OPCIÓN PARA CAMBIAR CONTRASEÑA EN SUPABASE (TABLA COMERCIOS -> PIN_LOCAL)
+    window.toggleVerClaveAliado = function(idInput, btn) {
+        var inp = document.getElementById(idInput);
+        if (!inp) return;
+        if (inp.type === 'password') { inp.type = 'text'; btn.textContent = '🙈'; }
+        else { inp.type = 'password'; btn.textContent = '👁️'; }
+    };
+
+    window.cambiarContrasenaDesdeAliado = async function() {
+        if (!comercioLogueado) return;
+        var actualIngresada = (document.getElementById('inpClaveActualAliado') ? document.getElementById('inpClaveActualAliado').value : '').trim();
+        var nuevaIngresada = (document.getElementById('inpClaveNuevaAliado') ? document.getElementById('inpClaveNuevaAliado').value : '').trim();
+
+        if (!actualIngresada || !nuevaIngresada) {
+            return kumuAlert('Ingresa tu contraseña actual y la nueva contraseña.', 'Campos Requeridos', '⚠️');
+        }
+        if (nuevaIngresada.length < 4 || nuevaIngresada.indexOf(':') !== -1) {
+            return kumuAlert('La nueva contraseña debe tener al menos 4 caracteres y no contener dos puntos (:).', 'Contraseña Inválida', '⚠️');
+        }
+
+        var pinGuardado = String(comercioLogueado.pin_local || '').trim();
+        var usuarioPrefijo = '';
+        var claveRealActual = pinGuardado;
+
+        if (pinGuardado.indexOf(':') !== -1) {
+            var partes = pinGuardado.split(':');
+            usuarioPrefijo = partes[0].trim();
+            claveRealActual = partes.slice(1).join(':').trim();
+        }
+
+        if (actualIngresada !== claveRealActual && actualIngresada !== pinGuardado) {
+            return kumuAlert('La contraseña actual que escribiste no coincide con la registrada.', '❌ Contraseña Incorrecta', '🚫');
+        }
+
+        var nuevoPinLocal = usuarioPrefijo ? (usuarioPrefijo + ':' + nuevaIngresada) : nuevaIngresada;
+        var res = await supabaseClient.from('comercios').update({ pin_local: nuevoPinLocal }).eq('id', comercioLogueado.id);
+
+        if (res.error) {
+            return kumuAlert('Error al actualizar la contraseña: ' + res.error.message, 'Error', '❌');
+        }
+
+        comercioLogueado.pin_local = nuevoPinLocal;
+        document.getElementById('inpClaveActualAliado').value = '';
+        document.getElementById('inpClaveNuevaAliado').value = '';
+        await kumuAlert('¡Tu contraseña ha sido actualizada con éxito en el sistema!', '🔐 Contraseña Actualizada', '✅');
+    };
+
+    window._kumuOrigRenderNegociosV9 = window._kumuOrigRenderNegociosV9 || renderNegociosView;
+    renderNegociosView = async function(container) {
+        await window._kumuOrigRenderNegociosV9(container);
+        if (!comercioLogueado || document.getElementById('cardCambiarClaveAliado')) return;
+
+        var pinRaw = String(comercioLogueado.pin_local || '').trim();
+        var infoUsuario = pinRaw.indexOf(':') !== -1 ? pinRaw.split(':')[0].trim() : comercioLogueado.nombre;
+
+        var cardClave = document.createElement('div');
+        cardClave.id = 'cardCambiarClaveAliado';
+        cardClave.className = 'bg-white border-2 border-[#D4AF37] rounded-2xl p-3 shadow-sm space-y-2';
+        cardClave.innerHTML =
+            '<h3 class="font-extrabold text-xs uppercase text-[#2D0B3A] border-b pb-1">🔐 Cambiar Contraseña de Mi Local</h3>' +
+            '<p class="text-[10px] text-gray-600">👤 Tu usuario de acceso es: <b class="text-[#1B4D3E]">' + escaparHTML(infoUsuario) + '</b></p>' +
+            '<div class="relative">' +
+                '<input type="password" id="inpClaveActualAliado" placeholder="Escribe tu contraseña actual" class="w-full p-2 pr-8 border rounded-xl text-xs bg-slate-50 font-semibold">' +
+                '<button type="button" onclick="window.toggleVerClaveAliado(\'inpClaveActualAliado\', this)" class="absolute right-2 top-1/2 -translate-y-1/2 text-xs">👁️</button>' +
+            '</div>' +
+            '<div class="relative">' +
+                '<input type="password" id="inpClaveNuevaAliado" placeholder="Escribe tu nueva contraseña (mín. 4 caracteres)" class="w-full p-2 pr-8 border rounded-xl text-xs bg-amber-50/40 font-semibold">' +
+                '<button type="button" onclick="window.toggleVerClaveAliado(\'inpClaveNuevaAliado\', this)" class="absolute right-2 top-1/2 -translate-y-1/2 text-xs">👁️</button>' +
+            '</div>' +
+            '<button type="button" onclick="window.cambiarContrasenaDesdeAliado()" class="w-full bg-[#2D0B3A] text-[#D4AF37] py-2 rounded-xl text-xs font-extrabold shadow">🔑 Guardar Nueva Contraseña</button>';
+
+        var contentDiv = container.querySelector('.p-4.flex-1.space-y-4') || container.lastElementChild;
+        if (contentDiv) contentDiv.appendChild(cardClave);
+    };
+
+    // 4. MÓDULO DE REPARTIDORES: OCULTAR CUADRO VISUAL "EFECTIVO LOCALES" Y AJUSTAR A 2 COLUMNAS
+    window._kumuOrigRenderDomiV9 = window._kumuOrigRenderDomiV9 || renderDomiciliarioView;
+    renderDomiciliarioView = async function(container) {
+        await window._kumuOrigRenderDomiV9(container);
+        var grids = container.querySelectorAll('.grid.grid-cols-3.gap-1\\.5.text-center');
+        grids.forEach(function(grid) {
+            if (grid.children.length === 3 && grid.lastElementChild.textContent.indexOf('Efectivo Locales') !== -1) {
+                grid.lastElementChild.remove();
+                grid.classList.remove('grid-cols-3');
+                grid.classList.add('grid-cols-2');
+            }
+        });
+    };
+</script>
+<!-- === FIN BLOQUE 4 === -->
 </body>
 </html>
