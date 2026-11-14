@@ -5612,5 +5612,890 @@
     };
 </script>
 <!-- === FIN BLOQUE 4 === -->
+<!-- === INICIO BLOQUE 5 (PARTE 1 DE 2): IMAGEN D.JPEG, CENEFAS LATERALES SUTILES Y AUTODOMICILIO 5 MIN === -->
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+<style>
+    .kumu-cursiva-oro {
+        font-family: 'Great Vibes', cursive;
+        background: linear-gradient(180deg, #FFFBEB 0%, #FDE68A 25%, #D4AF37 65%, #B45309 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        filter: drop-shadow(0px 3px 8px rgba(0, 0, 0, 0.45));
+    }
+    /* Cenefas laterales delgadas y sutiles a izquierda y derecha de la app */
+    #app {
+        padding-left: 6px;
+        padding-right: 6px;
+    }
+    .kumu-cenefa-lateral {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 6px;
+        z-index: 45;
+        pointer-events: none;
+        opacity: 0.82;
+        background-color: #2D0B3A;
+        background-repeat: repeat-y;
+        background-size: 6px 120px;
+    }
+    .kumu-cenefa-izq {
+        left: 0;
+        border-right: 1px solid rgba(212, 175, 55, 0.55);
+    }
+    .kumu-cenefa-der {
+        right: 0;
+        border-left: 1px solid rgba(212, 175, 55, 0.55);
+    }
+</style>
+
+<script>
+    // 1. GENERADOR DE CENEFA HORIZONTAL (PARA PANTALLA DE BIENVENIDA D.JPEG) Y VERTICAL SUTIL (PARA BORDES LATERALES DE LA APP)
+    function obtenerCenefaMinimalistaKumuSVG(alturaClase) {
+        alturaClase = alturaClase || 'h-8 sm:h-10';
+        return '<svg viewBox="0 0 600 44" class="w-full ' + alturaClase + ' block select-none" preserveAspectRatio="none">' +
+            '<rect width="600" height="44" fill="#2D0B3A"/>' +
+            '<line x1="0" y1="2" x2="600" y2="2" stroke="#D4AF37" stroke-width="2"/>' +
+            '<line x1="0" y1="42" x2="600" y2="42" stroke="#D4AF37" stroke-width="2"/>' +
+            '<polygon points="0,38 38,8 76,38 64,38 38,17 12,38" fill="#D4AF37"/>' +
+            '<polygon points="52,8 90,38 128,8 116,8 90,29 64,8" fill="#C85A17"/>' +
+            '<polygon points="104,38 142,8 180,38 168,38 142,17 116,38" fill="#1B4D3E" stroke="#D4AF37" stroke-width="0.8"/>' +
+            '<polygon points="124,38 142,23 160,38" fill="#C85A17"/>' +
+            '<polygon points="156,8 194,38 232,8 220,8 194,29 168,8" fill="#C85A17"/>' +
+            '<polygon points="208,38 256,8 256,38 246,38 246,20 222,38" fill="#D4AF37"/>' +
+            '<g transform="translate(300, 22)">' +
+                '<line x1="-13" y1="-13" x2="13" y2="13" stroke="#D4AF37" stroke-width="3.2" stroke-linecap="round"/>' +
+                '<line x1="13" y1="-13" x2="-13" y2="13" stroke="#D4AF37" stroke-width="3.2" stroke-linecap="round"/>' +
+                '<polyline points="-6,-13 0,-7 6,-13" fill="none" stroke="#FDE68A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
+                '<polyline points="-6,13 0,7 6,13" fill="none" stroke="#FDE68A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
+                '<polyline points="-13,-6 -7,0 -13,6" fill="none" stroke="#FDE68A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
+                '<polyline points="13,-6 7,0 13,6" fill="none" stroke="#FDE68A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
+                '<circle cx="0" cy="-16" r="2.3" fill="#C85A17" stroke="#FDE68A" stroke-width="0.7"/>' +
+                '<circle cx="0" cy="16" r="2.3" fill="#C85A17" stroke="#FDE68A" stroke-width="0.7"/>' +
+                '<circle cx="-16" cy="0" r="2.3" fill="#C85A17" stroke="#FDE68A" stroke-width="0.7"/>' +
+                '<circle cx="16" cy="0" r="2.3" fill="#C85A17" stroke="#FDE68A" stroke-width="0.7"/>' +
+            '</g>' +
+            '<polygon points="392,38 344,8 344,38 354,38 354,20 378,38" fill="#D4AF37"/>' +
+            '<polygon points="444,8 406,38 368,8 380,8 406,29 432,8" fill="#C85A17"/>' +
+            '<polygon points="496,38 458,8 420,38 432,38 458,17 484,38" fill="#1B4D3E" stroke="#D4AF37" stroke-width="0.8"/>' +
+            '<polygon points="476,38 458,23 440,38" fill="#C85A17"/>' +
+            '<polygon points="548,8 510,38 472,8 484,8 510,29 536,8" fill="#C85A17"/>' +
+            '<polygon points="600,38 562,8 524,38 536,38 562,17 588,38" fill="#D4AF37"/>' +
+        '</svg>';
+    }
+
+    function obtenerDataURLCenefaVerticalSutil() {
+        var svgVert = "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 160' width='12' height='160'>" +
+            "<rect width='12' height='160' fill='#2D0B3A'/>" +
+            "<polygon points='1,6 11,18 1,30' fill='none' stroke='#D4AF37' stroke-width='1.4'/>" +
+            "<polygon points='11,26 1,38 11,50' fill='none' stroke='#C85A17' stroke-width='1.4'/>" +
+            "<polygon points='1,46 11,58 1,70' fill='none' stroke='#15803D' stroke-width='1.4'/>" +
+            "<g transform='translate(6,80)'>" +
+                "<line x1='-4' y1='-4' x2='4' y2='4' stroke='#D4AF37' stroke-width='1.5'/>" +
+                "<line x1='4' y1='-4' x2='-4' y2='4' stroke='#D4AF37' stroke-width='1.5'/>" +
+                "<circle cx='0' cy='-5.5' r='1' fill='#C85A17'/>" +
+                "<circle cx='0' cy='5.5' r='1' fill='#C85A17'/>" +
+            "</g>" +
+            "<polygon points='11,90 1,102 11,114' fill='none' stroke='#15803D' stroke-width='1.4'/>" +
+            "<polygon points='1,110 11,122 1,134' fill='none' stroke='#C85A17' stroke-width='1.4'/>" +
+            "<polygon points='11,130 1,142 11,154' fill='none' stroke='#D4AF37' stroke-width='1.4'/>" +
+        "</svg>";
+        return 'url("data:image/svg+xml;utf8,' + encodeURIComponent(svgVert) + '")';
+    }
+
+    function inyectarCenefasLateralesSutilesEnApp(container) {
+        if (!container) return;
+        var bgUrl = obtenerDataURLCenefaVerticalSutil();
+        if (!container.querySelector('.kumu-cenefa-izq')) {
+            var izq = document.createElement('div');
+            izq.className = 'kumu-cenefa-lateral kumu-cenefa-izq';
+            izq.style.backgroundImage = bgUrl;
+            container.appendChild(izq);
+        }
+        if (!container.querySelector('.kumu-cenefa-der')) {
+            var der = document.createElement('div');
+            der.className = 'kumu-cenefa-lateral kumu-cenefa-der';
+            der.style.backgroundImage = bgUrl;
+            container.appendChild(der);
+        }
+    }
+
+    function obtenerSVGHongoMinimalistaOro(clases) {
+        clases = clases || 'w-32 h-32';
+        return '<svg viewBox="0 0 200 185" class="' + clases + ' select-none">' +
+            '<defs>' +
+                '<linearGradient id="oroMetalKumu" x1="0%" y1="0%" x2="100%" y2="0%">' +
+                    '<stop offset="0%" stop-color="#B45309"/><stop offset="28%" stop-color="#D4AF37"/><stop offset="50%" stop-color="#FFFBEB"/><stop offset="72%" stop-color="#D4AF37"/><stop offset="100%" stop-color="#92400E"/>' +
+                '</linearGradient>' +
+                '<linearGradient id="oroSombreroKumu" x1="0%" y1="0%" x2="0%" y2="100%">' +
+                    '<stop offset="0%" stop-color="#FFFBEB"/><stop offset="45%" stop-color="#D4AF37"/><stop offset="100%" stop-color="#92400E"/>' +
+                '</linearGradient>' +
+            '</defs>' +
+            '<path d="M82 88 C80 118, 70 145, 65 164 C63 170, 68 174, 76 174 L124 174 C132 174, 137 170, 135 164 C130 145, 120 118, 118 88 Z" fill="url(#oroMetalKumu)"/>' +
+            '<path d="M22 86 C22 18, 178 18, 178 86 C148 96, 52 96, 22 86 Z" fill="url(#oroSombreroKumu)"/>' +
+            '<path d="M33 78 C37 30, 163 30, 167 78 C140 86, 60 86, 33 78 Z" fill="#2D0B3A"/>' +
+            '<path d="M46 72 L72 41 L98 72 L124 41 L150 72" fill="none" stroke="url(#oroMetalKumu)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>' +
+            '<path d="M58 46 Q100 32 142 46" fill="none" stroke="#D4AF37" stroke-width="1.8" stroke-linecap="round"/>' +
+        '</svg>';
+    }
+
+    function aplicarSplashScreenMinimalista() {
+        var splash = document.getElementById('splash-screen');
+        if (!splash) return;
+        splash.className = 'fixed inset-0 bg-[#2D0B3A] z-[9999] flex flex-col items-center justify-between p-0 text-center text-white cursor-pointer select-none overflow-hidden';
+        splash.innerHTML =
+            '<div class="w-full">' + obtenerCenefaMinimalistaKumuSVG('h-9 sm:h-11') + '</div>' +
+            '<div class="flex flex-col items-center justify-center my-auto px-6">' +
+                obtenerSVGHongoMinimalistaOro('w-36 h-36 sm:w-40 sm:h-40 drop-shadow-[0_8px_20px_rgba(212,175,55,0.28)]') +
+                '<h1 class="kumu-cursiva-oro text-6xl sm:text-7xl leading-none -mt-1 pr-2 select-none">Kumu</h1>' +
+            '</div>' +
+            '<div class="w-full">' + obtenerCenefaMinimalistaKumuSVG('h-9 sm:h-11') + '</div>';
+    }
+    aplicarSplashScreenMinimalista();
+
+    obtenerSVGLogo1Mini = function(clases) {
+        clases = clases || 'w-8 h-8';
+        return '<svg viewBox="0 0 200 200" class="' + clases + ' rounded-full bg-[#2D0B3A] border border-[#D4AF37] shadow-sm flex-shrink-0">' +
+            '<path d="M80 96 C78 122, 68 146, 64 162 L136 162 C132 146, 122 122, 120 96 Z" fill="#D4AF37"/>' +
+            '<path d="M26 94 C26 28, 174 28, 174 94 C146 104, 54 104, 26 94 Z" fill="#D4AF37"/>' +
+            '<path d="M38 86 C42 42, 158 42, 162 86 C136 94, 64 94, 38 86 Z" fill="#2D0B3A"/>' +
+            '<path d="M52 80 L76 52 L100 80 L124 52 L148 80" fill="none" stroke="#FDE68A" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>' +
+        '</svg>';
+    };
+
+    window._kumuOrigRenderHeaderV9 = window._kumuOrigRenderHeaderV9 || renderHeader;
+    renderHeader = function(container) {
+        window._kumuOrigRenderHeaderV9(container);
+        inyectarCenefasLateralesSutilesEnApp(container);
+        var hdr = container.querySelector('.kumu-header');
+        if (hdr) {
+            var h1 = hdr.querySelector('h1');
+            if (h1) {
+                h1.className = 'kumu-cursiva-oro text-3xl leading-none pr-1';
+                h1.textContent = 'Kumu';
+            }
+        }
+    };
+
+    // 2. ACTUALIZAR ÍCONO INSTALABLE Y PLANTILLAS DE PÓSTER QR / TICKETS CON EL NUEVO HONGO DORADO
+    function dibujarCruzIndigenaCanvasV9(ctx, x, y, tam) {
+        ctx.save();
+        ctx.translate(x, y);
+        var d = tam * 0.42, p = tam * 0.54;
+        ctx.strokeStyle = '#D4AF37';
+        ctx.lineWidth = Math.max(1.8, tam * 0.12);
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(-d, -d); ctx.lineTo(d, d);
+        ctx.moveTo(d, -d); ctx.lineTo(-d, d);
+        ctx.stroke();
+        ctx.fillStyle = '#C85A17';
+        var rp = Math.max(1.8, tam * 0.09);
+        [[0, -p], [0, p], [-p, 0], [p, 0]].forEach(function(pt) {
+            ctx.beginPath(); ctx.arc(pt[0], pt[1], rp, 0, Math.PI * 2); ctx.fill();
+        });
+        ctx.restore();
+    }
+
+    dibujarEmblemaLogo1EnCanvas = function(ctx, cx, cy, radio) {
+        ctx.save();
+        ctx.beginPath(); ctx.arc(cx, cy, radio, 0, Math.PI * 2);
+        ctx.fillStyle = '#2D0B3A'; ctx.fill();
+        var gradOro = ctx.createLinearGradient(cx - radio * 0.6, cy - radio, cx + radio * 0.6, cy + radio);
+        gradOro.addColorStop(0, '#FFFBEB'); gradOro.addColorStop(0.5, '#D4AF37'); gradOro.addColorStop(1, '#B45309');
+        ctx.lineWidth = radio * 0.04; ctx.strokeStyle = gradOro; ctx.stroke();
+
+        ctx.fillStyle = gradOro;
+        ctx.beginPath();
+        ctx.moveTo(cx - radio * 0.14, cy - radio * 0.12);
+        ctx.quadraticCurveTo(cx - radio * 0.16, cy + radio * 0.15, cx - radio * 0.25, cy + radio * 0.30);
+        ctx.lineTo(cx + radio * 0.25, cy + radio * 0.30);
+        ctx.quadraticCurveTo(cx + radio * 0.16, cy + radio * 0.15, cx + radio * 0.14, cy - radio * 0.12);
+        ctx.closePath(); ctx.fill();
+
+        ctx.beginPath(); ctx.arc(cx, cy - radio * 0.10, radio * 0.54, Math.PI, 0, false);
+        ctx.fillStyle = gradOro; ctx.fill();
+
+        ctx.beginPath(); ctx.arc(cx, cy - radio * 0.13, radio * 0.45, Math.PI, 0, false);
+        ctx.fillStyle = '#2D0B3A'; ctx.fill();
+
+        ctx.strokeStyle = '#FDE68A'; ctx.lineWidth = radio * 0.035; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+        ctx.beginPath();
+        ctx.moveTo(cx - radio * 0.36, cy - radio * 0.18);
+        ctx.lineTo(cx - radio * 0.18, cy - radio * 0.42);
+        ctx.lineTo(cx, cy - radio * 0.18);
+        ctx.lineTo(cx + radio * 0.18, cy - radio * 0.42);
+        ctx.lineTo(cx + radio * 0.36, cy - radio * 0.18);
+        ctx.stroke();
+
+        ctx.fillStyle = gradOro;
+        ctx.font = 'italic 400 ' + Math.round(radio * 0.50) + 'px "Great Vibes", "Brush Script MT", cursive';
+        ctx.textAlign = 'center';
+        ctx.fillText('Kumu', cx, cy + radio * 0.74);
+        ctx.restore();
+    };
+
+    function dibujarCenefaIndigenaCanvas(ctx, yBase, w, alto) {
+        ctx.save();
+        ctx.fillStyle = '#2D0B3A'; ctx.fillRect(10, yBase, w - 20, alto);
+        ctx.strokeStyle = '#D4AF37'; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(10, yBase); ctx.lineTo(w - 10, yBase); ctx.moveTo(10, yBase + alto); ctx.lineTo(w - 10, yBase + alto); ctx.stroke();
+        var colores = ['#D4AF37', '#C85A17', '#1B4D3E', '#C85A17', '#D4AF37'], paso = 46, idx = 0;
+        for (var x = 22; x < w - 58; x += paso) {
+            if (Math.abs((x + paso / 2) - (w / 2)) < 36) continue;
+            ctx.strokeStyle = colores[idx % colores.length]; ctx.lineWidth = 3.2; ctx.beginPath();
+            if (idx % 2 === 0) { ctx.moveTo(x, yBase + alto - 5); ctx.lineTo(x + paso / 2, yBase + 5); ctx.lineTo(x + paso, yBase + alto - 5); }
+            else { ctx.moveTo(x, yBase + 5); ctx.lineTo(x + paso / 2, yBase + alto - 5); ctx.lineTo(x + paso, yBase + 5); }
+            ctx.stroke(); idx++;
+        }
+        dibujarCruzIndigenaCanvasV9(ctx, w / 2, yBase + alto / 2, alto * 0.72);
+        ctx.restore();
+    }
+
+    dibujarPlantilla1Pergamino = function(ctx, w, h, tituloSup, subtituloSup) {
+        ctx.fillStyle = '#FDFBF7'; ctx.fillRect(0, 0, w, h);
+        ctx.fillStyle = '#2D0B3A'; ctx.fillRect(0, 0, w, 168);
+        dibujarCenefaIndigenaCanvas(ctx, 12, w, 30);
+        ctx.fillStyle = '#2D0B3A'; ctx.fillRect(0, h - 92, w, 92);
+        dibujarCenefaIndigenaCanvas(ctx, h - 42, w, 30);
+        ctx.strokeStyle = '#D4AF37'; ctx.lineWidth = 6; ctx.strokeRect(10, 10, w - 20, h - 20);
+        ctx.fillStyle = '#D4AF37'; ctx.font = '900 30px Inter, sans-serif'; ctx.textAlign = 'center'; ctx.fillText(tituloSup, w / 2, 86);
+        ctx.fillStyle = '#FFFBEB'; ctx.font = 'bold 18px Inter, sans-serif'; ctx.fillText(subtituloSup, w / 2, 118);
+    };
+
+    inyectarIconoPNGAndroid();
+
+    // 3. BOTONES VISIBLES «⏱️ LISTO EN 5 MIN» Y «🏃‍♂️ ACTIVAR AUTODOMICILIO (5 MIN / 300s)» CON RELOJ EN VIVO
+    publicarCarreraGrupoRepartidores = async function(pedidoId) {
+        var p = (window._pedidosAliadoCache || []).find(function(x) { return String(x.id) === String(pedidoId); });
+        if (!p || !comercioLogueado) return;
+        var tsAhora = Date.now();
+        var infoBase = window.limpiarInfoDomiSoloTexto(p.domiciliario_info);
+        await supabaseClient.from('pedidos').update({
+            estado: 'En Preparación',
+            domiciliario_info: (infoBase + ' [MOTO_WA_TS:' + tsAhora + ']').trim()
+        }).eq('id', pedidoId);
+
+        if (window.enviarPushKumuEnSegundoPlano) {
+            window.enviarPushKumuEnSegundoPlano('🛵 Carrera Lista en ' + comercioLogueado.nombre, 'Dirección: ' + (p.direccion_entrega || '').split('[')[0] + ' ($' + Number(p.total).toLocaleString() + ')', 'domis');
+        }
+        var meta = extraerMetadatosComercio(comercioLogueado);
+        var msg = '🛵🚲 *¡CARRERA DISPONIBLE EN KUMU!* 🍄\n\n🏪 *Recoger en:* ' + comercioLogueado.nombre + ' (' + meta.dirLimpia + ')\n📍 *Entregar en:* ' + (p.direccion_entrega || '').split('|')[0] + '\n💰 *Total Pedido:* $' + Number(p.total).toLocaleString() + ' COP\n\n👉 *Entra a Kumu y toca "Tomar Pedido":* https://domicilios-mitu.vercel.app';
+        window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
+        initApp(true);
+    };
+
+    window.avisarListoEn5MinLocal = async function(pedidoId) {
+        var r = await supabaseClient.from('pedidos').select('domiciliario_info, direccion_entrega').eq('id', pedidoId).maybeSingle();
+        var raw = (r.data && r.data.domiciliario_info) || '';
+        var limpio = window.limpiarInfoDomiSoloTexto(raw);
+        var mTs = raw.match(/\[MOTO_WA_TS:\d+\]/);
+        var tagTs = mTs ? ' ' + mTs[0] : (' [MOTO_WA_TS:' + Date.now() + ']');
+        await supabaseClient.from('pedidos').update({
+            estado: 'En Preparación',
+            domiciliario_info: (limpio + tagTs + ' 🔥[Sale en 5 min — Acércate al local]').trim()
+        }).eq('id', pedidoId);
+
+        if (window.enviarPushKumuEnSegundoPlano) {
+            window.enviarPushKumuEnSegundoPlano('🔥 ¡Pedido Sale en 5 Min!', (comercioLogueado ? comercioLogueado.nombre : 'Restaurante') + ' avisa que el pedido sale en 5 min. ¡Acércate al local!', 'domis');
+        }
+        await kumuAlert('¡Alerta visual y sonora enviada a todos los repartidores («🔥 Sale en 5 min — Acércate al local»)!', '⏱️ Listo en 5 min', '🔥');
+        initApp(true);
+    };
+
+    window.activarAutodomicilio5Min = async function(pedidoId) {
+        var r = await supabaseClient.from('pedidos').select('domiciliario_info, creado_at').eq('id', pedidoId).maybeSingle();
+        var raw = (r.data && r.data.domiciliario_info) || '';
+        var mTs = raw.match(/\[MOTO_WA_TS:(\d+)\]/);
+        var tsBase = mTs ? Number(mTs[1]) : (r.data && r.data.creado_at ? new Date(r.data.creado_at).getTime() : 0);
+        var segs = tsBase ? Math.floor((Date.now() - tsBase) / 1000) : 300;
+
+        if (segs < 300 && !modoAdminVisible) {
+            var rest = 300 - segs;
+            return kumuAlert('⏳ El contador de espera para los motoristas va en ' + Math.floor(rest / 60) + 'm ' + (rest % 60) + 's.\n\nAl cumplirse los 5 minutos sin repartidor podrás activar el Autodomicilio y conservar el 100% del envío.', '⏳ Espera de 5 Minutos', '🛵');
+        }
+        await supabaseClient.from('pedidos').update({
+            estado: 'En Camino',
+            domiciliario_info: '🏃‍♂️ Autodomicilio del Local (100% envío del comercio)'
+        }).eq('id', pedidoId);
+        await kumuAlert('✅ ¡Autodomicilio activado! Tu local entrega el pedido y conserva el 100% del valor del domicilio.', '🏃‍♂️ Autodomicilio Activo', '✅');
+        initApp(true);
+    };
+
+    window._kumuOrigRenderPedAliadoV9 = window._kumuOrigRenderPedAliadoV9 || renderPedidosAliado;
+    renderPedidosAliado = async function() {
+        await window._kumuOrigRenderPedAliadoV9();
+        var cont = document.getElementById('listaPedidosAliadoLocal');
+        if (!cont) return;
+
+        cont.querySelectorAll('button[onclick^="publicarCarreraGrupoRepartidores"]').forEach(function(btnMoto) {
+            var m = btnMoto.getAttribute('onclick').match(/'([^']+)'/);
+            if (!m) return;
+            var pedId = m[1];
+            var pObj = (window._pedidosAliadoCache || []).find(function(x) { return String(x.id) === String(pedId); });
+            var rawDomi = (pObj && pObj.domiciliario_info) || '';
+            var mTs = rawDomi.match(/\[MOTO_WA_TS:(\d+)\]/);
+            var tsInicio = mTs ? Number(mTs[1]) : (pObj && pObj.creado_at ? new Date(pObj.creado_at).getTime() : Date.now());
+
+            if (!btnMoto.parentNode.querySelector('.btn-listo5-kumu')) {
+                var b5 = document.createElement('button');
+                b5.type = 'button';
+                b5.className = 'btn-listo5-kumu flex-1 bg-amber-500 hover:bg-amber-600 text-[#2D0B3A] py-1.5 px-2 rounded-lg font-extrabold text-[11px] shadow';
+                b5.innerHTML = '⏱️ Listo en 5 min';
+                b5.onclick = function() { window.avisarListoEn5MinLocal(pedId); };
+                btnMoto.insertAdjacentElement('afterend', b5);
+            }
+
+            if (!btnMoto.parentNode.parentNode.querySelector('.btn-autodomi-kumu')) {
+                var bAuto = document.createElement('button');
+                bAuto.type = 'button';
+                bAuto.setAttribute('data-ts-inicio', String(tsInicio));
+                bAuto.setAttribute('data-ped-id', String(pedId));
+                bAuto.onclick = function() { window.activarAutodomicilio5Min(pedId); };
+                btnMoto.parentNode.insertAdjacentElement('afterend', bAuto);
+            }
+        });
+
+        var actualizarRelojesAutodomi = function() {
+            document.querySelectorAll('button[data-ts-inicio]').forEach(function(btn) {
+                var ts = Number(btn.getAttribute('data-ts-inicio') || 0);
+                var segs = Math.floor((Date.now() - ts) / 1000);
+                if (segs >= 300) {
+                    btn.className = 'btn-autodomi-kumu w-full mt-1.5 bg-[#2D0B3A] text-[#D4AF37] border border-[#D4AF37] py-1.5 px-2 rounded-lg font-extrabold text-[11px] shadow animate-pulse';
+                    btn.innerHTML = '🏃‍♂️ Activar Autodomicilio (5 min cumplidos • 100% envío tuyo)';
+                } else {
+                    var rest = 300 - segs;
+                    var mm = String(Math.floor(rest / 60)).padStart(2, '0');
+                    var ss = String(rest % 60).padStart(2, '0');
+                    btn.className = 'btn-autodomi-kumu w-full mt-1.5 bg-purple-100 text-[#2D0B3A] border border-purple-300 py-1.5 px-2 rounded-lg font-extrabold text-[10px]';
+                    btn.innerHTML = '⏳ Autodomicilio (100% envío local) se habilita en ' + mm + ':' + ss;
+                }
+            });
+        };
+        actualizarRelojesAutodomi();
+        if (window._timerAutodomiKumu) clearInterval(window._timerAutodomiKumu);
+        window._timerAutodomiKumu = setInterval(actualizarRelojesAutodomi, 1000);
+    };
+</script>
+<!-- === FIN BLOQUE 5 (PARTE 1 DE 2) === -->
+<!-- === INICIO BLOQUE 5 (PARTE 2 DE 2): CLAVES ARRIBA (LOCALES Y DOMIS), SHA-256, RECUPERACIÓN WA Y ALARMA CELULAR 24/7 === -->
+<script>
+    // 1. MOTOR DE ALARMA EN CELULAR 24/7 (PUSH EN SEGUNDO PLANO NTFY + NOTIFICACIÓN NATIVA + SIRENA TRIPLE)
+    window.CANAL_PUSH_ADMIN_KUMU = 'kumu_mitu_3215698079';
+    window.CANAL_PUSH_DOMIS_KUMU = 'kumu_domis_mitu';
+
+    window.enviarPushKumuEnSegundoPlano = function(titulo, mensaje, destino) {
+        var topico = destino === 'domis' ? window.CANAL_PUSH_DOMIS_KUMU : window.CANAL_PUSH_ADMIN_KUMU;
+        try {
+            fetch('https://ntfy.sh/' + topico, {
+                method: 'POST',
+                body: mensaje,
+                headers: { 'Title': titulo, 'Priority': 'urgent', 'Tags': 'mushroom,bell,motorbike' }
+            }).catch(function() {});
+            if (destino === 'domis') {
+                fetch('https://ntfy.sh/' + window.CANAL_PUSH_ADMIN_KUMU, {
+                    method: 'POST',
+                    body: mensaje,
+                    headers: { 'Title': titulo, 'Priority': 'high', 'Tags': 'motorbike' }
+                }).catch(function() {});
+            }
+        } catch (e) {}
+    };
+
+    window.sonarSirenaContinuaKumu = function(titulo, detalle) {
+        reproducirTonoAlerta('exito');
+        setTimeout(function() { reproducirTonoAlerta('normal'); }, 450);
+        setTimeout(function() { reproducirTonoAlerta('exito'); }, 900);
+        try { if (navigator.vibrate) navigator.vibrate([400, 150, 400, 150, 500]); } catch (e) {}
+        if ('Notification' in window && Notification.permission === 'granted') {
+            try { new Notification('🛎️ ' + titulo, { body: detalle, requireInteraction: true }); } catch (e) {}
+        }
+    };
+
+    window.configurarAlarmasCelular247 = async function(rol) {
+        if ('Notification' in window && Notification.permission !== 'granted') {
+            try { await Notification.requestPermission(); } catch (e) {}
+        }
+        var canal = rol === 'domi' ? window.CANAL_PUSH_DOMIS_KUMU : window.CANAL_PUSH_ADMIN_KUMU;
+        window.sonarSirenaContinuaKumu('Prueba de Alarma Kumu', 'Sonido y notificación verificados en tu celular.');
+        await kumuAlert(
+            '🔔 ¡Sonido de Alarma activado en este navegador!\n\n' +
+            '📲 ¿QUIERES QUE TU CELULAR SUENE AUNQUE TENGAS KUMU CERRADO Y LA PANTALLA APAGADA?\n' +
+            '1. Instala gratis la app "ntfy" desde Play Store o App Store (no pide registro).\n' +
+            '2. Toca el botón "+" y escribe este canal exacto:\n👉 ' + canal + '\n\n' +
+            '¡Listo! Cada vez que entre un pedido nuevo en Mitú, tu celular sonará al instante como alarma sin tener que entrar cada 5 minutos.',
+            '📲 Alarma en Celular 24/7',
+            '🔔'
+        );
+    };
+
+    window._kumuOrigEnviarPedidoV9 = window._kumuOrigEnviarPedidoV9 || enviarPedido;
+    enviarPedido = async function(total, subtotal, domicilioRealRepartidor, comision, tieneLicor, totalEmpaque) {
+        var nomCli = limpiarInputUsuario(document.getElementById('nombreCliente') ? document.getElementById('nombreCliente').value : '');
+        var dirCli = limpiarInputUsuario(document.getElementById('direccionCliente') ? document.getElementById('direccionCliente').value : '');
+        var nomLoc = (comercioSeleccionado && comercioSeleccionado.nombre) ? comercioSeleccionado.nombre : 'Tienda Kumu';
+
+        await window._kumuOrigEnviarPedidoV9(total, subtotal, domicilioRealRepartidor, comision, tieneLicor, totalEmpaque);
+
+        if (carrito.length === 0 && nomCli) {
+            window.enviarPushKumuEnSegundoPlano(
+                '🛎️ ¡NUEVO PEDIDO EN ' + nomLoc.toUpperCase() + '!',
+                'Cliente: ' + nomCli + ' | Dir: ' + dirCli + ' | Total: $' + Number(total).toLocaleString() + ' COP',
+                'domis'
+            );
+        }
+    };
+
+    window._kumuOrigToastV9 = window._kumuOrigToastV9 || dispararToastEmergente;
+    dispararToastEmergente = function(titulo, mensaje, icono) {
+        window._kumuOrigToastV9(titulo, mensaje, icono);
+        window.sonarSirenaContinuaKumu(titulo, mensaje);
+    };
+
+    // 2. CIFRADO SHA-256 Y TARJETA DE CAMBIO DE CONTRASEÑA ARRIBA (PARA LOCALES Y PARA DOMICILIARIOS)
+    window.cifrarPinLocalSHA256 = async function(rawPin) {
+        var limpio = (rawPin || '').trim();
+        if (!limpio) return '';
+        if (limpio.indexOf('sha256:') !== -1) return limpio;
+        if (limpio.indexOf(':') !== -1) {
+            var partes = limpio.split(':');
+            var usr = partes[0].trim();
+            var pass = partes.slice(1).join(':').trim();
+            var hashPass = await sha256Texto(pass);
+            return usr + ':' + hashPass;
+        }
+        return await sha256Texto(limpio);
+    };
+
+    window.verificarLoginComercioAliado = async function(comercioObj, userIng, passIng) {
+        var rawPin = ((comercioObj && comercioObj.pin_local) || '').trim();
+        if (!rawPin || !passIng) return false;
+        var hashPassIng = await sha256Texto(passIng);
+
+        if (rawPin.indexOf(':') !== -1 && !rawPin.startsWith('sha256:')) {
+            var idx = rawPin.indexOf(':');
+            var uLocal = rawPin.slice(0, idx).trim();
+            var pLocal = rawPin.slice(idx + 1).trim();
+            var userOk = userIng.toLowerCase() === uLocal.toLowerCase() ||
+                         (!userIng && pLocal === passIng) ||
+                         comercioObj.nombre.toLowerCase().indexOf(userIng.toLowerCase()) !== -1;
+            var passOk = (pLocal === passIng) || (pLocal === hashPassIng);
+            if (userOk && passOk) {
+                if (!pLocal.startsWith('sha256:')) {
+                    var nuevoPinCifrado = uLocal + ':' + hashPassIng;
+                    supabaseClient.from('comercios').update({ pin_local: nuevoPinCifrado }).eq('id', comercioObj.id);
+                    comercioObj.pin_local = nuevoPinCifrado;
+                }
+                return true;
+            }
+            return false;
+        } else {
+            var coincideClave = (rawPin === passIng) || (rawPin === hashPassIng);
+            var coincideUsuario = !userIng ||
+                                  comercioObj.nombre.toLowerCase().indexOf(userIng.toLowerCase()) !== -1 ||
+                                  (comercioObj.telefono || '').indexOf(userIng) !== -1 ||
+                                  window.obtenerWhatsAppPedidosComercio(comercioObj).indexOf(userIng) !== -1;
+            if (coincideClave && coincideUsuario) {
+                if (!rawPin.startsWith('sha256:')) {
+                    supabaseClient.from('comercios').update({ pin_local: hashPassIng }).eq('id', comercioObj.id);
+                    comercioObj.pin_local = hashPassIng;
+                }
+                return true;
+            }
+            return false;
+        }
+    };
+
+    activarModoAcceso = async function() {
+        clicksLogo++;
+        if (clicksLogo >= 3) {
+            clicksLogo = 0;
+            if (!modoAdminVisible && !comercioLogueado && !modoRepartidorLogueado) {
+                if (await verificarBloqueoIntentos()) return;
+                await Promise.all([cargarClaveYClimaAdminDesdeSupabase(), cargarRepartidoresDesdeSupabase()]);
+
+                var cred = await kumuLoginPrompt();
+                if (!cred || !cred.clave) return;
+                var userIng = (cred.usuario || '').trim();
+                var passIng = (cred.clave || '').trim();
+                var hashPassIng = await sha256Texto(passIng);
+
+                if ((!userIng || userIng.toLowerCase() === 'admin' || userIng.toLowerCase() === 'kumu') && await verificarCoincidenciaClaveAdmin(passIng)) {
+                    limpiarIntentosFallidos();
+                    modoAdminVisible = true; modoRepartidorLogueado = false; repartidorActualObj = null; comercioLogueado = null;
+                    await cargarEstadisticasVentasKumu();
+                    await kumuAlert('Acceso Administrador General Activado.', 'Bienvenido Admin', '🔓');
+                    initApp(true);
+                    return;
+                }
+
+                var domiEncontrado = null;
+                for (var i = 0; i < (repartidoresOficialesCache || []).length; i++) {
+                    var d = repartidoresOficialesCache[i];
+                    var userDomiOk = String(d.cedula) === userIng || (d.nombre && d.nombre.toLowerCase() === userIng.toLowerCase());
+                    var passDomiOk = String(d.clave) === passIng || String(d.clave) === hashPassIng;
+                    if (userDomiOk && passDomiOk) {
+                        domiEncontrado = d;
+                        if (!String(d.clave).startsWith('sha256:')) {
+                            d.clave = hashPassIng;
+                            guardarRepartidoresEnSupabase(repartidoresOficialesCache);
+                        }
+                        break;
+                    }
+                }
+
+                if (domiEncontrado) {
+                    limpiarIntentosFallidos();
+                    if (domiEncontrado.activo === false) {
+                        await kumuAlert('Tu cuenta de repartidor se encuentra SUSPENDIDA temporalmente en el sistema.\n\nComunícate con Soporte Central Kumu (321 569 8079).', 'Cuenta Suspendida', '🛑');
+                        return;
+                    }
+                    modoRepartidorLogueado = true; repartidorActualObj = domiEncontrado; modoAdminVisible = false; comercioLogueado = null; currentView = 'domiciliario';
+                    localStorage.setItem('kumu_domi_frecuente', JSON.stringify({ nombre: domiEncontrado.nombre, cedula: domiEncontrado.cedula, tel: domiEncontrado.telefono, vehiculo: domiEncontrado.vehiculo || 'Moto' }));
+                    await kumuAlert('Bienvenido ' + domiEncontrado.nombre + ' (' + (domiEncontrado.vehiculo === 'Bicicleta' ? '🚲 Bicicleta' : '🛵 Moto') + ').', 'Panel Repartidor Activo', '🛵');
+                    initApp(true);
+                    return;
+                }
+
+                var resCom = await supabaseClient.from('comercios').select('*');
+                var validos = (resCom.data || []).filter(function(c) { return !c.nombre.startsWith('__KUMU_'); });
+                var localMatch = null;
+                for (var j = 0; j < validos.length; j++) {
+                    if (await window.verificarLoginComercioAliado(validos[j], userIng, passIng)) {
+                        localMatch = validos[j];
+                        break;
+                    }
+                }
+
+                if (localMatch) {
+                    limpiarIntentosFallidos();
+                    comercioLogueado = localMatch; modoAdminVisible = false; modoRepartidorLogueado = false; repartidorActualObj = null; currentView = 'negocios';
+                    await cargarEstadisticasVentasKumu();
+                    await kumuAlert('Sesión iniciada como Aliado: ' + comercioLogueado.nombre, 'Panel Aliado', '🏪');
+                    initApp(true);
+                    return;
+                }
+
+                await registrarIntentoFallido();
+            } else {
+                modoAdminVisible = false; modoRepartidorLogueado = false; repartidorActualObj = null; comercioLogueado = null; currentView = 'cliente';
+                await kumuAlert('Sesión cerrada correctamente (Modo Cliente).', 'Sesión Cerrada', '🔒');
+                initApp(true);
+            }
+        }
+    };
+
+    window.guardarNuevaClaveTarjetaLocal = async function() {
+        if (!comercioLogueado) return;
+        var actualIng = (document.getElementById('inpClaveActualLocal') ? document.getElementById('inpClaveActualLocal').value : '').trim();
+        var nuevaIng = (document.getElementById('inpClaveNuevaLocal') ? document.getElementById('inpClaveNuevaLocal').value : '').trim();
+        if (!actualIng || nuevaIng.length < 4) {
+            return kumuAlert('Escribe tu contraseña actual y una nueva contraseña de mínimo 4 caracteres.', 'Datos Incompletos', '⚠️');
+        }
+        var rawActual = (comercioLogueado.pin_local || '').trim();
+        var pGuardada = (rawActual.indexOf(':') !== -1 && !rawActual.startsWith('sha256:')) ? rawActual.split(':').slice(1).join(':').trim() : rawActual;
+        var hashActualIng = await sha256Texto(actualIng);
+
+        if (pGuardada !== actualIng && pGuardada !== hashActualIng) {
+            return kumuAlert('La contraseña actual ingresada no coincide.', '❌ Contraseña Actual Incorrecta', '🚫');
+        }
+
+        var prefijoUsuario = (rawActual.indexOf(':') !== -1 && !rawActual.startsWith('sha256:'))
+            ? rawActual.split(':')[0].trim()
+            : comercioLogueado.nombre;
+        var hashNueva = await sha256Texto(nuevaIng);
+        var pinFinal = prefijoUsuario + ':' + hashNueva;
+
+        var res = await supabaseClient.from('comercios').update({ pin_local: pinFinal }).eq('id', comercioLogueado.id);
+        if (res.error) return kumuAlert('Error al guardar: ' + res.error.message, 'Error', '❌');
+        comercioLogueado.pin_local = pinFinal;
+        document.getElementById('inpClaveActualLocal').value = '';
+        document.getElementById('inpClaveNuevaLocal').value = '';
+        await kumuAlert('¡Tu nueva contraseña ha sido guardada y cifrada con éxito!\n\n👤 Usuario: ' + prefijoUsuario, '🔐 Contraseña Actualizada', '✅');
+    };
+
+    window.guardarNuevaClaveTarjetaDomi = async function() {
+        if (!repartidorActualObj || !repartidorActualObj.cedula) return;
+        var actualIng = (document.getElementById('inpClaveActualDomi') ? document.getElementById('inpClaveActualDomi').value : '').trim();
+        var nuevaIng = (document.getElementById('inpClaveNuevaDomi') ? document.getElementById('inpClaveNuevaDomi').value : '').trim();
+        if (!actualIng || nuevaIng.length < 4) {
+            return kumuAlert('Escribe tu contraseña actual y una nueva contraseña de mínimo 4 caracteres.', 'Datos Incompletos', '⚠️');
+        }
+        await cargarRepartidoresDesdeSupabase();
+        var hashActualIng = await sha256Texto(actualIng);
+        var domiDB = (repartidoresOficialesCache || []).find(function(d) { return String(d.cedula) === String(repartidorActualObj.cedula); });
+        if (!domiDB || (String(domiDB.clave) !== actualIng && String(domiDB.clave) !== hashActualIng)) {
+            return kumuAlert('Tu contraseña actual no coincide.', '❌ Contraseña Incorrecta', '🚫');
+        }
+
+        var hashNueva = await sha256Texto(nuevaIng);
+        repartidoresOficialesCache = (repartidoresOficialesCache || []).map(function(d) {
+            if (String(d.cedula) === String(repartidorActualObj.cedula)) d.clave = hashNueva;
+            return d;
+        });
+        await guardarRepartidoresEnSupabase(repartidoresOficialesCache);
+        repartidorActualObj.clave = hashNueva;
+        document.getElementById('inpClaveActualDomi').value = '';
+        document.getElementById('inpClaveNuevaDomi').value = '';
+        await kumuAlert('¡Tu contraseña de Repartidor ha sido actualizada con éxito!\n\n🪪 Tu usuario (Cédula) es: ' + repartidorActualObj.cedula, '🔐 Contraseña Actualizada', '✅');
+    };
+
+    // 3. SUBIR EL CUADRO DE CONTRASEÑA ARRIBA EN "MI LOCAL" (ELIMINANDO CUALQUIER COPIA DE ABAJO DEL BLOQUE 4) Y PONERLO ARRIBA EN DOMIS
+    window._kumuOrigRenderNegociosV9 = window._kumuOrigRenderNegociosV9 || renderNegociosView;
+    renderNegociosView = async function(container) {
+        await window._kumuOrigRenderNegociosV9(container);
+
+        if (modoAdminVisible) {
+            var boxCtrl = container.querySelector('.bg-gradient-to-br');
+            if (boxCtrl && !document.getElementById('btnAlarma247Admin')) {
+                var btnAl = document.createElement('button');
+                btnAl.type = 'button';
+                btnAl.id = 'btnAlarma247Admin';
+                btnAl.className = 'w-full bg-amber-400 hover:bg-amber-300 text-[#2D0B3A] py-2 px-3 rounded-xl font-extrabold text-xs shadow-md flex items-center justify-center gap-1.5';
+                btnAl.innerHTML = '🔔 Conectar Alarma de Pedidos a mi Celular (24/7)';
+                btnAl.onclick = function() { window.configurarAlarmasCelular247('admin'); };
+                boxCtrl.appendChild(btnAl);
+            }
+            container.querySelectorAll('p').forEach(function(pEl) {
+                if (pEl.textContent.indexOf('Clave: sha256:') !== -1) {
+                    pEl.textContent = pEl.textContent.replace(/Clave:\s*sha256:[a-f0-9]+/i, 'Clave: 🔒 Cifrada');
+                }
+            });
+        } else if (comercioLogueado) {
+            // Si el Bloque 4 creó un cuadro de cambiar contraseña abajo al fondo, lo removemos para dejar solo el de ARRIBA
+            container.querySelectorAll('h3').forEach(function(h3El) {
+                if (h3El.textContent.indexOf('CAMBIAR CONTRASEÑA DE MI LOCAL') !== -1) {
+                    var boxPadre = h3El.closest('div');
+                    if (boxPadre && boxPadre.id !== 'cardCambiarClaveLocalTop') boxPadre.remove();
+                }
+            });
+            var viejoTop = document.getElementById('cardCambiarClaveLocalTop');
+            if (viejoTop) viejoTop.remove();
+
+            var rawPin = (comercioLogueado.pin_local || '').trim();
+            var usrMostrar = (rawPin.indexOf(':') !== -1 && !rawPin.startsWith('sha256:')) ? rawPin.split(':')[0].trim() : comercioLogueado.nombre;
+
+            var cardClaveLocal = document.createElement('div');
+            cardClaveLocal.id = 'cardCambiarClaveLocalTop';
+            cardClaveLocal.className = 'bg-white border-2 border-[#D4AF37] rounded-2xl p-3.5 shadow-sm space-y-2.5';
+            cardClaveLocal.innerHTML =
+                '<h3 class="font-extrabold text-xs uppercase text-[#2D0B3A] border-b pb-1.5 flex items-center gap-1.5">🔐 CAMBIAR CONTRASEÑA DE MI LOCAL</h3>' +
+                '<p class="text-[11px] text-gray-700 font-semibold">👤 Tu usuario de acceso es: <b class="text-[#1B4D3E]">' + escaparHTML(usrMostrar) + '</b></p>' +
+                '<div class="relative">' +
+                    '<input type="password" id="inpClaveActualLocal" placeholder="Escribe tu contraseña actual" class="w-full p-2.5 pr-9 border rounded-xl text-xs bg-slate-50 font-semibold outline-none focus:border-[#2D0B3A]">' +
+                    '<button type="button" onclick="var i=document.getElementById(\'inpClaveActualLocal\'); i.type=i.type===\'password\'?\'text\':\'password\';" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-sm">👁️</button>' +
+                '</div>' +
+                '<div class="relative">' +
+                    '<input type="password" id="inpClaveNuevaLocal" placeholder="Escribe tu nueva contraseña (mín. 4 caracteres)" class="w-full p-2.5 pr-9 border rounded-xl text-xs bg-slate-50 font-semibold outline-none focus:border-[#2D0B3A]">' +
+                    '<button type="button" onclick="var i=document.getElementById(\'inpClaveNuevaLocal\'); i.type=i.type===\'password\'?\'text\':\'password\';" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-sm">👁️</button>' +
+                '</div>' +
+                '<button type="button" onclick="window.guardarNuevaClaveTarjetaLocal()" class="w-full bg-[#2D0B3A] text-[#D4AF37] py-2.5 rounded-xl text-xs font-extrabold shadow">🔑 Guardar Nueva Contraseña</button>';
+
+            var cajaPedidos = document.getElementById('listaPedidosAliadoLocal');
+            if (cajaPedidos && cajaPedidos.parentNode) {
+                cajaPedidos.parentNode.insertAdjacentElement('afterend', cardClaveLocal);
+            }
+        }
+    };
+
+    window._kumuOrigRenderDomiV10 = window._kumuOrigRenderDomiV10 || renderDomiciliarioView;
+    renderDomiciliarioView = async function(container) {
+        await window._kumuOrigRenderDomiV10(container);
+
+        var gridDash = container.querySelector('.grid.grid-cols-3.gap-1\\.5.text-center');
+        if (gridDash && gridDash.children.length === 3) {
+            gridDash.children[2].remove();
+            gridDash.classList.remove('grid-cols-3');
+            gridDash.classList.add('grid-cols-2');
+        }
+
+        var dashBox = container.querySelector('.bg-gradient-to-br');
+        if (dashBox && !document.getElementById('btnAlarma247Domi')) {
+            var btnAlD = document.createElement('button');
+            btnAlD.type = 'button';
+            btnAlD.id = 'btnAlarma247Domi';
+            btnAlD.className = 'w-full bg-amber-400 text-[#2D0B3A] py-1.5 px-3 rounded-xl font-extrabold text-[11px] shadow mt-1';
+            btnAlD.innerHTML = '🔔 Activar Alarma de Carreras en mi Celular (24/7)';
+            btnAlD.onclick = function() { window.configurarAlarmasCelular247('domi'); };
+            dashBox.appendChild(btnAlD);
+        }
+
+        if (repartidorActualObj && repartidorActualObj.cedula && !document.getElementById('cardCambiarClaveDomiTop')) {
+            var cardClaveDomi = document.createElement('div');
+            cardClaveDomi.id = 'cardCambiarClaveDomiTop';
+            cardClaveDomi.className = 'bg-white border-2 border-[#D4AF37] rounded-2xl p-3.5 shadow-sm space-y-2.5';
+            cardClaveDomi.innerHTML =
+                '<h3 class="font-extrabold text-xs uppercase text-[#2D0B3A] border-b pb-1.5 flex items-center gap-1.5">🔐 CAMBIAR MI CONTRASEÑA DE REPARTIDOR</h3>' +
+                '<p class="text-[11px] text-gray-700 font-semibold">🪪 Tu usuario de acceso (Cédula) es: <b class="text-[#1B4D3E]">' + escaparHTML(repartidorActualObj.cedula) + '</b></p>' +
+                '<div class="relative">' +
+                    '<input type="password" id="inpClaveActualDomi" placeholder="Escribe tu contraseña actual" class="w-full p-2.5 pr-9 border rounded-xl text-xs bg-slate-50 font-semibold outline-none focus:border-[#2D0B3A]">' +
+                    '<button type="button" onclick="var i=document.getElementById(\'inpClaveActualDomi\'); i.type=i.type===\'password\'?\'text\':\'password\';" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-sm">👁️</button>' +
+                '</div>' +
+                '<div class="relative">' +
+                    '<input type="password" id="inpClaveNuevaDomi" placeholder="Escribe tu nueva contraseña (mín. 4 caracteres)" class="w-full p-2.5 pr-9 border rounded-xl text-xs bg-slate-50 font-semibold outline-none focus:border-[#2D0B3A]">' +
+                    '<button type="button" onclick="var i=document.getElementById(\'inpClaveNuevaDomi\'); i.type=i.type===\'password\'?\'text\':\'password\';" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-sm">👁️</button>' +
+                '</div>' +
+                '<button type="button" onclick="window.guardarNuevaClaveTarjetaDomi()" class="w-full bg-[#2D0B3A] text-[#D4AF37] py-2.5 rounded-xl text-xs font-extrabold shadow">🔑 Guardar Nueva Contraseña</button>';
+
+            var listaPed = document.getElementById('listaPedidos');
+            if (listaPed) {
+                listaPed.insertAdjacentElement('beforebegin', cardClaveDomi);
+            }
+        }
+    };
+
+    // 4. RECUPERACIÓN DE CONTRASEÑA POR WHATSAPP AUTORIZADO (ALIADOS Y DOMIS)
+    window._kumuOrigMostrarModalV9 = window._kumuOrigMostrarModalV9 || mostrarModalKumu;
+    mostrarModalKumu = function(opciones) {
+        var promesa = window._kumuOrigMostrarModalV9(opciones);
+        var contInput = document.getElementById('contenedorInputDialogoKumu');
+        var existente = document.getElementById('btnOlvideClaveKumu');
+        if (existente) existente.remove();
+
+        if (opciones && opciones.conUsuario && contInput) {
+            var divRec = document.createElement('div');
+            divRec.id = 'btnOlvideClaveKumu';
+            divRec.className = 'pt-2 text-center border-t border-amber-200/60 mt-2';
+            divRec.innerHTML =
+                '<button type="button" onclick="window.abrirRecuperacionWhatsAppAutorizado()" class="text-[11px] font-extrabold text-[#1B4D3E] hover:text-[#C85A17] underline flex items-center justify-center gap-1 mx-auto">' +
+                    '📲 ¿Olvidaste tu contraseña? Recupérala por WhatsApp' +
+                '</button>';
+            contInput.appendChild(divRec);
+        }
+        return promesa;
+    };
+
+    window.cerrarModalRecuperacionKumu = function() {
+        var m = document.getElementById('modalRecuperacionClaveWA');
+        if (m) m.remove();
+    };
+
+    window.abrirRecuperacionWhatsAppAutorizado = async function() {
+        var btnCanc = document.getElementById('btnCancelarDialogoKumu');
+        if (btnCanc) btnCanc.click();
+        if (await verificarBloqueoIntentos()) return;
+
+        window.cerrarModalRecuperacionKumu();
+        var modal = document.createElement('div');
+        modal.id = 'modalRecuperacionClaveWA';
+        modal.className = 'fixed inset-0 bg-black/80 backdrop-blur-sm z-[10006] flex items-center justify-center p-4';
+        modal.innerHTML =
+            '<div class="bg-[#FDFBF7] rounded-2xl max-w-xs w-full overflow-hidden shadow-2xl border-2 border-[#D4AF37] modal-pop">' +
+                '<div class="kumu-header px-4 py-3 flex items-center justify-between">' +
+                    '<div class="flex items-center space-x-2"><span class="text-lg">📲</span><h3 class="font-extrabold text-xs text-[#D4AF37] uppercase tracking-wider">Recuperación por WhatsApp</h3></div>' +
+                    '<button type="button" onclick="window.cerrarModalRecuperacionKumu()" class="text-amber-200 font-bold text-sm">✕</button>' +
+                '</div>' +
+                '<div id="paso1RecuperacionWA" class="p-4 space-y-3 text-xs">' +
+                    '<p class="text-[11px] text-gray-700 leading-relaxed font-medium">Ingresa tus datos registrados (Local Aliado o Repartidor) para enviar un código OTP a tu WhatsApp:</p>' +
+                    '<input type="text" id="recNombreNegocio" placeholder="🏪 Nombre del Local o tu Cédula" class="w-full p-2.5 border-2 border-emerald-700/40 rounded-xl text-xs font-semibold bg-white">' +
+                    '<input type="tel" id="recWhatsappAutorizado" placeholder="📱 WhatsApp Autorizado (10 dígitos)" class="w-full p-2.5 border-2 border-emerald-700/40 rounded-xl text-xs font-semibold bg-white">' +
+                    '<input type="number" id="recUltimos4Cuenta" placeholder="💳 Últimos 4 dígitos Nequi o Cédula" class="w-full p-2.5 border-2 border-amber-500/50 rounded-xl text-xs font-bold bg-amber-50/40">' +
+                    '<button type="button" onclick="window.validarTitularidadYGenerarOTP()" class="w-full btn-vaupes py-2.5 rounded-xl font-extrabold text-xs shadow-md">🔐 Validar y Enviar Código OTP</button>' +
+                '</div>' +
+                '<div id="paso2RecuperacionWA" class="hidden p-4 space-y-3 text-xs">' +
+                    '<div class="bg-emerald-50 border border-emerald-300 p-2.5 rounded-xl text-[11px] text-emerald-950 font-semibold">✅ <b>¡Verificado!</b> Escribe el código OTP de 6 dígitos y tu nueva contraseña:</div>' +
+                    '<input type="number" id="recInputCodigoOTP" placeholder="Código OTP de 6 dígitos" class="w-full p-2.5 border-2 border-[#D4AF37] rounded-xl text-center text-sm font-black tracking-widest bg-amber-50">' +
+                    '<div class="relative">' +
+                        '<input type="password" id="recInputNuevaClave" placeholder="Nueva contraseña (mín. 4 caracteres)" class="w-full p-2.5 pr-9 border-2 border-emerald-700/40 rounded-xl text-xs font-bold bg-white">' +
+                        '<button type="button" onclick="var i=document.getElementById(\'recInputNuevaClave\'); i.type=i.type===\'password\'?\'text\':\'password\';" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-base">👁️</button>' +
+                    '</div>' +
+                    '<button type="button" onclick="window.confirmarCambioClaveConOTP()" class="w-full bg-[#1B4D3E] text-[#D4AF37] py-2.5 rounded-xl font-extrabold text-xs shadow-md">💾 Guardar Nueva Contraseña</button>' +
+                '</div>' +
+            '</div>';
+        document.body.appendChild(modal);
+    };
+
+    window.validarTitularidadYGenerarOTP = async function() {
+        if (await verificarBloqueoIntentos()) return;
+        var nomIng = (document.getElementById('recNombreNegocio') ? document.getElementById('recNombreNegocio').value : '').trim().toLowerCase();
+        var waIng = (document.getElementById('recWhatsappAutorizado') ? document.getElementById('recWhatsappAutorizado').value : '').replace(/\D/g, '').slice(-10);
+        var ult4Ing = (document.getElementById('recUltimos4Cuenta') ? document.getElementById('recUltimos4Cuenta').value : '').replace(/\D/g, '').slice(-4);
+
+        if (!nomIng || waIng.length !== 10 || ult4Ing.length < 4) {
+            return kumuAlert('Completa los 3 campos para verificar tu titularidad.', 'Datos Incompletos', '⚠️');
+        }
+
+        await cargarRepartidoresDesdeSupabase();
+        var domiMatch = (repartidoresOficialesCache || []).find(function(d) {
+            var okId = String(d.cedula) === nomIng || (d.nombre && d.nombre.toLowerCase().indexOf(nomIng) !== -1);
+            var okTel = String(d.telefono).replace(/\D/g, '').slice(-10) === waIng;
+            var ok4 = String(d.cedula).slice(-4) === ult4Ing || String(d.telefono).slice(-4) === ult4Ing;
+            return okId && okTel && ok4;
+        });
+
+        var localEncontrado = null;
+        if (!domiMatch) {
+            var res = await supabaseClient.from('comercios').select('*');
+            var comercios = (res.data || []).filter(function(c) { return !c.nombre.startsWith('__KUMU_'); });
+            localEncontrado = comercios.find(function(c) {
+                var uLocal = (c.pin_local && c.pin_local.indexOf(':') !== -1) ? c.pin_local.split(':')[0].trim().toLowerCase() : '';
+                var coincideNombre = c.nombre.toLowerCase().indexOf(nomIng) !== -1 || (uLocal && uLocal === nomIng);
+                var waPedidos = window.obtenerWhatsAppPedidosComercio(c);
+                var numsCuenta = (c.telefono || '').replace(/\D/g, '');
+                var coincideWA = (waPedidos === waIng) || (numsCuenta.indexOf(waIng) !== -1);
+                var coincideUlt4 = numsCuenta.slice(-4) === ult4Ing || waPedidos.slice(-4) === ult4Ing;
+                return coincideNombre && coincideWA && coincideUlt4;
+            });
+        }
+
+        if (!localEncontrado && !domiMatch) {
+            await registrarIntentoFallido();
+            return;
+        }
+
+        limpiarIntentosFallidos();
+        var otpGenerado = String(Math.floor(100000 + Math.random() * 900000));
+        window._recuperacionActivaObj = {
+            tipo: domiMatch ? 'domi' : 'comercio',
+            comercio: localEncontrado,
+            domi: domiMatch,
+            otpHash: await sha256Texto(otpGenerado),
+            expira: Date.now() + (10 * 60 * 1000)
+        };
+
+        document.getElementById('paso1RecuperacionWA').classList.add('hidden');
+        document.getElementById('paso2RecuperacionWA').classList.remove('hidden');
+
+        var msgOTP = '🔐 *KUMU MITÚ - CÓDIGO OTP DE RECUPERACIÓN*\n\n🔢 Tu código de 6 dígitos es: *' + otpGenerado + '*\n⏳ Válido por 10 minutos.';
+        window.open('https://wa.me/57' + waIng + '?text=' + encodeURIComponent(msgOTP), '_blank');
+    };
+
+    window.confirmarCambioClaveConOTP = async function() {
+        var rec = window._recuperacionActivaObj;
+        if (!rec || Date.now() > rec.expira) {
+            window.cerrarModalRecuperacionKumu();
+            return kumuAlert('El código OTP expiró.', 'Código Expirado', '⏳');
+        }
+        var otpDig = (document.getElementById('recInputCodigoOTP') ? document.getElementById('recInputCodigoOTP').value : '').trim();
+        var nuevaClave = (document.getElementById('recInputNuevaClave') ? document.getElementById('recInputNuevaClave').value : '').trim();
+        if (otpDig.length !== 6 || nuevaClave.length < 4) return kumuAlert('Verifica el código de 6 dígitos y la nueva clave.', 'Datos', '⚠️');
+        if ((await sha256Texto(otpDig)) !== rec.otpHash) { await registrarIntentoFallido(); return; }
+
+        var hashNueva = await sha256Texto(nuevaClave);
+        if (rec.tipo === 'domi' && rec.domi) {
+            await cargarRepartidoresDesdeSupabase();
+            repartidoresOficialesCache = (repartidoresOficialesCache || []).map(function(d) {
+                if (String(d.cedula) === String(rec.domi.cedula)) d.clave = hashNueva;
+                return d;
+            });
+            await guardarRepartidoresEnSupabase(repartidoresOficialesCache);
+            window._recuperacionActivaObj = null;
+            window.cerrarModalRecuperacionKumu();
+            await kumuAlert('¡Contraseña de Repartidor restablecida!\n🪪 Usuario: ' + rec.domi.cedula, '✅ Listo', '🔐');
+            return;
+        }
+
+        var rawActual = (rec.comercio.pin_local || '').trim();
+        var prefijoUsuario = (rawActual.indexOf(':') !== -1 && !rawActual.startsWith('sha256:')) ? rawActual.split(':')[0].trim() : rec.comercio.nombre;
+        var pinFinalCifrado = prefijoUsuario + ':' + hashNueva;
+        await supabaseClient.from('comercios').update({ pin_local: pinFinalCifrado }).eq('id', rec.comercio.id);
+        window._recuperacionActivaObj = null;
+        window.cerrarModalRecuperacionKumu();
+        await kumuAlert('¡Contraseña actualizada!\n👤 Usuario: ' + prefijoUsuario, '✅ Listo', '🔐');
+    };
+</script>
+<!-- === FIN BLOQUE 5 (PARTE 2 DE 2) === -->
 </body>
 </html>
+
+
