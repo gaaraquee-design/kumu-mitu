@@ -5612,112 +5612,106 @@
     };
 </script>
 <!-- === FIN BLOQUE 4 === -->
-<!-- === INICIO BLOQUE 5 (PARTE 1 DE 2): IMAGEN D.JPEG, CENEFAS LATERALES SUTILES Y AUTODOMICILIO 5 MIN === -->
-<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+<!-- === INICIO BLOQUE 5 (PARTE 1 DE 2): LETRA FIRME SIN CURSIVA, CENEFAS SIN ESTIRAR (12PX LATERALES) Y AUTODOMICILIO 5 MIN === -->
 <style>
-    .kumu-cursiva-oro {
-        font-family: 'Great Vibes', cursive;
-        background: linear-gradient(180deg, #FFFBEB 0%, #FDE68A 25%, #D4AF37 65%, #B45309 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        filter: drop-shadow(0px 3px 8px rgba(0, 0, 0, 0.45));
-    }
-    /* Cenefas laterales delgadas y sutiles a izquierda y derecha de la app */
+    /* Cenefas laterales de 12px a izquierda y derecha de la app (más visibles y sin estirarse) */
     #app {
-        padding-left: 6px;
-        padding-right: 6px;
+        padding-left: 12px !important;
+        padding-right: 12px !important;
     }
     .kumu-cenefa-lateral {
         position: absolute;
         top: 0;
         bottom: 0;
-        width: 6px;
+        width: 12px;
         z-index: 45;
         pointer-events: none;
-        opacity: 0.82;
         background-color: #2D0B3A;
         background-repeat: repeat-y;
-        background-size: 6px 120px;
+        background-size: 12px 144px;
     }
     .kumu-cenefa-izq {
         left: 0;
-        border-right: 1px solid rgba(212, 175, 55, 0.55);
+        border-right: 1.5px solid #D4AF37;
     }
     .kumu-cenefa-der {
         right: 0;
-        border-left: 1px solid rgba(212, 175, 55, 0.55);
+        border-left: 1.5px solid #D4AF37;
     }
 </style>
 
 <script>
-    // 1. GENERADOR DE CENEFA HORIZONTAL (PARA PANTALLA DE BIENVENIDA D.JPEG) Y VERTICAL SUTIL (PARA BORDES LATERALES DE LA APP)
-    function obtenerCenefaMinimalistaKumuSVG(alturaClase) {
-        alturaClase = alturaClase || 'h-8 sm:h-10';
-        return '<svg viewBox="0 0 600 44" class="w-full ' + alturaClase + ' block select-none" preserveAspectRatio="none">' +
-            '<rect width="600" height="44" fill="#2D0B3A"/>' +
-            '<line x1="0" y1="2" x2="600" y2="2" stroke="#D4AF37" stroke-width="2"/>' +
-            '<line x1="0" y1="42" x2="600" y2="42" stroke="#D4AF37" stroke-width="2"/>' +
-            '<polygon points="0,38 38,8 76,38 64,38 38,17 12,38" fill="#D4AF37"/>' +
-            '<polygon points="52,8 90,38 128,8 116,8 90,29 64,8" fill="#C85A17"/>' +
-            '<polygon points="104,38 142,8 180,38 168,38 142,17 116,38" fill="#1B4D3E" stroke="#D4AF37" stroke-width="0.8"/>' +
-            '<polygon points="124,38 142,23 160,38" fill="#C85A17"/>' +
-            '<polygon points="156,8 194,38 232,8 220,8 194,29 168,8" fill="#C85A17"/>' +
-            '<polygon points="208,38 256,8 256,38 246,38 246,20 222,38" fill="#D4AF37"/>' +
-            '<g transform="translate(300, 22)">' +
-                '<line x1="-13" y1="-13" x2="13" y2="13" stroke="#D4AF37" stroke-width="3.2" stroke-linecap="round"/>' +
-                '<line x1="13" y1="-13" x2="-13" y2="13" stroke="#D4AF37" stroke-width="3.2" stroke-linecap="round"/>' +
-                '<polyline points="-6,-13 0,-7 6,-13" fill="none" stroke="#FDE68A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
-                '<polyline points="-6,13 0,7 6,13" fill="none" stroke="#FDE68A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
-                '<polyline points="-13,-6 -7,0 -13,6" fill="none" stroke="#FDE68A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
-                '<polyline points="13,-6 7,0 13,6" fill="none" stroke="#FDE68A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
-                '<circle cx="0" cy="-16" r="2.3" fill="#C85A17" stroke="#FDE68A" stroke-width="0.7"/>' +
-                '<circle cx="0" cy="16" r="2.3" fill="#C85A17" stroke="#FDE68A" stroke-width="0.7"/>' +
-                '<circle cx="-16" cy="0" r="2.3" fill="#C85A17" stroke="#FDE68A" stroke-width="0.7"/>' +
-                '<circle cx="16" cy="0" r="2.3" fill="#C85A17" stroke="#FDE68A" stroke-width="0.7"/>' +
-            '</g>' +
-            '<polygon points="392,38 344,8 344,38 354,38 354,20 378,38" fill="#D4AF37"/>' +
-            '<polygon points="444,8 406,38 368,8 380,8 406,29 432,8" fill="#C85A17"/>' +
-            '<polygon points="496,38 458,8 420,38 432,38 458,17 484,38" fill="#1B4D3E" stroke="#D4AF37" stroke-width="0.8"/>' +
-            '<polygon points="476,38 458,23 440,38" fill="#C85A17"/>' +
-            '<polygon points="548,8 510,38 472,8 484,8 510,29 536,8" fill="#C85A17"/>' +
-            '<polygon points="600,38 562,8 524,38 536,38 562,17 588,38" fill="#D4AF37"/>' +
-        '</svg>';
+    // 1. CENEFA HORIZONTAL CON PATRÓN FIJO (NUNCA SE ESTIRA EN PC NI EN CELULAR) + CRUZ CENTRAL (※)
+    function obtenerCenefaMinimalistaKumuSVG(alturaPx) {
+        var h = alturaPx || 42;
+        var uid = 'pat_' + Math.floor(Math.random() * 99999);
+        return '<div class="w-full bg-[#2D0B3A] border-y-2 border-[#D4AF37] relative overflow-hidden select-none" style="height:' + h + 'px;">' +
+            '<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">' +
+                '<defs>' +
+                    '<pattern id="' + uid + '" x="0" y="0" width="120" height="' + h + '" patternUnits="userSpaceOnUse">' +
+                        '<polygon points="2,36 30,6 58,36 48,36 30,16 12,36" fill="#D4AF37"/>' +
+                        '<polygon points="34,6 60,36 86,6 76,6 60,25 44,6" fill="#C85A17"/>' +
+                        '<polygon points="64,36 92,6 118,36 108,36 92,16 74,36" fill="#1B4D3E" stroke="#D4AF37" stroke-width="0.9"/>' +
+                        '<polygon points="80,36 92,22 104,36" fill="#C85A17"/>' +
+                    '</pattern>' +
+                '</defs>' +
+                '<rect width="100%" height="100%" fill="url(#' + uid + ')"/>' +
+            '</svg>' +
+            '<div class="absolute inset-y-0 left-1/2 -translate-x-1/2 bg-[#2D0B3A] px-3 flex items-center justify-center border-x border-[#D4AF37]/60">' +
+                '<svg viewBox="0 0 44 44" class="w-7 h-7">' +
+                    '<line x1="9" y1="9" x2="35" y2="35" stroke="#D4AF37" stroke-width="3.2" stroke-linecap="round"/>' +
+                    '<line x1="35" y1="9" x2="9" y2="35" stroke="#D4AF37" stroke-width="3.2" stroke-linecap="round"/>' +
+                    '<polyline points="16,9 22,15 28,9" fill="none" stroke="#FDE68A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
+                    '<polyline points="16,35 22,29 28,35" fill="none" stroke="#FDE68A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
+                    '<polyline points="9,16 15,22 9,28" fill="none" stroke="#FDE68A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
+                    '<polyline points="35,16 29,22 35,28" fill="none" stroke="#FDE68A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
+                    '<circle cx="22" cy="5.5" r="2.3" fill="#C85A17" stroke="#FDE68A" stroke-width="0.7"/>' +
+                    '<circle cx="22" cy="38.5" r="2.3" fill="#C85A17" stroke="#FDE68A" stroke-width="0.7"/>' +
+                    '<circle cx="5.5" cy="22" r="2.3" fill="#C85A17" stroke="#FDE68A" stroke-width="0.7"/>' +
+                    '<circle cx="38.5" cy="22" r="2.3" fill="#C85A17" stroke="#FDE68A" stroke-width="0.7"/>' +
+                '</svg>' +
+            '</div>' +
+        '</div>';
     }
 
-    function obtenerDataURLCenefaVerticalSutil() {
-        var svgVert = "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 160' width='12' height='160'>" +
-            "<rect width='12' height='160' fill='#2D0B3A'/>" +
-            "<polygon points='1,6 11,18 1,30' fill='none' stroke='#D4AF37' stroke-width='1.4'/>" +
-            "<polygon points='11,26 1,38 11,50' fill='none' stroke='#C85A17' stroke-width='1.4'/>" +
-            "<polygon points='1,46 11,58 1,70' fill='none' stroke='#15803D' stroke-width='1.4'/>" +
-            "<g transform='translate(6,80)'>" +
-                "<line x1='-4' y1='-4' x2='4' y2='4' stroke='#D4AF37' stroke-width='1.5'/>" +
-                "<line x1='4' y1='-4' x2='-4' y2='4' stroke='#D4AF37' stroke-width='1.5'/>" +
-                "<circle cx='0' cy='-5.5' r='1' fill='#C85A17'/>" +
-                "<circle cx='0' cy='5.5' r='1' fill='#C85A17'/>" +
+    // 2. CENEFA LATERAL DE 12PX CON TRIÁNGULOS RELLENOS Y CRUZ INDÍGENA (MÁS ANCHA Y DEFINIDA)
+    function obtenerDataURLCenefaVertical12px() {
+        var svgVert = "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 144' width='12' height='144'>" +
+            "<rect width='12' height='144' fill='#2D0B3A'/>" +
+            "<polygon points='1,4 11,18 1,32' fill='#D4AF37'/>" +
+            "<polygon points='11,22 1,36 11,50' fill='#C85A17'/>" +
+            "<polygon points='1,40 11,54 1,68' fill='#1B4D3E' stroke='#D4AF37' stroke-width='0.8'/>" +
+            "<g transform='translate(6,76)'>" +
+                "<line x1='-4.2' y1='-4.2' x2='4.2' y2='4.2' stroke='#D4AF37' stroke-width='1.8' stroke-linecap='round'/>" +
+                "<line x1='4.2' y1='-4.2' x2='-4.2' y2='4.2' stroke='#D4AF37' stroke-width='1.8' stroke-linecap='round'/>" +
+                "<circle cx='0' cy='-5.8' r='1.3' fill='#C85A17'/>" +
+                "<circle cx='0' cy='5.8' r='1.3' fill='#C85A17'/>" +
             "</g>" +
-            "<polygon points='11,90 1,102 11,114' fill='none' stroke='#15803D' stroke-width='1.4'/>" +
-            "<polygon points='1,110 11,122 1,134' fill='none' stroke='#C85A17' stroke-width='1.4'/>" +
-            "<polygon points='11,130 1,142 11,154' fill='none' stroke='#D4AF37' stroke-width='1.4'/>" +
+            "<polygon points='11,86 1,100 11,114' fill='#1B4D3E' stroke='#D4AF37' stroke-width='0.8'/>" +
+            "<polygon points='1,104 11,118 1,132' fill='#C85A17'/>" +
+            "<polygon points='11,120 1,134 11,142' fill='#D4AF37'/>" +
         "</svg>";
         return 'url("data:image/svg+xml;utf8,' + encodeURIComponent(svgVert) + '")';
     }
 
-    function inyectarCenefasLateralesSutilesEnApp(container) {
+    function inyectarCenefasLateralesEnApp(container) {
         if (!container) return;
-        var bgUrl = obtenerDataURLCenefaVerticalSutil();
-        if (!container.querySelector('.kumu-cenefa-izq')) {
-            var izq = document.createElement('div');
+        var bgUrl = obtenerDataURLCenefaVertical12px();
+        var izq = container.querySelector('.kumu-cenefa-izq');
+        if (!izq) {
+            izq = document.createElement('div');
             izq.className = 'kumu-cenefa-lateral kumu-cenefa-izq';
-            izq.style.backgroundImage = bgUrl;
             container.appendChild(izq);
         }
-        if (!container.querySelector('.kumu-cenefa-der')) {
-            var der = document.createElement('div');
+        izq.style.backgroundImage = bgUrl;
+
+        var der = container.querySelector('.kumu-cenefa-der');
+        if (!der) {
+            der = document.createElement('div');
             der.className = 'kumu-cenefa-lateral kumu-cenefa-der';
-            der.style.backgroundImage = bgUrl;
             container.appendChild(der);
         }
+        der.style.backgroundImage = bgUrl;
     }
 
     function obtenerSVGHongoMinimalistaOro(clases) {
@@ -5739,17 +5733,19 @@
         '</svg>';
     }
 
+    // 3. PANTALLA DE BIENVENIDA CON TIPOGRAFÍA FIRME Y LIMPIA (SIN CURSIVA) Y CENEFAS SIN DEFORMARSE
     function aplicarSplashScreenMinimalista() {
         var splash = document.getElementById('splash-screen');
         if (!splash) return;
         splash.className = 'fixed inset-0 bg-[#2D0B3A] z-[9999] flex flex-col items-center justify-between p-0 text-center text-white cursor-pointer select-none overflow-hidden';
         splash.innerHTML =
-            '<div class="w-full">' + obtenerCenefaMinimalistaKumuSVG('h-9 sm:h-11') + '</div>' +
+            obtenerCenefaMinimalistaKumuSVG(42) +
             '<div class="flex flex-col items-center justify-center my-auto px-6">' +
                 obtenerSVGHongoMinimalistaOro('w-36 h-36 sm:w-40 sm:h-40 drop-shadow-[0_8px_20px_rgba(212,175,55,0.28)]') +
-                '<h1 class="kumu-cursiva-oro text-6xl sm:text-7xl leading-none -mt-1 pr-2 select-none">Kumu</h1>' +
+                '<h1 class="font-extrabold text-4xl sm:text-5xl tracking-wider text-[#D4AF37] mt-1 select-none">KUMU</h1>' +
+                '<p class="text-[11px] uppercase tracking-widest text-amber-200 font-semibold mt-1">Pide fácil, recibe rápido</p>' +
             '</div>' +
-            '<div class="w-full">' + obtenerCenefaMinimalistaKumuSVG('h-9 sm:h-11') + '</div>';
+            obtenerCenefaMinimalistaKumuSVG(42);
     }
     aplicarSplashScreenMinimalista();
 
@@ -5766,18 +5762,18 @@
     window._kumuOrigRenderHeaderV9 = window._kumuOrigRenderHeaderV9 || renderHeader;
     renderHeader = function(container) {
         window._kumuOrigRenderHeaderV9(container);
-        inyectarCenefasLateralesSutilesEnApp(container);
+        inyectarCenefasLateralesEnApp(container);
         var hdr = container.querySelector('.kumu-header');
         if (hdr) {
             var h1 = hdr.querySelector('h1');
             if (h1) {
-                h1.className = 'kumu-cursiva-oro text-3xl leading-none pr-1';
+                h1.className = 'font-extrabold text-xl flex items-center gap-1 text-[#D4AF37] tracking-tight leading-none';
                 h1.textContent = 'Kumu';
             }
         }
     };
 
-    // 2. ACTUALIZAR ÍCONO INSTALABLE Y PLANTILLAS DE PÓSTER QR / TICKETS CON EL NUEVO HONGO DORADO
+    // 4. PLANTILLAS EN CANVAS CON TIPOGRAFÍA FIRME "KUMU" (SIN CURSIVA)
     function dibujarCruzIndigenaCanvasV9(ctx, x, y, tam) {
         ctx.save();
         ctx.translate(x, y);
@@ -5828,10 +5824,10 @@
         ctx.lineTo(cx + radio * 0.36, cy - radio * 0.18);
         ctx.stroke();
 
-        ctx.fillStyle = gradOro;
-        ctx.font = 'italic 400 ' + Math.round(radio * 0.50) + 'px "Great Vibes", "Brush Script MT", cursive';
+        ctx.fillStyle = '#D4AF37';
+        ctx.font = '900 ' + Math.round(radio * 0.26) + 'px Inter, sans-serif';
         ctx.textAlign = 'center';
-        ctx.fillText('Kumu', cx, cy + radio * 0.74);
+        ctx.fillText('KUMU', cx, cy + radio * 0.72);
         ctx.restore();
     };
 
@@ -5865,35 +5861,43 @@
 
     inyectarIconoPNGAndroid();
 
-    // 3. BOTONES VISIBLES «⏱️ LISTO EN 5 MIN» Y «🏃‍♂️ ACTIVAR AUTODOMICILIO (5 MIN / 300s)» CON RELOJ EN VIVO
+    // 5. BOTONES SIEMPRE VISIBLES «⏱️ LISTO EN 5 MIN» Y «🏃‍♂️ AUTODOMICILIO (5 MIN)» SIN OCULTARSE NUNCA
+    var _origOcultarPinV9 = ocultarPinVisual;
+    ocultarPinVisual = function(texto) {
+        return _origOcultarPinV9(texto).replace(/\[MOTO_WA_TS:\d+\]/g, '').trim();
+    };
+
     publicarCarreraGrupoRepartidores = async function(pedidoId) {
-        var p = (window._pedidosAliadoCache || []).find(function(x) { return String(x.id) === String(pedidoId); });
-        if (!p || !comercioLogueado) return;
+        var r = await supabaseClient.from('pedidos').select('*').eq('id', pedidoId).maybeSingle();
+        var p = r.data || (window._pedidosAliadoCache || []).find(function(x) { return String(x.id) === String(pedidoId); });
+        if (!p) return;
         var tsAhora = Date.now();
-        var infoBase = window.limpiarInfoDomiSoloTexto(p.domiciliario_info);
+        var dirLimpiaSinTs = (p.direccion_entrega || '').replace(/\[MOTO_WA_TS:\d+\]/g, '').trim();
         await supabaseClient.from('pedidos').update({
             estado: 'En Preparación',
-            domiciliario_info: (infoBase + ' [MOTO_WA_TS:' + tsAhora + ']').trim()
+            direccion_entrega: (dirLimpiaSinTs + ' [MOTO_WA_TS:' + tsAhora + ']').trim()
         }).eq('id', pedidoId);
 
+        var nomLocal = comercioLogueado ? comercioLogueado.nombre : 'Comercio Kumu';
         if (window.enviarPushKumuEnSegundoPlano) {
-            window.enviarPushKumuEnSegundoPlano('🛵 Carrera Lista en ' + comercioLogueado.nombre, 'Dirección: ' + (p.direccion_entrega || '').split('[')[0] + ' ($' + Number(p.total).toLocaleString() + ')', 'domis');
+            window.enviarPushKumuEnSegundoPlano('🛵 Carrera Lista en ' + nomLocal, 'Dirección: ' + (p.direccion_entrega || '').split('[')[0] + ' ($' + Number(p.total).toLocaleString() + ')', 'domis');
         }
-        var meta = extraerMetadatosComercio(comercioLogueado);
-        var msg = '🛵🚲 *¡CARRERA DISPONIBLE EN KUMU!* 🍄\n\n🏪 *Recoger en:* ' + comercioLogueado.nombre + ' (' + meta.dirLimpia + ')\n📍 *Entregar en:* ' + (p.direccion_entrega || '').split('|')[0] + '\n💰 *Total Pedido:* $' + Number(p.total).toLocaleString() + ' COP\n\n👉 *Entra a Kumu y toca "Tomar Pedido":* https://domicilios-mitu.vercel.app';
+        var meta = comercioLogueado ? extraerMetadatosComercio(comercioLogueado) : { dirLimpia: 'Mitú' };
+        var msg = '🛵🚲 *¡CARRERA DISPONIBLE EN KUMU!* 🍄\n\n🏪 *Recoger en:* ' + nomLocal + ' (' + meta.dirLimpia + ')\n📍 *Entregar en:* ' + (p.direccion_entrega || '').split('|')[0] + '\n💰 *Total Pedido:* $' + Number(p.total).toLocaleString() + ' COP\n\n👉 *Entra a Kumu y toca "Tomar Pedido":* https://domicilios-mitu.vercel.app';
         window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
         initApp(true);
     };
 
     window.avisarListoEn5MinLocal = async function(pedidoId) {
-        var r = await supabaseClient.from('pedidos').select('domiciliario_info, direccion_entrega').eq('id', pedidoId).maybeSingle();
-        var raw = (r.data && r.data.domiciliario_info) || '';
-        var limpio = window.limpiarInfoDomiSoloTexto(raw);
-        var mTs = raw.match(/\[MOTO_WA_TS:\d+\]/);
-        var tagTs = mTs ? ' ' + mTs[0] : (' [MOTO_WA_TS:' + Date.now() + ']');
+        var r = await supabaseClient.from('pedidos').select('direccion_entrega').eq('id', pedidoId).maybeSingle();
+        var dirRaw = (r.data && r.data.direccion_entrega) || '';
+        var dirSin5m = dirRaw.replace(/🔥\[Sale en 5 min[^\]]*\]/g, '').trim();
+        if (dirSin5m.indexOf('[MOTO_WA_TS:') === -1) {
+            dirSin5m += ' [MOTO_WA_TS:' + Date.now() + ']';
+        }
         await supabaseClient.from('pedidos').update({
             estado: 'En Preparación',
-            domiciliario_info: (limpio + tagTs + ' 🔥[Sale en 5 min — Acércate al local]').trim()
+            direccion_entrega: (dirSin5m + ' 🔥[Sale en 5 min — Acércate al local]').trim()
         }).eq('id', pedidoId);
 
         if (window.enviarPushKumuEnSegundoPlano) {
@@ -5904,9 +5908,9 @@
     };
 
     window.activarAutodomicilio5Min = async function(pedidoId) {
-        var r = await supabaseClient.from('pedidos').select('domiciliario_info, creado_at').eq('id', pedidoId).maybeSingle();
-        var raw = (r.data && r.data.domiciliario_info) || '';
-        var mTs = raw.match(/\[MOTO_WA_TS:(\d+)\]/);
+        var r = await supabaseClient.from('pedidos').select('direccion_entrega, domiciliario_info, creado_at').eq('id', pedidoId).maybeSingle();
+        var comb = ((r.data && r.data.direccion_entrega) || '') + ' ' + ((r.data && r.data.domiciliario_info) || '');
+        var mTs = comb.match(/\[MOTO_WA_TS:(\d+)\]/);
         var tsBase = mTs ? Number(mTs[1]) : (r.data && r.data.creado_at ? new Date(r.data.creado_at).getTime() : 0);
         var segs = tsBase ? Math.floor((Date.now() - tsBase) / 1000) : 300;
 
@@ -5918,51 +5922,18 @@
             estado: 'En Camino',
             domiciliario_info: '🏃‍♂️ Autodomicilio del Local (100% envío del comercio)'
         }).eq('id', pedidoId);
-        await kumuAlert('✅ ¡Autodomicilio activado! Tu local entrega el pedido y conserva el 100% del valor del domicilio.', '🏃‍♂️ Autodomicilio Activo', '✅');
+        await kumuAlert('✅ ¡Autodomicilio activado! El local entrega el pedido y conserva el 100% del valor del domicilio.', '🏃‍♂️ Autodomicilio Activo', '✅');
         initApp(true);
     };
 
-    window._kumuOrigRenderPedAliadoV9 = window._kumuOrigRenderPedAliadoV9 || renderPedidosAliado;
-    renderPedidosAliado = async function() {
-        await window._kumuOrigRenderPedAliadoV9();
-        var cont = document.getElementById('listaPedidosAliadoLocal');
-        if (!cont) return;
-
-        cont.querySelectorAll('button[onclick^="publicarCarreraGrupoRepartidores"]').forEach(function(btnMoto) {
-            var m = btnMoto.getAttribute('onclick').match(/'([^']+)'/);
-            if (!m) return;
-            var pedId = m[1];
-            var pObj = (window._pedidosAliadoCache || []).find(function(x) { return String(x.id) === String(pedId); });
-            var rawDomi = (pObj && pObj.domiciliario_info) || '';
-            var mTs = rawDomi.match(/\[MOTO_WA_TS:(\d+)\]/);
-            var tsInicio = mTs ? Number(mTs[1]) : (pObj && pObj.creado_at ? new Date(pObj.creado_at).getTime() : Date.now());
-
-            if (!btnMoto.parentNode.querySelector('.btn-listo5-kumu')) {
-                var b5 = document.createElement('button');
-                b5.type = 'button';
-                b5.className = 'btn-listo5-kumu flex-1 bg-amber-500 hover:bg-amber-600 text-[#2D0B3A] py-1.5 px-2 rounded-lg font-extrabold text-[11px] shadow';
-                b5.innerHTML = '⏱️ Listo en 5 min';
-                b5.onclick = function() { window.avisarListoEn5MinLocal(pedId); };
-                btnMoto.insertAdjacentElement('afterend', b5);
-            }
-
-            if (!btnMoto.parentNode.parentNode.querySelector('.btn-autodomi-kumu')) {
-                var bAuto = document.createElement('button');
-                bAuto.type = 'button';
-                bAuto.setAttribute('data-ts-inicio', String(tsInicio));
-                bAuto.setAttribute('data-ped-id', String(pedId));
-                bAuto.onclick = function() { window.activarAutodomicilio5Min(pedId); };
-                btnMoto.parentNode.insertAdjacentElement('afterend', bAuto);
-            }
-        });
-
-        var actualizarRelojesAutodomi = function() {
+    function iniciarRelojGlobalAutodomi() {
+        var actualizarRelojes = function() {
             document.querySelectorAll('button[data-ts-inicio]').forEach(function(btn) {
                 var ts = Number(btn.getAttribute('data-ts-inicio') || 0);
                 var segs = Math.floor((Date.now() - ts) / 1000);
                 if (segs >= 300) {
                     btn.className = 'btn-autodomi-kumu w-full mt-1.5 bg-[#2D0B3A] text-[#D4AF37] border border-[#D4AF37] py-1.5 px-2 rounded-lg font-extrabold text-[11px] shadow animate-pulse';
-                    btn.innerHTML = '🏃‍♂️ Activar Autodomicilio (5 min cumplidos • 100% envío tuyo)';
+                    btn.innerHTML = '🏃‍♂️ Activar Autodomicilio (5 min cumplidos • 100% envío local)';
                 } else {
                     var rest = 300 - segs;
                     var mm = String(Math.floor(rest / 60)).padStart(2, '0');
@@ -5972,9 +5943,80 @@
                 }
             });
         };
-        actualizarRelojesAutodomi();
+        actualizarRelojes();
         if (window._timerAutodomiKumu) clearInterval(window._timerAutodomiKumu);
-        window._timerAutodomiKumu = setInterval(actualizarRelojesAutodomi, 1000);
+        window._timerAutodomiKumu = setInterval(actualizarRelojes, 1000);
+    }
+
+    window._kumuOrigRenderPedAliadoV9 = window._kumuOrigRenderPedAliadoV9 || renderPedidosAliado;
+    renderPedidosAliado = async function() {
+        await window._kumuOrigRenderPedAliadoV9();
+        var cont = document.getElementById('listaPedidosAliadoLocal');
+        if (!cont) return;
+
+        // Si no hay pedidos activos, mostrar confirmación visual de que los botones están listos
+        if (!window._pedidosAliadoCache || window._pedidosAliadoCache.length === 0) {
+            cont.innerHTML =
+                '<p class="text-xs text-gray-500 italic">No hay pedidos pendientes en este momento.</p>' +
+                '<div class="bg-amber-100/70 border border-amber-300 rounded-xl p-2 mt-1.5 text-[10px] text-[#2D0B3A] font-semibold">' +
+                    '✅ <b>Botones activos cuando entra un pedido:</b> 👨‍🍳 1. Aceptar • 🛵 2. Pedir Moto WA • <b>⏱️ Listo en 5 min</b> • <b>🏃‍♂️ Autodomicilio (tras 5 min)</b>' +
+                '</div>';
+            return;
+        }
+
+        // Inyectar "⏱️ Listo en 5 min" y "🏃‍♂️ Autodomicilio" en cada tarjeta de pedido activo del local
+        Array.from(cont.children).forEach(function(card, idx) {
+            var pObj = (window._pedidosAliadoCache || [])[idx];
+            if (!pObj) return;
+            var pedId = pObj.id;
+            var comb = (pObj.direccion_entrega || '') + ' ' + (pObj.domiciliario_info || '');
+            var mTs = comb.match(/\[MOTO_WA_TS:(\d+)\]/);
+            var tsInicio = mTs ? Number(mTs[1]) : (pObj.creado_at ? new Date(pObj.creado_at).getTime() : Date.now());
+            var domiReal = window.limpiarInfoDomiSoloTexto(pObj.domiciliario_info);
+            if (domiReal) return;
+
+            var filaBotones = card.querySelector('.flex.flex-wrap.gap-1\\.5.pt-1');
+            if (filaBotones && !card.querySelector('.btn-listo5-kumu')) {
+                var b5 = document.createElement('button');
+                b5.type = 'button';
+                b5.className = 'btn-listo5-kumu flex-1 bg-amber-500 hover:bg-amber-600 text-[#2D0B3A] py-1.5 px-2 rounded-lg font-extrabold text-[11px] shadow';
+                b5.innerHTML = '⏱️ Listo en 5 min';
+                b5.onclick = function() { window.avisarListoEn5MinLocal(pedId); };
+                filaBotones.appendChild(b5);
+            }
+
+            if (!card.querySelector('.btn-autodomi-kumu')) {
+                var bAuto = document.createElement('button');
+                bAuto.type = 'button';
+                bAuto.setAttribute('data-ts-inicio', String(tsInicio));
+                bAuto.setAttribute('data-ped-id', String(pedId));
+                bAuto.onclick = function() { window.activarAutodomicilio5Min(pedId); };
+                card.appendChild(bAuto);
+            }
+        });
+        iniciarRelojGlobalAutodomi();
+    };
+
+    // Mostrar también los botones "⏱️ Listo en 5 min" y "🏃‍♂️ Autodomicilio" en la vista de Admin / Domis cuando no hay repartidor asignado
+    window._kumuOrigRenderDomiBotones5m = window._kumuOrigRenderDomiBotones5m || renderDomiciliarioView;
+    renderDomiciliarioView = async function(container) {
+        await window._kumuOrigRenderDomiBotones5m(container);
+        if (!modoAdminVisible) return;
+        var lista = document.getElementById('listaPedidos');
+        if (!lista) return;
+        lista.querySelectorAll('button[onclick^="tomarPedidoConDatos"]').forEach(function(btnTomar) {
+            var m = btnTomar.getAttribute('onclick').match(/'([^']+)'/);
+            if (!m) return;
+            var pedId = m[1];
+            var card = btnTomar.closest('.bg-white.border.rounded-2xl');
+            if (!card || card.querySelector('.box-admin-5min-autodomi')) return;
+            var divAdmin5 = document.createElement('div');
+            divAdmin5.className = 'box-admin-5min-autodomi grid grid-cols-2 gap-1.5 pt-1 border-t border-amber-200 mt-1';
+            divAdmin5.innerHTML =
+                '<button type="button" onclick="window.avisarListoEn5MinLocal(\'' + pedId + '\')" class="bg-amber-500 text-[#2D0B3A] py-1.5 px-2 rounded-lg font-extrabold text-[10px] shadow">⏱️ Listo en 5 min</button>' +
+                '<button type="button" onclick="window.activarAutodomicilio5Min(\'' + pedId + '\')" class="bg-[#2D0B3A] text-[#D4AF37] border border-[#D4AF37] py-1.5 px-2 rounded-lg font-extrabold text-[10px] shadow">🏃‍♂️ Autodomicilio</button>';
+            card.appendChild(divAdmin5);
+        });
     };
 </script>
 <!-- === FIN BLOQUE 5 (PARTE 1 DE 2) === -->
